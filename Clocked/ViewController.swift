@@ -22,35 +22,42 @@ class ViewController: UITableViewController {
     }
     
     func setupUIBarButtons() {
-        let rightBarButton = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(ViewController.myRightSideBarButtonItemTapped(_:)))
-        navigationItem.rightBarButtonItem = rightBarButton
+//        let rightBarButton = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(ViewController.myRightSideBarButtonItemTapped(_:)))
+//        navigationItem.rightBarButtonItem = rightBarButton
+        let addTimeButton = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(ViewController.addTime(_:)))
+        navigationItem.rightBarButtonItem = addTimeButton
         
-        
-        let leftBarButton = UIBarButtonItem(title: "Edit", style: .done, target: self, action: #selector(ViewController.myLeftSideBarButtonItemTapped(_:)))
+        let leftBarButton = UIBarButtonItem(title: "Delete", style: .done, target: self, action: #selector(ViewController.myLeftSideBarButtonItemTapped(_:)))
         navigationItem.leftBarButtonItem = leftBarButton
     }
     
-    @objc func myRightSideBarButtonItemTapped(_ sender:UIBarButtonItem)
-    {
-        print("myRightSideBarButtonItemTapped")
-        let alert = UIAlertController(title: "New Name", message: "Add a new name", preferredStyle: .alert)
+//    @objc func myRightSideBarButtonItemTapped(_ sender:UIBarButtonItem)
+//    {
+//        print("myRightSideBarButtonItemTapped")
+//        let alert = UIAlertController(title: "New Name", message: "Add a new name", preferredStyle: .alert)
+//
+//        let saveAction = UIAlertAction(title: "Save", style: .default) { [unowned self] action in
+//            guard let textField = alert.textFields?.first, let nameToSave = textField.text else {
+//                return
+//            }
+//
+//            self.save(name: nameToSave)
+//            self.tableView.reloadData()
+//        }
+//
+//        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+//
+//        alert.addTextField()
+//        alert.addAction(saveAction)
+//        alert.addAction(cancelAction)
+//
+//        present(alert, animated: true)
+//    }
+    
+    @objc func addTime(_ sender:UIBarButtonItem) {
+        let timePicker = UIDatePicker(frame: CGRect(x: 10, y: 50, width: self.view.frame.width, height: 200))
         
-        let saveAction = UIAlertAction(title: "Save", style: .default) { [unowned self] action in
-            guard let textField = alert.textFields?.first, let nameToSave = textField.text else {
-                return
-            }
-            
-            self.save(name: nameToSave)
-            self.tableView.reloadData()
-        }
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        
-        alert.addTextField()
-        alert.addAction(saveAction)
-        alert.addAction(cancelAction)
-        
-        present(alert, animated: true)
+        self.view.addSubview(timePicker)
     }
     
     func save(name: String) {
@@ -105,7 +112,12 @@ class ViewController: UITableViewController {
         let person = people[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         
-        cell.textLabel?.text = person.value(forKeyPath: "name") as? String
+        let name = person.value(forKeyPath: "name") as? String
+        
+        if let name = name {
+            cell.textLabel?.text = "hi\nim\n\(name)"
+        }
+        cell.textLabel?.numberOfLines = 0
         
         return cell
     }
