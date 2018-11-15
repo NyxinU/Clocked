@@ -18,6 +18,11 @@ class ViewController: UITableViewController {
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         positionAddButton()
+        
+        // change back button to say cancel 
+        let backItem = UIBarButtonItem()
+        backItem.title = "Cancel"
+        navigationItem.backBarButtonItem = backItem
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -47,16 +52,17 @@ class ViewController: UITableViewController {
         view.addSubview(addTimeCardButton)
         
         NSLayoutConstraint.activate([
-        addTimeCardButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-        addTimeCardButton.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
-        addTimeCardButton.heightAnchor.constraint(equalToConstant: 60),
-        addTimeCardButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            addTimeCardButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            addTimeCardButton.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
+            addTimeCardButton.heightAnchor.constraint(equalToConstant: 60),
+            addTimeCardButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
     
     @objc func addTimeCardButtonAction(sender: UIButton!) {
         print("Button Tapped")
-        present(TimeCardViewController(), animated: true)
+        navigationController?.pushViewController(TimeCardViewController(), animated: true)
     }
+
 }
 
