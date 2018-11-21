@@ -10,9 +10,11 @@ import UIKit
 import CoreData
 class TimeCardViewController: UITableViewController {
     
+    
     let cellId = "cellId"
     var descriptions: [String] = ["Start", "End", "Duration"]
     var times: [String] = ["","",""]
+    var timeLabel: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,6 +23,12 @@ class TimeCardViewController: UITableViewController {
         tableView.tableFooterView = UIView()
         
         navigationItem.title = "New Entry"
+        
+        let backItem = UIBarButtonItem()
+        backItem.title = "Cancel"
+        navigationItem.backBarButtonItem = backItem
+        
+        
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -32,19 +40,26 @@ class TimeCardViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // do i need to cast?
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as UITableViewCell
 
-        cell.textLabel?.text = "\(descriptions[indexPath.row]): \(times[indexPath.row])"
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+
+        cell.textLabel?.text = "\(descriptions[indexPath.row]): \(timeLabel)"
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-DD HH:mm:ss"
-        
-        times[indexPath.row] = formatter.string(from: Date())
-        
+        let datePicker = DatePickerViewController()
+        datePicker.delegate = self	
+        navigationController?.pushViewController(datePicker, animated: true)
+	
         tableView.reloadData()
     }
+}
+
+extension TimeCardViewController: DatePickerDelegate {
+    func DateTimeSelected(value: String) {
+        timeLabel = value
+        tableView.reloadData()
+    }
+    
 }
