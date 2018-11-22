@@ -9,6 +9,7 @@
 import UIKit
 
 class DatePickerViewController: UIViewController {
+    let datePicker: UIDatePicker = UIDatePicker()
     var delegate: DatePickerDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,7 +19,7 @@ class DatePickerViewController: UIViewController {
         let datePickerContainer = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
 
         datePickerContainer.backgroundColor = .white
-        let datePicker: UIDatePicker = UIDatePicker()
+        
         
         datePicker.timeZone = NSTimeZone.local
 
@@ -28,7 +29,13 @@ class DatePickerViewController: UIViewController {
     }
     
     @objc func saveDateTime(_ sender: UIBarButtonItem) {
-        delegate?.DateTimeSelected(value: "11/25/2018 12:00:00")
+        let dateFormatter: DateFormatter = DateFormatter()
+        
+        dateFormatter.dateFormat = "MM/dd/yyyy hh:mm a"
+        
+        let selectedDate: String = dateFormatter.string(from: datePicker.date)
+        
+        delegate?.DateTimeSelected(value: selectedDate)
         navigationController?.popViewController(animated: true)
         
     }
