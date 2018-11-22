@@ -60,7 +60,6 @@ class ViewController: UITableViewController {
     }
     
     @objc func addTimeCardButtonAction(sender: UIButton!) {
-        print("Button Tapped")
         navigationController?.pushViewController(TimeCardViewController(), animated: true)
     }
 

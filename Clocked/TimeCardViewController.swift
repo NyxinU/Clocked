@@ -8,8 +8,16 @@
 
 import UIKit
 import CoreData
-class TimeCardViewController: UITableViewController {
+class TimeCardViewController: UITableViewController, DatePickerDelegate {
+    var indexPath: Int?
     
+    func DateTimeSelected(value: String) {
+
+        if let indexPath = indexPath {
+            times[indexPath] = value
+        }
+        tableView.reloadData()
+    }
     
     let cellId = "cellId"
     var descriptions: [String] = ["Start", "End", "Duration"]
@@ -43,23 +51,16 @@ class TimeCardViewController: UITableViewController {
 
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
 
-        cell.textLabel?.text = "\(descriptions[indexPath.row]): \(timeLabel)"
+        cell.textLabel?.text = "\(descriptions[indexPath.row]): \(times[indexPath.row])"
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let datePicker = DatePickerViewController()
-        datePicker.delegate = self	
-        navigationController?.pushViewController(datePicker, animated: true)
+        datePicker.delegate = self
+        self.indexPath = indexPath.row
+    navigationController?.pushViewController(datePicker, animated: true)
 	
         tableView.reloadData()
     }
-}
-
-extension TimeCardViewController: DatePickerDelegate {
-    func DateTimeSelected(value: String) {
-        timeLabel = value
-        tableView.reloadData()
-    }
-    
 }
