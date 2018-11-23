@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		500E545721A52AFC00214F25 /* DatePickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500E545621A52AFC00214F25 /* DatePickerDelegate.swift */; };
+		500E545B21A7786900214F25 /* UIDatePickerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500E545A21A7786900214F25 /* UIDatePickerExtensions.swift */; };
 		5040C4E2219CD107007C1031 /* TimeCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5040C4E1219CD107007C1031 /* TimeCardViewController.swift */; };
 		5040C4E4219E2F64007C1031 /* DatePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5040C4E3219E2F64007C1031 /* DatePickerViewController.swift */; };
 		50E16722219A750500A3510C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E16721219A750500A3510C /* AppDelegate.swift */; };
@@ -39,6 +40,7 @@
 
 /* Begin PBXFileReference section */
 		500E545621A52AFC00214F25 /* DatePickerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerDelegate.swift; sourceTree = "<group>"; };
+		500E545A21A7786900214F25 /* UIDatePickerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDatePickerExtensions.swift; sourceTree = "<group>"; };
 		5040C4E1219CD107007C1031 /* TimeCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardViewController.swift; sourceTree = "<group>"; };
 		5040C4E3219E2F64007C1031 /* DatePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerViewController.swift; sourceTree = "<group>"; };
 		50E1671E219A750500A3510C /* Clocked.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clocked.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -110,6 +112,7 @@
 				5040C4E3219E2F64007C1031 /* DatePickerViewController.swift */,
 				500E545621A52AFC00214F25 /* DatePickerDelegate.swift */,
 				5040C4E1219CD107007C1031 /* TimeCardViewController.swift */,
+				500E545A21A7786900214F25 /* UIDatePickerExtensions.swift */,
 				50E16725219A750500A3510C /* Main.storyboard */,
 				50E1672B219A750600A3510C /* Assets.xcassets */,
 				50E1672D219A750600A3510C /* LaunchScreen.storyboard */,
@@ -271,6 +274,7 @@
 				500E545721A52AFC00214F25 /* DatePickerDelegate.swift in Sources */,
 				5040C4E2219CD107007C1031 /* TimeCardViewController.swift in Sources */,
 				5040C4E4219E2F64007C1031 /* DatePickerViewController.swift in Sources */,
+				500E545B21A7786900214F25 /* UIDatePickerExtensions.swift in Sources */,
 				50E16724219A750500A3510C /* ViewController.swift in Sources */,
 				50E1672A219A750500A3510C /* Clocked.xcdatamodeld in Sources */,
 				50E16722219A750500A3510C /* AppDelegate.swift in Sources */,
