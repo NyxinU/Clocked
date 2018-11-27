@@ -29,9 +29,8 @@ class DatePickerViewController: UIViewController {
     }
     
     @objc func saveDateTime(_ sender: UIBarButtonItem) {
-        let selectedDate = datePicker.dateToString()
         
-        delegate?.DateTimeSelected(value: selectedDate)
+        delegate?.DateTimeSelected(value: datePicker.date)
         navigationController?.popViewController(animated: true)
         
     }

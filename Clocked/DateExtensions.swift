@@ -8,13 +8,13 @@
 
 import UIKit
 
-extension UIDatePicker {
-    func dateToString() -> String {
+extension Date {
+    func stringified() -> String {
         let dateFormatter: DateFormatter = DateFormatter()
         
         dateFormatter.dateFormat = "MM/dd/yyyy hh:mm a"
         
-        let StringifiedDate: String = dateFormatter.string(from: self.date)
+        let StringifiedDate: String = dateFormatter.string(from: self)
         
         return StringifiedDate
     }

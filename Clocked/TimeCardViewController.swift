@@ -10,19 +10,8 @@ import UIKit
 import CoreData
 class TimeCardViewController: UITableViewController, DatePickerDelegate {
     var indexPath: Int?
-    
-    func DateTimeSelected(value: String) {
-
-        if let indexPath = indexPath {
-            times[indexPath] = value
-        }
-        tableView.reloadData()
-    }
-    
     let cellId = "cellId"
-    var descriptions: [String] = ["Start", "End", "Duration"]
-    var times: [String] = ["","",""]
-    var timeLabel: String = ""
+    var timeCard = TimeCard()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,8 +24,6 @@ class TimeCardViewController: UITableViewController, DatePickerDelegate {
         let backItem = UIBarButtonItem()
         backItem.title = "Cancel"
         navigationItem.backBarButtonItem = backItem
-        
-        
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -48,19 +35,58 @@ class TimeCardViewController: UITableViewController, DatePickerDelegate {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+        var start: String = ""
+        var end: String = ""
+        var duration: String = ""
+        
+        if let startTime = timeCard.startTime {
+            start = startTime.stringified()
+        }
+        
+        if let endTime = timeCard.endTime {
+            end = endTime.stringified()
+        }
 
-        cell.textLabel?.text = "\(descriptions[indexPath.row]): \(times[indexPath.row])"
+        if let timeElapsed = timeCard.duration {
+            duration = timeElapsed
+        }
+        
+        switch indexPath.row {
+        case 0:
+            cell.textLabel?.text = "Start \(start)"
+        case 1:
+            cell.textLabel?.text = "End \(end)"
+        case 2:
+            cell.textLabel?.text = "Duration \(duration)"
+        default:
+            cell.textLabel?.text = ""
+        }
+        
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let datePicker = DatePickerViewController()
+        
         datePicker.delegate = self
         self.indexPath = indexPath.row
-    navigationController?.pushViewController(datePicker, animated: true)
+        if indexPath.row != 2 {
+            navigationController?.pushViewController(datePicker, animated: true)
+        }
 	
+        tableView.reloadData()
+    }
+    
+    func DateTimeSelected(value: Date) {
+        switch indexPath {
+        case 0:
+            timeCard.startTime = value
+        case 1:
+            timeCard.endTime = value
+        default:
+            return
+        }
         tableView.reloadData()
     }
 }

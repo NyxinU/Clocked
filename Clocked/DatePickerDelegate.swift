@@ -10,5 +10,5 @@ import Foundation
 
 protocol DatePickerDelegate {
     var indexPath: Int? { get set }
-    func DateTimeSelected(value: String)
+    func DateTimeSelected(value: Date)
 }
