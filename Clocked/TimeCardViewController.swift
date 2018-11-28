@@ -69,8 +69,22 @@ class TimeCardViewController: UITableViewController, DatePickerDelegate {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let datePicker = DatePickerViewController()
         
+        switch indexPath.row {
+        case 0:
+            if let startTime = timeCard.startTime {
+                datePicker.datePicker.date = startTime
+            }
+        case 1:
+            if let endTime = timeCard.endTime {
+                datePicker.datePicker.date = endTime
+            }
+        default:
+            return 
+        }
+        
         datePicker.delegate = self
         self.indexPath = indexPath.row
+        
         if indexPath.row != 2 {
             navigationController?.pushViewController(datePicker, animated: true)
         }
