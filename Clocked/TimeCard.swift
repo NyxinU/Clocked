@@ -7,11 +7,6 @@
 //
 
 import Foundation
-enum labels: String {
-    case start
-    case end
-    case duration
-}
 
 protocol TimeCardModel {
     var startTime: Date? {get set}

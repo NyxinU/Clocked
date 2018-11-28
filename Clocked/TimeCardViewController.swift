@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+
 class TimeCardViewController: UITableViewController, DatePickerDelegate {
     var indexPath: Int?
     let cellId = "cellId"
@@ -20,6 +21,8 @@ class TimeCardViewController: UITableViewController, DatePickerDelegate {
         tableView.tableFooterView = UIView()
         
         navigationItem.title = "New Entry"
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveTimeCard(_:)))
         
         let backItem = UIBarButtonItem()
         backItem.title = "Cancel"
@@ -35,6 +38,7 @@ class TimeCardViewController: UITableViewController, DatePickerDelegate {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // fix duration touch 
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         var start: String = ""
         var end: String = ""
@@ -68,6 +72,8 @@ class TimeCardViewController: UITableViewController, DatePickerDelegate {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let datePicker = DatePickerViewController()
+        datePicker.delegate = self
+        self.indexPath = indexPath.row
         
         switch indexPath.row {
         case 0:
@@ -81,9 +87,6 @@ class TimeCardViewController: UITableViewController, DatePickerDelegate {
         default:
             return 
         }
-        
-        datePicker.delegate = self
-        self.indexPath = indexPath.row
         
         if indexPath.row != 2 {
             navigationController?.pushViewController(datePicker, animated: true)
@@ -102,5 +105,12 @@ class TimeCardViewController: UITableViewController, DatePickerDelegate {
             return
         }
         tableView.reloadData()
+    }
+    
+    @objc func saveTimeCard(_ sender: UIBarButtonItem) {
+        
+//        delegate?.DateTimeSelected(value: datePicker.date)
+        navigationController?.popViewController(animated: true)
+        
     }
 }
