@@ -12,7 +12,7 @@ import CoreData
 class TimeCardViewController: UITableViewController, DatePickerDelegate {
     var indexPath: Int?
     let cellId = "cellId"
-    var timeCard = TimeCard()
+    var timeCard: TimeCard = TimeCard()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -108,9 +108,32 @@ class TimeCardViewController: UITableViewController, DatePickerDelegate {
     }
     
     @objc func saveTimeCard(_ sender: UIBarButtonItem) {
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return
+        }
         
-//        delegate?.DateTimeSelected(value: datePicker.date)
+        let managedContext =
+            appDelegate.persistentContainer.viewContext
+        
+        let entity = NSEntityDescription.entity(forEntityName: "TimeCards", in: managedContext)!
+        
+        let timeCardObject = NSManagedObject(entity: entity, insertInto: managedContext)
+        
+        if let startTime = timeCard.startTime {
+            timeCardObject.setValue(startTime, forKey: "startTime")
+        }
+        
+        if let endTime = timeCard.endTime {
+            timeCardObject.setValue(endTime, forKey: "endTime")
+        }
+        
+        do {
+            try managedContext.save()
+            print(managedContext.registeredObjects)
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
         navigationController?.popViewController(animated: true)
-        
     }
 }
