@@ -8,7 +8,7 @@
 
 import UIKit
 import CoreData
-class ViewController: UITableViewController {
+class TimeCardsViewController: UITableViewController {
     
     let cellId = "cellId"
     var timecards: [NSManagedObject] = []
@@ -85,7 +85,7 @@ class ViewController: UITableViewController {
     }
     
     @objc func addTimeCardButtonAction(sender: UIButton!) {
-        navigationController?.pushViewController(TimeCardViewController(), animated: true)
+        navigationController?.pushViewController(TimeCardDetailsViewController(), animated: true)
     }
 
 }

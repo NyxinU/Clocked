@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class TimeCardViewController: UITableViewController, DatePickerDelegate {
+class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
     var indexPath: Int?
     let cellId = "cellId"
     var timeCard: TimeCard = TimeCard()
