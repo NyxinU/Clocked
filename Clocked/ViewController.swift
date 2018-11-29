@@ -25,13 +25,38 @@ class ViewController: UITableViewController {
         navigationItem.backBarButtonItem = backItem
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return
+        }
+        
+        let managedContext =
+            appDelegate.persistentContainer.viewContext
+        
+        let fetchRequest =
+            NSFetchRequest<NSManagedObject>(entityName: "TimeCards")
+        
+        do {
+            timecards = try managedContext.fetch(fetchRequest)
+            tableView.reloadData()
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        print(timecards)
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return timecards.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-        
+        let startTime = timecards[indexPath.row].value(forKeyPath: "startTime") as? Date
+        cell.textLabel?.text = startTime?.stringified()
+
         return cell
     }
     

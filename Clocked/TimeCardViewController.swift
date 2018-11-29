@@ -130,7 +130,6 @@ class TimeCardViewController: UITableViewController, DatePickerDelegate {
         
         do {
             try managedContext.save()
-            print(managedContext.registeredObjects)
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
