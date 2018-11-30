@@ -12,11 +12,41 @@ extension Date {
     func stringified() -> String {
         let dateFormatter: DateFormatter = DateFormatter()
         
-        dateFormatter.dateFormat = "MM/dd/yyyy hh:mm a"
+        dateFormatter.dateFormat = "EEE MMM dd, yyyy hh:mm a"
         
-        let StringifiedDate: String = dateFormatter.string(from: self)
+        let stringifiedDate: String = dateFormatter.string(from: self)
         
-        return StringifiedDate
+        return stringifiedDate
+    }
+    
+    func dayOfWeek() -> String {
+        let dateFormatter: DateFormatter = DateFormatter()
+        
+        dateFormatter.dateFormat = "EEE"
+        
+        let dayOfWeek: String = dateFormatter.string(from: self)
+        
+        return dayOfWeek 
+    }
+    
+    func dateAsString() -> String {
+        let dateFormatter: DateFormatter = DateFormatter()
+        
+        dateFormatter.dateFormat = "MMM dd, yyyy"
+        
+        let stringifiedDate: String = dateFormatter.string(from: self)
+        
+        return stringifiedDate
+    }
+    
+    func timeAsString() -> String {
+        let dateFormatter: DateFormatter = DateFormatter()
+        
+        dateFormatter.dateFormat = "hh:mm a"
+        
+        let stringifiedTime: String = dateFormatter.string(from: self)
+        
+        return stringifiedTime
     }
 }
 

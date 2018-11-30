@@ -23,6 +23,7 @@ class DatePickerViewController: UIViewController {
         
         
         datePicker.timeZone = NSTimeZone.local
+        datePicker.datePickerMode = .dateAndTime
 
         datePickerContainer.addSubview(datePicker)
         

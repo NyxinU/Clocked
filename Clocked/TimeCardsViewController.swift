@@ -16,7 +16,7 @@ class TimeCardsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(TimeCardTableViewCell.self, forCellReuseIdentifier: cellId)
         positionAddButton()
         
         // change back button to say cancel 
@@ -53,9 +53,21 @@ class TimeCardsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-        let startTime = timecards[indexPath.row].value(forKeyPath: "startTime") as? Date
-        cell.textLabel?.text = startTime?.stringified()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? TimeCardTableViewCell else {
+            return UITableViewCell() }
+        
+        let startTime: Date? = timecards[indexPath.row].value(forKeyPath: "startTime") as? Date
+        let endTime: Date? = timecards[indexPath.row].value(forKeyPath: "endTime") as? Date
+        
+        let timecard: TimeCard = TimeCard()
+        timecard.startTime = startTime
+        timecard.endTime = endTime
+        
+        cell.startDateLabel.text = "\(startTime?.dayOfWeek() ?? "") \(startTime?.dateAsString() ?? "")"
+        cell.startTimeLabel.text = startTime?.timeAsString()
+        cell.endTimeLabel.text = endTime?.timeAsString()
+        cell.durationLabel.text = timecard.durationAsString
+//        cell.textLabel?.text = startTime?.stringified()
 
         return cell
     }

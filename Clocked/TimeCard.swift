@@ -11,13 +11,23 @@ import Foundation
 protocol TimeCardModel {
     var startTime: Date? {get set}
     var endTime: Date? {get set}
-    var duration: String? {get}
+    var durationInMs: Double? {get}
+    var durationAsString: String? {get}
 }
 
 class TimeCard: TimeCardModel {
     var startTime: Date?
     var endTime: Date?
-    var duration: String? {
+    var durationInMs: Double? {
+        get {
+            if let startTime = startTime, let endTime = endTime {
+                return DateInterval(start: startTime, end: endTime).duration
+            } else {
+                return nil
+            }
+        }
+    }
+    var durationAsString: String? {
         get {
             if let startTime = startTime, let endTime = endTime {
                 let seconds = DateInterval(start: startTime, end: endTime).duration
@@ -27,7 +37,7 @@ class TimeCard: TimeCardModel {
                 
                 return "\(hours) hours \(minutes) minutes"
             } else {
-                return nil
+                return ""
             }
         }
     }

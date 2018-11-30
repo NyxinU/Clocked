@@ -45,14 +45,14 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         var duration: String = ""
         
         if let startTime = timeCard.startTime {
-            start = startTime.stringified()
+            start = "\(startTime.dayOfWeek()) \(startTime.dateAsString()) at \(startTime.timeAsString())"
         }
         
         if let endTime = timeCard.endTime {
-            end = endTime.stringified()
+            end = "\(endTime.dayOfWeek()) \(endTime.dateAsString()) at \(endTime.timeAsString())"
         }
 
-        if let timeElapsed = timeCard.duration {
+        if let timeElapsed = timeCard.durationAsString {
             duration = timeElapsed
         }
         
