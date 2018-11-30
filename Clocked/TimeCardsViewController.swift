@@ -19,10 +19,11 @@ class TimeCardsViewController: UITableViewController {
         tableView.register(TimeCardTableViewCell.self, forCellReuseIdentifier: cellId)
         positionAddButton()
         
-        // change back button to say cancel 
         let backItem = UIBarButtonItem()
         backItem.title = "Cancel"
         navigationItem.backBarButtonItem = backItem
+        
+        tableView.rowHeight = 60
     }
     
     override func viewWillAppear(_ animated: Bool) {

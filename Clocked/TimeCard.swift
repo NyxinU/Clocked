@@ -35,7 +35,7 @@ class TimeCard: TimeCardModel {
                 let hours = Int(seconds / 3600)
                 let minutes = Int((seconds / 60).truncatingRemainder(dividingBy: 60))
                 
-                return "\(hours) hours \(minutes) minutes"
+                return "\(hours) h \(minutes) m"
             } else {
                 return ""
             }
