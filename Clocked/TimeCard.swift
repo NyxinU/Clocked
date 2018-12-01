@@ -11,14 +11,14 @@ import Foundation
 protocol TimeCardModel {
     var startTime: Date? {get set}
     var endTime: Date? {get set}
-    var durationInMs: Double? {get}
+    var durationInMins: Double? {get}
     var durationAsString: String? {get}
 }
 
 class TimeCard: TimeCardModel {
     var startTime: Date?
     var endTime: Date?
-    var durationInMs: Double? {
+    var durationInMins: Double? {
         get {
             if let startTime = startTime, let endTime = endTime {
                 return DateInterval(start: startTime, end: endTime).duration

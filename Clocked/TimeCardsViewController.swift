@@ -12,13 +12,11 @@ class TimeCardsViewController: UITableViewController {
     
     let cellId = "cellId"
     var timecards: [NSManagedObject] = []
-    var total: Double = 0.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.register(TimeCardTableViewCell.self, forCellReuseIdentifier: cellId)
-//        layoutSubviews()
         
         let backItem = UIBarButtonItem()
         backItem.title = "Cancel"
@@ -50,33 +48,20 @@ class TimeCardsViewController: UITableViewController {
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
-        print(timecards)
-    }
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return 1
-        } else {
             return timecards.count
-        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-            cell.textLabel?.text = "Total"
-            return cell
-        }
+        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? TimeCardTableViewCell else {
             return UITableViewCell() }
         
         let startTime: Date? = timecards[indexPath.row].value(forKeyPath: "startTime") as? Date
         let endTime: Date? = timecards[indexPath.row].value(forKeyPath: "endTime") as? Date
-        
+
         let timecard: TimeCard = TimeCard()
         timecard.startTime = startTime
         timecard.endTime = endTime
@@ -85,8 +70,21 @@ class TimeCardsViewController: UITableViewController {
         cell.startTimeLabel.text = startTime?.timeAsString()
         cell.endTimeLabel.text = endTime?.timeAsString()
         cell.durationLabel.text = timecard.durationAsString
-
+        
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let timeCardDetails = TimeCardDetailsViewController()
+        
+        let startTime: Date? = timecards[indexPath.row].value(forKeyPath: "startTime") as? Date
+        let endTime: Date? = timecards[indexPath.row].value(forKeyPath: "endTime") as? Date
+        
+        timeCardDetails.timeCard.startTime = startTime
+        timeCardDetails.timeCard.endTime = endTime
+        
+        navigationController?.pushViewController(timeCardDetails, animated: true)
+        
     }
     
     @objc func addTimeCardButtonAction(_ sender: UIBarButtonItem) {
