@@ -79,10 +79,10 @@ class TimeCardsViewController: UITableViewController {
         
         let startTime: Date? = timecards[indexPath.row].value(forKeyPath: "startTime") as? Date
         let endTime: Date? = timecards[indexPath.row].value(forKeyPath: "endTime") as? Date
-        
+
         timeCardDetails.timeCard.startTime = startTime
         timeCardDetails.timeCard.endTime = endTime
-        
+        timeCardDetails.prevTimeCardObject = timecards[indexPath.row]        
         navigationController?.pushViewController(timeCardDetails, animated: true)
         
     }

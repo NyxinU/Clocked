@@ -12,6 +12,7 @@ import CoreData
 class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
     var indexPath: Int?
     let cellId = "cellId"
+    var prevTimeCardObject: NSManagedObject?
     var timeCard: TimeCard = TimeCard()
     
     override func viewDidLoad() {
@@ -118,7 +119,13 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         
         let entity = NSEntityDescription.entity(forEntityName: "TimeCards", in: managedContext)!
         
-        let timeCardObject = NSManagedObject(entity: entity, insertInto: managedContext)
+        var timeCardObject: NSManagedObject
+        
+        if let prevTimeCardObject = prevTimeCardObject {
+            timeCardObject = prevTimeCardObject
+        } else {
+           timeCardObject = NSManagedObject(entity: entity, insertInto: managedContext)
+        }
         
         if let startTime = timeCard.startTime {
             timeCardObject.setValue(startTime, forKey: "startTime")
