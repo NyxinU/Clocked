@@ -87,6 +87,34 @@ class TimeCardsViewController: UITableViewController {
         
     }
     
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == .delete) {
+            // handle delete (by removing the data from your array and updating the tableview)
+            guard let appDelegate =
+                UIApplication.shared.delegate as? AppDelegate else {
+                    return
+            }
+            
+            let managedContext =
+                appDelegate.persistentContainer.viewContext
+            
+            let timeCardObject: NSManagedObject = timecards[indexPath.row]
+            
+            timecards.remove(at: indexPath.row)
+            managedContext.delete(timeCardObject)
+            do {
+                try managedContext.save()
+                tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: UITableView.RowAnimation.automatic)
+            } catch let error as NSError {
+                print("Could not save. \(error), \(error.userInfo)")
+            }
+        }
+    }
+    
     @objc func addTimeCardButtonAction(_ sender: UIBarButtonItem) {
         navigationController?.pushViewController(TimeCardDetailsViewController(), animated: true)
     }
