@@ -31,15 +31,46 @@ class DatePickerViewController: UIViewController {
     }
     
     @objc func saveDateTime(_ sender: UIBarButtonItem) {
+        if isValidDate() {
+            delegate?.DateTimeSelected(value: datePicker.date)
+            navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    func isValidDate() -> Bool {
+        let indexPath = delegate?.indexPath
         
-        delegate?.DateTimeSelected(value: datePicker.date)
-        navigationController?.popViewController(animated: true)
-        
+        if indexPath == 0 {
+            let endTime = delegate?.timeCard.endTime
+            if let endTime = endTime {
+                if datePicker.date > endTime {
+                    presentAlert()
+                } else {
+                    return true
+                }
+            }
+        } else  {
+            let startTime = delegate?.timeCard.startTime
+            if let startTime = startTime {
+                if startTime > datePicker.date {
+                    presentAlert()
+                } else {
+                    return true
+                }
+            }
+        }
+        return false
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func presentAlert() {
+        let alert = UIAlertController(title: "Alert", message: "Message", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "Click", style: UIAlertAction.Style.default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
     
 }

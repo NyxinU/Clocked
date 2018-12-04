@@ -9,5 +9,7 @@
 import Foundation
 
 protocol DatePickerDelegate {
+    var indexPath: Int? { get }
+    var timeCard: TimeCard { get }
     func DateTimeSelected(value: Date)
 }
