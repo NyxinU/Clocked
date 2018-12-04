@@ -24,15 +24,21 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         navigationItem.title = "New Entry"
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveTimeCard(_:)))
-        if (timeCard.startTime == nil) && (timeCard.endTime == nil) {
-            navigationItem.rightBarButtonItem?.isEnabled = false
-        } else {
-            navigationItem.rightBarButtonItem?.isEnabled = true
-        }
+
         
         let backItem = UIBarButtonItem()
         backItem.title = "Cancel"
         navigationItem.backBarButtonItem = backItem
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+                if (timeCard.startTime == nil) && (timeCard.endTime == nil) {
+                    navigationItem.rightBarButtonItem?.isEnabled = false
+                } else {
+                    navigationItem.rightBarButtonItem?.isEnabled = true
+                }
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
