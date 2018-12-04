@@ -38,10 +38,16 @@ class DatePickerViewController: UIViewController {
     }
     
     func isValidDate() -> Bool {
+        // is it possible to use alert to halt code?
+        let startTime = delegate?.timeCard.startTime
+        let endTime = delegate?.timeCard.endTime
         let indexPath = delegate?.indexPath
         
+        if (startTime == nil) && (endTime == nil) {
+            return true
+        }
+        
         if indexPath == 0 {
-            let endTime = delegate?.timeCard.endTime
             if let endTime = endTime {
                 if datePicker.date > endTime {
                     presentAlert()
@@ -50,7 +56,6 @@ class DatePickerViewController: UIViewController {
                 }
             }
         } else  {
-            let startTime = delegate?.timeCard.startTime
             if let startTime = startTime {
                 if startTime > datePicker.date {
                     presentAlert()
