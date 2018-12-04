@@ -46,8 +46,10 @@ class DatePickerViewController: UIViewController {
         if (startTime == nil) && (endTime == nil) {
             return true
         }
-        
+        // refactor this later
         if indexPath == 0 {
+            // allow editing on new entry 
+            if endTime == nil { return true }
             if let endTime = endTime {
                 if datePicker.date > endTime {
                     presentAlert()
@@ -56,6 +58,7 @@ class DatePickerViewController: UIViewController {
                 }
             }
         } else  {
+            if startTime == nil { return true }
             if let startTime = startTime {
                 if startTime > datePicker.date {
                     presentAlert()
