@@ -18,6 +18,8 @@ class TimeCardsViewController: UITableViewController {
         
         tableView.register(TimeCardTableViewCell.self, forCellReuseIdentifier: cellId)
         
+        navigationItem.title = "Time Cards"
+        
         let backItem = UIBarButtonItem()
         backItem.title = "Cancel"
         navigationItem.backBarButtonItem = backItem
