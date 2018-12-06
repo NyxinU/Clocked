@@ -32,13 +32,13 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-                if (timeCard.startTime == nil) && (timeCard.endTime == nil) {
-                    navigationItem.rightBarButtonItem?.isEnabled = false
-                } else {
-                    navigationItem.rightBarButtonItem?.isEnabled = true
-                }
+        super.viewWillAppear(true)
+
+        if (timeCard.startTime == nil) && (timeCard.endTime == nil) {
+            navigationItem.rightBarButtonItem?.isEnabled = false
+        } else {
+            navigationItem.rightBarButtonItem?.isEnabled = true
+        }
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {

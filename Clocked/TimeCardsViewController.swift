@@ -38,12 +38,12 @@ class TimeCardsViewController: UITableViewController {
         let managedContext =
             appDelegate.persistentContainer.viewContext
         
-        let fetchRequest =
-            NSFetchRequest<NSManagedObject>(entityName: "TimeCards")
+        let fetchRequest = NSFetchRequest<TimeCards>(entityName: "TimeCards")
+        let sort = NSSortDescriptor(key: #keyPath(TimeCards.startTime), ascending: false)
+        fetchRequest.sortDescriptors = [sort]
         
         do {
             timecards = try managedContext.fetch(fetchRequest)
-            timecards = timecards.reversed()
             tableView.reloadData()
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
@@ -110,7 +110,7 @@ class TimeCardsViewController: UITableViewController {
                 try managedContext.save()
                 tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: UITableView.RowAnimation.automatic)
             } catch let error as NSError {
-                print("Could not save. \(error), \(error.userInfo)")
+                print("Could not delete. \(error), \(error.userInfo)")
             }
         }
     }
