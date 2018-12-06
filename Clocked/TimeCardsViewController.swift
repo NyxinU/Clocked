@@ -9,8 +9,17 @@
 import UIKit
 import CoreData
 class TimeCardsViewController: UITableViewController {
+    init (payCycle: NSManagedObject) {
+        self.payCycle = payCycle
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     let cellId = "cellId"
+    let payCycle: NSManagedObject
     var timecards: [NSManagedObject] = []
     
     override func viewDidLoad() {

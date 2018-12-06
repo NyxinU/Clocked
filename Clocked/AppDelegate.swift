@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow()
         window?.makeKeyAndVisible()
         
-        let navController = UINavigationController(rootViewController: TimeCardsViewController())
+        let navController = UINavigationController(rootViewController: PayCyclesViewController())
         
         window?.rootViewController = navController
         return true

@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14460.32" systemVersion="18B75" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="PayCycles" representedClassName="PayCycles" syncable="YES" codeGenerationType="class">
+        <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="timeCards" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TimeCards" inverseName="payCycles" inverseEntity="TimeCards" syncable="YES"/>
     </entity>
     <entity name="TimeCards" representedClassName="TimeCards" syncable="YES" codeGenerationType="class">
         <attribute name="endTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="startTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="payCycles" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PayCycles" inverseName="timeCards" inverseEntity="PayCycles" syncable="YES"/>
     </entity>
     <elements>
-        <element name="PayCycles" positionX="-63" positionY="0" width="128" height="60"/>
-        <element name="TimeCards" positionX="-63" positionY="-18" width="128" height="75"/>
+        <element name="PayCycles" positionX="-63" positionY="0" width="128" height="90"/>
+        <element name="TimeCards" positionX="-63" positionY="-18" width="128" height="90"/>
     </elements>
 </model>
