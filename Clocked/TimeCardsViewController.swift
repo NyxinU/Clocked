@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 class TimeCardsViewController: UITableViewController {
-    init (payCycle: NSManagedObject) {
+    init (payCycle: PayCycles) {
         self.payCycle = payCycle
         super.init(nibName: nil, bundle: nil)
     }
@@ -19,8 +19,8 @@ class TimeCardsViewController: UITableViewController {
     }
     
     let cellId = "cellId"
-    let payCycle: NSManagedObject
-    var timecards: [NSManagedObject] = []
+    let payCycle: PayCycles
+    var timeCards: [TimeCards] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,11 +50,14 @@ class TimeCardsViewController: UITableViewController {
             appDelegate.persistentContainer.viewContext
         
         let fetchRequest = NSFetchRequest<TimeCards>(entityName: "TimeCards")
+        
         let sort = NSSortDescriptor(key: #keyPath(TimeCards.startTime), ascending: false)
+        fetchRequest.predicate = NSPredicate(format: "payCycle == %@", payCycle)
         fetchRequest.sortDescriptors = [sort]
         
+        
         do {
-            timecards = try managedContext.fetch(fetchRequest)
+            timeCards = try managedContext.fetch(fetchRequest)
             tableView.reloadData()
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
@@ -62,7 +65,7 @@ class TimeCardsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return timecards.count
+            return timeCards.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -70,8 +73,8 @@ class TimeCardsViewController: UITableViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? TimeCardTableViewCell else {
             return UITableViewCell() }
         
-        let startTime: Date? = timecards[indexPath.row].value(forKeyPath: "startTime") as? Date
-        let endTime: Date? = timecards[indexPath.row].value(forKeyPath: "endTime") as? Date
+        let startTime: Date? = timeCards[indexPath.row].value(forKeyPath: "startTime") as? Date
+        let endTime: Date? = timeCards[indexPath.row].value(forKeyPath: "endTime") as? Date
 
         let timecard: TimeCard = TimeCard()
         timecard.startTime = startTime
@@ -86,14 +89,14 @@ class TimeCardsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let timeCardDetails = TimeCardDetailsViewController()
+        let timeCardDetails = TimeCardDetailsViewController(payCycle: payCycle, prevTimeCardObject: timeCards[indexPath.row])
         
-        let startTime: Date? = timecards[indexPath.row].value(forKeyPath: "startTime") as? Date
-        let endTime: Date? = timecards[indexPath.row].value(forKeyPath: "endTime") as? Date
+        let startTime: Date? = timeCards[indexPath.row].value(forKeyPath: "startTime") as? Date
+        let endTime: Date? = timeCards[indexPath.row].value(forKeyPath: "endTime") as? Date
 
         timeCardDetails.timeCard.startTime = startTime
         timeCardDetails.timeCard.endTime = endTime
-        timeCardDetails.prevTimeCardObject = timecards[indexPath.row]        
+//        timeCardDetails.prevTimeCardObject = timeCards[indexPath.row]
         navigationController?.pushViewController(timeCardDetails, animated: true)
         
     }
@@ -113,9 +116,9 @@ class TimeCardsViewController: UITableViewController {
             let managedContext =
                 appDelegate.persistentContainer.viewContext
             
-            let timeCardObject: NSManagedObject = timecards[indexPath.row]
+            let timeCardObject: TimeCards = timeCards[indexPath.row]
             
-            timecards.remove(at: indexPath.row)
+            timeCards.remove(at: indexPath.row)
             managedContext.delete(timeCardObject)
             do {
                 try managedContext.save()
@@ -127,7 +130,7 @@ class TimeCardsViewController: UITableViewController {
     }
     
     @objc func addTimeCardButtonAction(_ sender: UIBarButtonItem) {
-        navigationController?.pushViewController(TimeCardDetailsViewController(), animated: true)
+        navigationController?.pushViewController(TimeCardDetailsViewController(payCycle: payCycle, prevTimeCardObject: nil), animated: true)
     }
 
 }

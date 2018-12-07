@@ -24,6 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let navController = UINavigationController(rootViewController: PayCyclesViewController())
         
         window?.rootViewController = navController
+        
         return true
     }
 

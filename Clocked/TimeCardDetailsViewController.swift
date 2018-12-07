@@ -8,11 +8,22 @@
 
 import UIKit
 import CoreData
+import Foundation
 
 class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
+    init (payCycle: PayCycles, prevTimeCardObject: TimeCards?) {
+        self.payCycle = payCycle
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     var indexPath: Int?
     let cellId = "cellId"
-    var prevTimeCardObject: NSManagedObject?
+    let payCycle: PayCycles
+    var prevTimeCardObject: TimeCards?
     var timeCard: TimeCard = TimeCard()
     
     override func viewDidLoad() {
@@ -128,25 +139,25 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         let managedContext =
             appDelegate.persistentContainer.viewContext
         
-        let entity = NSEntityDescription.entity(forEntityName: "TimeCards", in: managedContext)!
-        
-        var timeCardObject: NSManagedObject
+        var timeCardObject: TimeCards
         
         if let prevTimeCardObject = prevTimeCardObject {
             timeCardObject = prevTimeCardObject
         } else {
-           timeCardObject = NSManagedObject(entity: entity, insertInto: managedContext)
+            timeCardObject = TimeCards(context: managedContext)
         }
         
         if let startTime = timeCard.startTime {
-            timeCardObject.setValue(startTime, forKey: "startTime")
+            timeCardObject.startTime = startTime
+            
         }
         
         if let endTime = timeCard.endTime {
-            timeCardObject.setValue(endTime, forKey: "endTime")
+            timeCardObject.endTime = endTime
         }
-        
+
         do {
+            payCycle.addToTimeCards(timeCardObject)
             try managedContext.save()
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")

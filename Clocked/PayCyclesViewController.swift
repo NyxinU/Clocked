@@ -12,7 +12,7 @@ import CoreData
 class PayCyclesViewController: UITableViewController {
     // what does this cellId mean?
     let cellId = "cellId"
-    var payCycles: [NSManagedObject] = []
+    var payCycles: [PayCycles] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +41,6 @@ class PayCyclesViewController: UITableViewController {
         
         do {
             payCycles = try managedContext.fetch(fetchRequest)
-            tableView.reloadData()
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
@@ -52,7 +51,9 @@ class PayCyclesViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+        
         cell.textLabel?.text = "Start: End:"
         return cell 
     }
@@ -63,19 +64,46 @@ class PayCyclesViewController: UITableViewController {
         navigationController?.pushViewController(timeCardViewController, animated: true)
     }
     
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == .delete) {
+            // handle delete (by removing the data from your array and updating the tableview)
+            guard let appDelegate =
+                UIApplication.shared.delegate as? AppDelegate else {
+                    return
+            }
+            
+            let managedContext =
+                appDelegate.persistentContainer.viewContext
+            
+            let payCycleObject: PayCycles = payCycles[indexPath.row]
+            
+            payCycles.remove(at: indexPath.row)
+            managedContext.delete(payCycleObject)
+            do {
+                try managedContext.save()
+                tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: UITableView.RowAnimation.automatic)
+            } catch let error as NSError {
+                print("Could not delete. \(error), \(error.userInfo)")
+            }
+        }
+    }
+    
     @objc func addPayCycleButtonAction(_ sender: UIBarButtonItem) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
         
         let managedContext = appDelegate.persistentContainer.viewContext
-        // how to avoid force unwrapping?
-        let entity = NSEntityDescription.entity(forEntityName: "PayCycles", in: managedContext)!
-        
-        var _: NSManagedObject = NSManagedObject(entity: entity, insertInto: managedContext)
+
+        let _: PayCycles = PayCycles(context: managedContext)
         
         do {
             try managedContext.save()
+            tableView.reloadData()
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
