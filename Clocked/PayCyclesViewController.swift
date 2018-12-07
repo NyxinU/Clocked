@@ -100,12 +100,12 @@ class PayCyclesViewController: UITableViewController {
         
         let managedContext = appDelegate.persistentContainer.viewContext
 
-//        let payCycle: ManagedPayCycle = ManagedPayCycle(context: managedContext)
+        let payCycle: ManagedPayCycle = ManagedPayCycle(context: managedContext)
         
         do {
             try managedContext.save()
-//            payCycles.append(payCycle)
-//            tableView.insertRows(at: [IndexPath(row: payCycles.count, section: 0)], with: .automatic)
+            payCycles.append(payCycle)
+            tableView.insertRows(at: [IndexPath(row: payCycles.count - 1, section: 0)], with: .automatic)
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
