@@ -8,13 +8,13 @@
 
 import Foundation
 
-protocol PayCycleModel {
+protocol PayCycleProtocol {
     var startDate: Date? { get set }
     var endDate: Date? { get set }
     var totalHours: Double? { get }
 }
 
-class PayCycle: PayCycleModel {
+class PayCycle: PayCycleProtocol {
     var startDate: Date?
     var endDate: Date?
     var totalHours: Double?

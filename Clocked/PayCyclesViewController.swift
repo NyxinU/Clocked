@@ -12,7 +12,7 @@ import CoreData
 class PayCyclesViewController: UITableViewController {
     // what does this cellId mean?
     let cellId = "cellId"
-    var payCycles: [PayCycles] = []
+    var payCycles: [ManagedPayCycle] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,7 +37,7 @@ class PayCyclesViewController: UITableViewController {
         
         let managedContext = appDelegate.persistentContainer.viewContext
         
-        let fetchRequest = NSFetchRequest<PayCycles>(entityName: "PayCycles")
+        let fetchRequest = NSFetchRequest<ManagedPayCycle>(entityName: "ManagedPayCycle")
         
         do {
             payCycles = try managedContext.fetch(fetchRequest)
@@ -79,7 +79,7 @@ class PayCyclesViewController: UITableViewController {
             let managedContext =
                 appDelegate.persistentContainer.viewContext
             
-            let payCycleObject: PayCycles = payCycles[indexPath.row]
+            let payCycleObject: ManagedPayCycle = payCycles[indexPath.row]
             
             payCycles.remove(at: indexPath.row)
             managedContext.delete(payCycleObject)
@@ -99,7 +99,7 @@ class PayCyclesViewController: UITableViewController {
         
         let managedContext = appDelegate.persistentContainer.viewContext
 
-        let _: PayCycles = PayCycles(context: managedContext)
+        let _: ManagedPayCycle = ManagedPayCycle(context: managedContext)
         
         do {
             try managedContext.save()

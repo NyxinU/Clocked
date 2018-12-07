@@ -11,7 +11,7 @@ import CoreData
 import Foundation
 
 class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
-    init (payCycle: PayCycles, prevTimeCardObject: TimeCards?) {
+    init (payCycle: ManagedPayCycle, prevTimeCardObject: ManagedTimeCard?) {
         self.payCycle = payCycle
         super.init(nibName: nil, bundle: nil)
     }
@@ -22,8 +22,8 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
     
     var indexPath: Int?
     let cellId = "cellId"
-    let payCycle: PayCycles
-    var prevTimeCardObject: TimeCards?
+    let payCycle: ManagedPayCycle
+    var prevTimeCardObject: ManagedTimeCard?
     var timeCard: TimeCard = TimeCard()
     
     override func viewDidLoad() {
@@ -139,12 +139,12 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         let managedContext =
             appDelegate.persistentContainer.viewContext
         
-        var timeCardObject: TimeCards
+        var timeCardObject: ManagedTimeCard
         
         if let prevTimeCardObject = prevTimeCardObject {
             timeCardObject = prevTimeCardObject
         } else {
-            timeCardObject = TimeCards(context: managedContext)
+            timeCardObject = ManagedTimeCard(context: managedContext)
         }
         
         if let startTime = timeCard.startTime {

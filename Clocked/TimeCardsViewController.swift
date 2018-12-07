@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 class TimeCardsViewController: UITableViewController {
-    init (payCycle: PayCycles) {
+    init (payCycle: ManagedPayCycle) {
         self.payCycle = payCycle
         super.init(nibName: nil, bundle: nil)
     }
@@ -19,8 +19,8 @@ class TimeCardsViewController: UITableViewController {
     }
     
     let cellId = "cellId"
-    let payCycle: PayCycles
-    var timeCards: [TimeCards] = []
+    let payCycle: ManagedPayCycle
+    var timeCards: [ManagedTimeCard] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,9 +49,9 @@ class TimeCardsViewController: UITableViewController {
         let managedContext =
             appDelegate.persistentContainer.viewContext
         
-        let fetchRequest = NSFetchRequest<TimeCards>(entityName: "TimeCards")
+        let fetchRequest = NSFetchRequest<ManagedTimeCard>(entityName: "ManagedTimeCard")
         
-        let sort = NSSortDescriptor(key: #keyPath(TimeCards.startTime), ascending: false)
+        let sort = NSSortDescriptor(key: #keyPath(ManagedTimeCard.startTime), ascending: false)
         fetchRequest.predicate = NSPredicate(format: "payCycle == %@", payCycle)
         fetchRequest.sortDescriptors = [sort]
         
@@ -116,7 +116,7 @@ class TimeCardsViewController: UITableViewController {
             let managedContext =
                 appDelegate.persistentContainer.viewContext
             
-            let timeCardObject: TimeCards = timeCards[indexPath.row]
+            let timeCardObject: ManagedTimeCard = timeCards[indexPath.row]
             
             timeCards.remove(at: indexPath.row)
             managedContext.delete(timeCardObject)

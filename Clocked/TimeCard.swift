@@ -8,14 +8,14 @@
 
 import Foundation
 
-protocol TimeCardModel {
+protocol TimeCardProtocol {
     var startTime: Date? {get set}
     var endTime: Date? {get set}
     var durationInMins: Double? {get}
     var durationAsString: String? {get}
 }
 
-class TimeCard: TimeCardModel {
+class TimeCard: TimeCardProtocol {
     var startTime: Date?
     var endTime: Date?
     var durationInMins: Double? {
