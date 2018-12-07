@@ -18,6 +18,7 @@ class PayCyclesViewController: UITableViewController {
         super.viewDidLoad()
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        tableView.tableFooterView = UIView()
         
         navigationItem.title = "Pay Cycles"
         
@@ -99,11 +100,12 @@ class PayCyclesViewController: UITableViewController {
         
         let managedContext = appDelegate.persistentContainer.viewContext
 
-        let _: ManagedPayCycle = ManagedPayCycle(context: managedContext)
+//        let payCycle: ManagedPayCycle = ManagedPayCycle(context: managedContext)
         
         do {
             try managedContext.save()
-            tableView.reloadData()
+//            payCycles.append(payCycle)
+//            tableView.insertRows(at: [IndexPath(row: payCycles.count, section: 0)], with: .automatic)
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }

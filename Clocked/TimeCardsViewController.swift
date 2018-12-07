@@ -96,7 +96,6 @@ class TimeCardsViewController: UITableViewController {
 
         timeCardDetails.timeCard.startTime = startTime
         timeCardDetails.timeCard.endTime = endTime
-//        timeCardDetails.prevTimeCardObject = timeCards[indexPath.row]
         navigationController?.pushViewController(timeCardDetails, animated: true)
         
     }
@@ -122,7 +121,7 @@ class TimeCardsViewController: UITableViewController {
             managedContext.delete(timeCardObject)
             do {
                 try managedContext.save()
-                tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: UITableView.RowAnimation.automatic)
+                tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: .automatic)
             } catch let error as NSError {
                 print("Could not delete. \(error), \(error.userInfo)")
             }
