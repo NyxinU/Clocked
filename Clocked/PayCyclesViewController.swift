@@ -49,6 +49,7 @@ class PayCyclesViewController: UITableViewController {
             for payCycle in payCycles {
                 print(payCycle)
             }
+            tableView.reloadData()
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
