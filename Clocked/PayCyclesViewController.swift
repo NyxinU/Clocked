@@ -40,8 +40,15 @@ class PayCyclesViewController: UITableViewController {
         
         let fetchRequest = NSFetchRequest<ManagedPayCycle>(entityName: "ManagedPayCycle")
         
+        let sort = NSSortDescriptor(key: #keyPath(ManagedPayCycle.startDate), ascending: false)
+        fetchRequest.sortDescriptors = [sort]
+        
         do {
             payCycles = try managedContext.fetch(fetchRequest)
+            print("=======================================================")
+            for payCycle in payCycles {
+                print(payCycle)
+            }
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
@@ -56,6 +63,11 @@ class PayCyclesViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         
         cell.textLabel?.text = "Start: End:"
+        
+        if let startDate = payCycles[indexPath.row].startDate {
+            cell.textLabel?.text = "Start: \(startDate.dateAsString()) End:"
+        }
+        
         return cell 
     }
     

@@ -54,10 +54,11 @@ class TimeCardsViewController: UITableViewController {
         let sort = NSSortDescriptor(key: #keyPath(ManagedTimeCard.startTime), ascending: false)
         fetchRequest.predicate = NSPredicate(format: "payCycle == %@", payCycle)
         fetchRequest.sortDescriptors = [sort]
-        
-        
         do {
             timeCards = try managedContext.fetch(fetchRequest)
+            if timeCards.count > 0 {
+                updatePayCycleStartDate(firstTimeCard: timeCards[0])
+            }
             tableView.reloadData()
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
@@ -130,6 +131,12 @@ class TimeCardsViewController: UITableViewController {
     
     @objc func addTimeCardButtonAction(_ sender: UIBarButtonItem) {
         navigationController?.pushViewController(TimeCardDetailsViewController(payCycle: payCycle, prevTimeCardObject: nil), animated: true)
+    }
+    
+    func updatePayCycleStartDate(firstTimeCard: ManagedTimeCard) {
+        if let startTime = firstTimeCard.startTime {
+            payCycle.startDate = startTime
+        }
     }
 
 }
