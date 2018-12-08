@@ -149,7 +149,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         
         if let startTime = timeCard.startTime {
             timeCardObject.startTime = startTime
-            
         }
         
         if let endTime = timeCard.endTime {
@@ -157,8 +156,10 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         }
 
         do {
-            payCycle.addToTimeCards(timeCardObject)
             try managedContext.save()
+            if prevTimeCardObject == nil {
+                payCycle.addToTimeCards(timeCardObject)
+            }
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }

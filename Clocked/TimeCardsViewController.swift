@@ -57,7 +57,7 @@ class TimeCardsViewController: UITableViewController {
         do {
             timeCards = try managedContext.fetch(fetchRequest)
             if timeCards.count > 0 {
-                updatePayCycleStartDate(firstTimeCard: timeCards[0])
+                updatePayCycle()
             }
             tableView.reloadData()
         } catch let error as NSError {
@@ -133,9 +133,14 @@ class TimeCardsViewController: UITableViewController {
         navigationController?.pushViewController(TimeCardDetailsViewController(payCycle: payCycle, prevTimeCardObject: nil), animated: true)
     }
     
-    func updatePayCycleStartDate(firstTimeCard: ManagedTimeCard) {
-        if let startTime = firstTimeCard.startTime {
-            payCycle.startDate = startTime
+    func updatePayCycle() {
+        payCycle.startDate = timeCards.last?.startTime
+        
+        for timeCard in timeCards {
+            if let endDate = timeCard.endTime {
+                payCycle.endDate = endDate
+                return
+            }
         }
     }
 

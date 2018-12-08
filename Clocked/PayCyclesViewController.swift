@@ -45,10 +45,6 @@ class PayCyclesViewController: UITableViewController {
         
         do {
             payCycles = try managedContext.fetch(fetchRequest)
-            print("=======================================================")
-            for payCycle in payCycles {
-                print(payCycle)
-            }
             tableView.reloadData()
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
@@ -63,10 +59,13 @@ class PayCyclesViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         
-        cell.textLabel?.text = "Start: End:"
+        cell.textLabel?.text = "New Pay Cycle"
         
-        if let startDate = payCycles[indexPath.row].startDate {
-            cell.textLabel?.text = "Start: \(startDate.dateAsString()) End:"
+        var startDate = payCycles[indexPath.row].startDate?.dateAsString() ?? ""
+        var endDate = payCycles[indexPath.row].endDate?.dateAsString() ?? ""
+        print(payCycles[indexPath.row].endDate)
+        if startDate != "" && endDate != "" {
+           cell.textLabel?.text = "Start: \(startDate)     End: \(endDate)"
         }
         
         return cell 
