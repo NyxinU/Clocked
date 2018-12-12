@@ -21,6 +21,7 @@ class TimeCardsViewController: UITableViewController {
     let cellId = "cellId"
     let payCycle: ManagedPayCycle
     var timeCards: [ManagedTimeCard] = []
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,6 +124,7 @@ class TimeCardsViewController: UITableViewController {
             do {
                 try managedContext.save()
                 tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: .automatic)
+                updatePayCycle()
             } catch let error as NSError {
                 print("Could not delete. \(error), \(error.userInfo)")
             }
@@ -134,15 +136,40 @@ class TimeCardsViewController: UITableViewController {
     }
     
     func updatePayCycle() {
+        var totalHours: Double = 0.0
         payCycle.startDate = timeCards.last?.startTime
         
         for timeCard in timeCards {
             if let endDate = timeCard.endTime {
                 payCycle.endDate = endDate
-                return
+                break
             }
         }
+        
+        for managedTimeCard in timeCards {
+            if let startTime = managedTimeCard.startTime, let endTime = managedTimeCard.endTime {
+                let timeCard = TimeCard()
+                timeCard.startTime = startTime
+                timeCard.endTime = endTime
+                
+                totalHours += timeCard.durationInMins!
+            }
+        }
+        payCycle.totalHours = totalHours
+        
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return
+        }
+        
+        let managedContext =
+            appDelegate.persistentContainer.viewContext
+        
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
     }
-
 }
 
