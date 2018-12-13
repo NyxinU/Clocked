@@ -12,7 +12,18 @@ import CoreData
 class PayCyclesViewController: UITableViewController {
     // what does this cellId mean?
     let cellId = "cellId"
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    let managedContext: NSManagedObjectContext
     var payCycles: [ManagedPayCycle] = []
+    
+    init() {
+        self.managedContext = appDelegate.persistentContainer.viewContext
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,12 +42,6 @@ class PayCyclesViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return
-        }
-        
-        let managedContext = appDelegate.persistentContainer.viewContext
         
         let fetchRequest = NSFetchRequest<ManagedPayCycle>(entityName: "ManagedPayCycle")
         
@@ -88,13 +93,6 @@ class PayCyclesViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
             // handle delete (by removing the data from your array and updating the tableview)
-            guard let appDelegate =
-                UIApplication.shared.delegate as? AppDelegate else {
-                    return
-            }
-            
-            let managedContext =
-                appDelegate.persistentContainer.viewContext
             
             let payCycleObject: ManagedPayCycle = payCycles[indexPath.row]
             
@@ -110,12 +108,6 @@ class PayCyclesViewController: UITableViewController {
     }
     
     @objc func addPayCycleButtonAction(_ sender: UIBarButtonItem) {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return
-        }
-        
-        let managedContext = appDelegate.persistentContainer.viewContext
-
         let payCycle: ManagedPayCycle = ManagedPayCycle(context: managedContext)
         
         do {
@@ -123,7 +115,7 @@ class PayCyclesViewController: UITableViewController {
             payCycles.append(payCycle)
             tableView.insertRows(at: [IndexPath(row: payCycles.count - 1, section: 0)], with: .automatic)
         } catch let error as NSError {
-            print("Could not save. \(error), \(error.userInfo)")
+            print("Could not add. \(error), \(error.userInfo)")
         }
     }
 }

@@ -139,6 +139,8 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         let managedContext =
             appDelegate.persistentContainer.viewContext
         
+    
+        
         var timeCardObject: ManagedTimeCard
         
         if let prevTimeCardObject = prevTimeCardObject {
