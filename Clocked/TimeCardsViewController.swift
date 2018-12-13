@@ -9,7 +9,14 @@
 import UIKit
 import CoreData
 class TimeCardsViewController: UITableViewController {
-    init (payCycle: ManagedPayCycle) {
+    
+    let cellId = "cellId"
+    let managedContext: NSManagedObjectContext
+    let payCycle: ManagedPayCycle
+    var timeCards: [ManagedTimeCard] = []
+    
+    init (payCycle: ManagedPayCycle, managedContext: NSManagedObjectContext) {
+        self.managedContext = managedContext
         self.payCycle = payCycle
         super.init(nibName: nil, bundle: nil)
     }
@@ -17,11 +24,6 @@ class TimeCardsViewController: UITableViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    let cellId = "cellId"
-    let payCycle: ManagedPayCycle
-    var timeCards: [ManagedTimeCard] = []
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,14 +43,6 @@ class TimeCardsViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        guard let appDelegate =
-            UIApplication.shared.delegate as? AppDelegate else {
-                return
-        }
-        
-        let managedContext =
-            appDelegate.persistentContainer.viewContext
         
         let fetchRequest = NSFetchRequest<ManagedTimeCard>(entityName: "ManagedTimeCard")
         
@@ -108,15 +102,7 @@ class TimeCardsViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
-            // handle delete (by removing the data from your array and updating the tableview)
-            guard let appDelegate =
-                UIApplication.shared.delegate as? AppDelegate else {
-                    return
-            }
-            
-            let managedContext =
-                appDelegate.persistentContainer.viewContext
-            
+
             let timeCardObject: ManagedTimeCard = timeCards[indexPath.row]
             
             timeCards.remove(at: indexPath.row)
@@ -156,14 +142,6 @@ class TimeCardsViewController: UITableViewController {
             }
         }
         payCycle.totalHours = totalHours
-        
-        guard let appDelegate =
-            UIApplication.shared.delegate as? AppDelegate else {
-                return
-        }
-        
-        let managedContext =
-            appDelegate.persistentContainer.viewContext
         
         do {
             try managedContext.save()

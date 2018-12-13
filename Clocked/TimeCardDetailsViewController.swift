@@ -11,7 +11,7 @@ import CoreData
 import Foundation
 
 class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
-    init (payCycle: ManagedPayCycle, prevTimeCardObject: ManagedTimeCard?) {
+    init (payCycle: ManagedPayCycle, prevTimeCardObject: ManagedTimeCard?, managedContext: NSManagedObjectContext) {
         self.payCycle = payCycle
         super.init(nibName: nil, bundle: nil)
     }

@@ -81,7 +81,7 @@ class PayCyclesViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let timeCardViewController = TimeCardsViewController(payCycle: payCycles[indexPath.row])
+        let timeCardViewController = TimeCardsViewController(payCycle: payCycles[indexPath.row], managedContext: managedContext)
         
         navigationController?.pushViewController(timeCardViewController, animated: true)
     }

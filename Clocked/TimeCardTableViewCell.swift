@@ -23,6 +23,10 @@ class TimeCardTableViewCell: UITableViewCell {
         addSubview(durationLabel)
     }
     
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -62,9 +66,5 @@ class TimeCardTableViewCell: UITableViewCell {
                 durationLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.5),
                 
         ])
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
