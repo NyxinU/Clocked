@@ -85,7 +85,7 @@ class TimeCardsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let timeCardDetails = TimeCardDetailsViewController(payCycle: payCycle, prevTimeCardObject: timeCards[indexPath.row])
+        let timeCardDetails = TimeCardDetailsViewController(payCycle: payCycle, prevTimeCardObject: timeCards[indexPath.row], managedContext: managedContext)
         
         let startTime: Date? = timeCards[indexPath.row].value(forKeyPath: "startTime") as? Date
         let endTime: Date? = timeCards[indexPath.row].value(forKeyPath: "endTime") as? Date
@@ -118,7 +118,7 @@ class TimeCardsViewController: UITableViewController {
     }
     
     @objc func addTimeCardButtonAction(_ sender: UIBarButtonItem) {
-        navigationController?.pushViewController(TimeCardDetailsViewController(payCycle: payCycle, prevTimeCardObject: nil), animated: true)
+        navigationController?.pushViewController(TimeCardDetailsViewController(payCycle: payCycle, prevTimeCardObject: nil, managedContext: managedContext), animated: true)
     }
     
     func updatePayCycle() {

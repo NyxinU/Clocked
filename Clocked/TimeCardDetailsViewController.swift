@@ -11,7 +11,16 @@ import CoreData
 import Foundation
 
 class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
+    
+    let cellId = "cellId"
+    let managedContext: NSManagedObjectContext
+    let payCycle: ManagedPayCycle
+    var indexPath: Int?
+    var prevTimeCardObject: ManagedTimeCard?
+    var timeCard: TimeCard = TimeCard()
+    
     init (payCycle: ManagedPayCycle, prevTimeCardObject: ManagedTimeCard?, managedContext: NSManagedObjectContext) {
+        self.managedContext = managedContext
         self.payCycle = payCycle
         super.init(nibName: nil, bundle: nil)
     }
@@ -19,13 +28,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    var indexPath: Int?
-    let cellId = "cellId"
-    let payCycle: ManagedPayCycle
-    var prevTimeCardObject: ManagedTimeCard?
-    var timeCard: TimeCard = TimeCard()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -131,16 +134,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
     }
     
     @objc func saveTimeCard(_ sender: UIBarButtonItem) {
-        guard let appDelegate =
-            UIApplication.shared.delegate as? AppDelegate else {
-                return
-        }
-        
-        let managedContext =
-            appDelegate.persistentContainer.viewContext
-        
-    
-        
         var timeCardObject: ManagedTimeCard
         
         if let prevTimeCardObject = prevTimeCardObject {
