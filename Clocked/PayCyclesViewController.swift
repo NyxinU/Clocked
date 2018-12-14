@@ -44,8 +44,8 @@ class PayCyclesViewController: UITableViewController {
         super.viewWillAppear(animated)
         
         let fetchRequest = NSFetchRequest<ManagedPayCycle>(entityName: "ManagedPayCycle")
-        
         let sort = NSSortDescriptor(key: #keyPath(ManagedPayCycle.startDate), ascending: false)
+        
         fetchRequest.sortDescriptors = [sort]
         
         do {
@@ -96,10 +96,10 @@ class PayCyclesViewController: UITableViewController {
             
             let payCycleObject: ManagedPayCycle = payCycles[indexPath.row]
             
-            payCycles.remove(at: indexPath.row)
             managedContext.delete(payCycleObject)
             do {
                 try managedContext.save()
+                payCycles.remove(at: indexPath.row)
                 tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: UITableView.RowAnimation.automatic)
             } catch let error as NSError {
                 print("Could not delete. \(error), \(error.userInfo)")

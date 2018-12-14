@@ -15,6 +15,7 @@
 		500E546321B7072C00214F25 /* PayCycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500E546221B7072C00214F25 /* PayCycle.swift */; };
 		5040C4E2219CD107007C1031 /* TimeCardDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5040C4E1219CD107007C1031 /* TimeCardDetailsViewController.swift */; };
 		5040C4E4219E2F64007C1031 /* DatePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5040C4E3219E2F64007C1031 /* DatePickerViewController.swift */; };
+		5093A81A21C34C4100A7C5A6 /* ManagedTimeCardExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5093A81921C34C4100A7C5A6 /* ManagedTimeCardExtensions.swift */; };
 		50E16722219A750500A3510C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E16721219A750500A3510C /* AppDelegate.swift */; };
 		50E16724219A750500A3510C /* TimeCardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E16723219A750500A3510C /* TimeCardsViewController.swift */; };
 		50E16727219A750500A3510C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50E16725219A750500A3510C /* Main.storyboard */; };
@@ -51,6 +52,7 @@
 		500E546221B7072C00214F25 /* PayCycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayCycle.swift; sourceTree = "<group>"; };
 		5040C4E1219CD107007C1031 /* TimeCardDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardDetailsViewController.swift; sourceTree = "<group>"; };
 		5040C4E3219E2F64007C1031 /* DatePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerViewController.swift; sourceTree = "<group>"; };
+		5093A81921C34C4100A7C5A6 /* ManagedTimeCardExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedTimeCardExtensions.swift; sourceTree = "<group>"; };
 		50E1671E219A750500A3510C /* Clocked.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clocked.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50E16721219A750500A3510C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		50E16723219A750500A3510C /* TimeCardsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardsViewController.swift; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 			children = (
 				50E16721219A750500A3510C /* AppDelegate.swift */,
 				50E16723219A750500A3510C /* TimeCardsViewController.swift */,
+				5093A81921C34C4100A7C5A6 /* ManagedTimeCardExtensions.swift */,
 				500E545E21AF6CB500214F25 /* TimeCardTableViewCell.swift */,
 				5040C4E3219E2F64007C1031 /* DatePickerViewController.swift */,
 				500E545621A52AFC00214F25 /* DatePickerDelegate.swift */,
@@ -283,6 +286,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5093A81A21C34C4100A7C5A6 /* ManagedTimeCardExtensions.swift in Sources */,
 				500E545721A52AFC00214F25 /* DatePickerDelegate.swift in Sources */,
 				500E546321B7072C00214F25 /* PayCycle.swift in Sources */,
 				5040C4E2219CD107007C1031 /* TimeCardDetailsViewController.swift in Sources */,

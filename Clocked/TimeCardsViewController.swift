@@ -38,7 +38,7 @@ class TimeCardsViewController: UITableViewController {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add", style: .plain, target: self, action:#selector(addTimeCardButtonAction(_:)))
         
-        tableView.rowHeight = 60
+//        tableView.rowHeight = 60
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -49,6 +49,7 @@ class TimeCardsViewController: UITableViewController {
         let sort = NSSortDescriptor(key: #keyPath(ManagedTimeCard.startTime), ascending: false)
         fetchRequest.predicate = NSPredicate(format: "payCycle == %@", payCycle)
         fetchRequest.sortDescriptors = [sort]
+        
         do {
             timeCards = try managedContext.fetch(fetchRequest)
             if timeCards.count > 0 {
@@ -68,18 +69,18 @@ class TimeCardsViewController: UITableViewController {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? TimeCardTableViewCell else {
             return UITableViewCell() }
-        
-        let startTime: Date? = timeCards[indexPath.row].value(forKeyPath: "startTime") as? Date
-        let endTime: Date? = timeCards[indexPath.row].value(forKeyPath: "endTime") as? Date
+        let timeCard = timeCards[indexPath.row]
+        let startTime: Date? = timeCard.startTime
+        let endTime: Date? = timeCard.endTime
 
-        let timecard: TimeCard = TimeCard()
-        timecard.startTime = startTime
-        timecard.endTime = endTime
+//        let timecard: TimeCard = TimeCard()
+//        timecard.startTime = startTime
+//        timecard.endTime = endTime
         
         cell.startDateLabel.text = "\(startTime?.dayOfWeek() ?? "") \(startTime?.dateAsString() ?? "")"
         cell.startTimeLabel.text = startTime?.timeAsString()
         cell.endTimeLabel.text = endTime?.timeAsString()
-        cell.durationLabel.text = timecard.durationAsString
+        cell.durationLabel.text = timeCard.durationAsString(start: startTime, end: endTime)
         
         return cell
     }
