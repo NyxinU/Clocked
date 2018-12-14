@@ -71,7 +71,7 @@ class PayCyclesViewController: UITableViewController {
         let totalHours = payCycles[indexPath.row].totalHours
         
         let hours = Int(totalHours / 3600)
-        let minutes = Int((totalHours / 60).truncatingRemainder(dividingBy: 60))
+        let minutes = Int((totalHours / 60) % 60)
         
         if startDate != "" && endDate != "" {
            cell.textLabel?.text = "Start: \(startDate) End: \(endDate) \(hours) h \(minutes) m"

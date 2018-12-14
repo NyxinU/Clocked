@@ -72,10 +72,6 @@ class TimeCardsViewController: UITableViewController {
         let timeCard = timeCards[indexPath.row]
         let startTime: Date? = timeCard.startTime
         let endTime: Date? = timeCard.endTime
-
-//        let timecard: TimeCard = TimeCard()
-//        timecard.startTime = startTime
-//        timecard.endTime = endTime
         
         cell.startDateLabel.text = "\(startTime?.dayOfWeek() ?? "") \(startTime?.dateAsString() ?? "")"
         cell.startTimeLabel.text = startTime?.timeAsString()
@@ -86,13 +82,14 @@ class TimeCardsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let timeCardDetails = TimeCardDetailsViewController(payCycle: payCycle, prevTimeCardObject: timeCards[indexPath.row], managedContext: managedContext)
+        let timeCardDetails = TimeCardDetailsViewController(payCycle: payCycle, prevTimeCard: timeCards[indexPath.row], managedContext: managedContext)
         
-        let startTime: Date? = timeCards[indexPath.row].value(forKeyPath: "startTime") as? Date
-        let endTime: Date? = timeCards[indexPath.row].value(forKeyPath: "endTime") as? Date
-
-        timeCardDetails.timeCard.startTime = startTime
-        timeCardDetails.timeCard.endTime = endTime
+//        let timeCard = timeCards[indexPath.row]
+//        let startTime: Date? = timeCard.startTime
+//        let endTime: Date? = timeCard.endTime
+//
+//        timeCardDetails.timeCard.startTime = startTime
+//        timeCardDetails.timeCard.endTime = endTime
         navigationController?.pushViewController(timeCardDetails, animated: true)
         
     }
@@ -119,12 +116,18 @@ class TimeCardsViewController: UITableViewController {
     }
     
     @objc func addTimeCardButtonAction(_ sender: UIBarButtonItem) {
-        navigationController?.pushViewController(TimeCardDetailsViewController(payCycle: payCycle, prevTimeCardObject: nil, managedContext: managedContext), animated: true)
+        navigationController?.pushViewController(TimeCardDetailsViewController(payCycle: payCycle, prevTimeCard: nil, managedContext: managedContext), animated: true)
     }
     
     func updatePayCycle() {
-        var totalHours: Double = 0.0
-        payCycle.startDate = timeCards.last?.startTime
+        var totalHours: Int = 0
+        
+        for index in stride(from: timeCards.count - 1, through: 0, by: -1) {
+            if let startDate = timeCards[index].startTime {
+                payCycle.startDate = startDate
+                break
+            }
+        }
         
         for timeCard in timeCards {
             if let endDate = timeCard.endTime {
@@ -134,15 +137,11 @@ class TimeCardsViewController: UITableViewController {
         }
         
         for managedTimeCard in timeCards {
-            if let startTime = managedTimeCard.startTime, let endTime = managedTimeCard.endTime {
-                let timeCard = TimeCard()
-                timeCard.startTime = startTime
-                timeCard.endTime = endTime
-                
-                totalHours += timeCard.durationInMins!
+            if let start = managedTimeCard.startTime, let end = managedTimeCard.endTime {
+                totalHours += managedTimeCard.durationBetween(start: start, end: end)
             }
         }
-        payCycle.totalHours = totalHours
+        payCycle.totalHours = Int64(totalHours)
         
         do {
             try managedContext.save()

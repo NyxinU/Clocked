@@ -11,6 +11,16 @@ import UIKit
 class DatePickerViewController: UIViewController {    
     let datePicker: UIDatePicker = UIDatePicker()
     var delegate: DatePickerDelegate?
+    var indexPath: Int
+    
+    init(indexPath: Int) {
+        self.indexPath = indexPath
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +30,6 @@ class DatePickerViewController: UIViewController {
         let datePickerContainer = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
 
         datePickerContainer.backgroundColor = .white
-        
         
         datePicker.timeZone = NSTimeZone.local
         datePicker.datePickerMode = .dateAndTime
@@ -32,24 +41,25 @@ class DatePickerViewController: UIViewController {
     
     @objc func saveDateTime(_ sender: UIBarButtonItem) {
         if isValidDate() {
-            delegate?.DateTimeSelected(value: datePicker.date)
+            delegate?.dateTimeSelected(value: datePicker.date, indexPath: indexPath)
             navigationController?.popViewController(animated: true)
         }
     }
     
     func isValidDate() -> Bool {
         // is it possible to use alert to halt code?
+        
         let startTime = delegate?.timeCard.startTime
         let endTime = delegate?.timeCard.endTime
-        let indexPath = delegate?.indexPath
-        
-        if (startTime == nil) && (endTime == nil) {
+//        let indexPath = delegate?.indexPath
+//
+        if (startTime == nil) || (endTime == nil) {
             return true
         }
-        // refactor this later
+//        // refactor this later
         if indexPath == 0 {
-            // allow editing on new entry 
-            if endTime == nil { return true }
+            // allow editing on new entry
+//            if endTime == nil { return true }
             if let endTime = endTime {
                 if datePicker.date > endTime {
                     presentAlert()
@@ -57,8 +67,8 @@ class DatePickerViewController: UIViewController {
                     return true
                 }
             }
-        } else  {
-            if startTime == nil { return true }
+        } else {
+//            if startTime == nil { return true }
             if let startTime = startTime {
                 if startTime > datePicker.date {
                     presentAlert()
