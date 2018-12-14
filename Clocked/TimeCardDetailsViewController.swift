@@ -52,12 +52,13 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-
+        
         if (timeCard.startTime == nil) && (timeCard.endTime == nil) {
             navigationItem.rightBarButtonItem?.isEnabled = false
         } else {
             navigationItem.rightBarButtonItem?.isEnabled = true
         }
+        
         tableView.reloadData()
     }
     
@@ -104,7 +105,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let datePicker = DatePickerViewController(indexPath: indexPath.row)
         datePicker.delegate = self
-//        self.indexPath = indexPath.row
         
         if let row = Rows(rawValue: indexPath.row) {
             switch row {
@@ -127,13 +127,15 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
     }
     
     func dateTimeSelected(value: Date, indexPath: Int) {
-        switch indexPath {
-        case 0:
-            timeCard.startTime = value
-        case 1:
-            timeCard.endTime = value
-        default:
-            return
+        if let row = Rows(rawValue: indexPath) {
+            switch row {
+            case .start:
+                timeCard.startTime = value
+            case .end:
+                timeCard.endTime = value
+            default:
+                return
+            }
         }
     }
     

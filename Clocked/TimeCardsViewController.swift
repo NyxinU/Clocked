@@ -84,14 +84,7 @@ class TimeCardsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let timeCardDetails = TimeCardDetailsViewController(payCycle: payCycle, prevTimeCard: timeCards[indexPath.row], managedContext: managedContext)
         
-//        let timeCard = timeCards[indexPath.row]
-//        let startTime: Date? = timeCard.startTime
-//        let endTime: Date? = timeCard.endTime
-//
-//        timeCardDetails.timeCard.startTime = startTime
-//        timeCardDetails.timeCard.endTime = endTime
         navigationController?.pushViewController(timeCardDetails, animated: true)
-        
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -101,12 +94,12 @@ class TimeCardsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
 
-            let timeCardObject: ManagedTimeCard = timeCards[indexPath.row]
+            let timeCard: ManagedTimeCard = timeCards[indexPath.row]
             
-            timeCards.remove(at: indexPath.row)
-            managedContext.delete(timeCardObject)
+            managedContext.delete(timeCard)
             do {
                 try managedContext.save()
+                timeCards.remove(at: indexPath.row)
                 tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: .automatic)
                 updatePayCycle()
             } catch let error as NSError {
@@ -141,6 +134,7 @@ class TimeCardsViewController: UITableViewController {
                 totalHours += managedTimeCard.durationBetween(start: start, end: end)
             }
         }
+        
         payCycle.totalHours = Int64(totalHours)
         
         do {

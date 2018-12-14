@@ -33,6 +33,7 @@ class DatePickerViewController: UIViewController {
         
         datePicker.timeZone = NSTimeZone.local
         datePicker.datePickerMode = .dateAndTime
+        datePicker.minuteInterval = 5
 
         datePickerContainer.addSubview(datePicker)
         
@@ -47,37 +48,26 @@ class DatePickerViewController: UIViewController {
     }
     
     func isValidDate() -> Bool {
-        // is it possible to use alert to halt code?
         
         let startTime = delegate?.timeCard.startTime
         let endTime = delegate?.timeCard.endTime
-//        let indexPath = delegate?.indexPath
-//
-        if (startTime == nil) || (endTime == nil) {
-            return true
-        }
-//        // refactor this later
+
         if indexPath == 0 {
-            // allow editing on new entry
-//            if endTime == nil { return true }
             if let endTime = endTime {
                 if datePicker.date > endTime {
                     presentAlert()
-                } else {
-                    return true
+                    return false
                 }
             }
         } else {
-//            if startTime == nil { return true }
             if let startTime = startTime {
                 if startTime > datePicker.date {
                     presentAlert()
-                } else {
-                    return true
+                    return false
                 }
             }
         }
-        return false
+        return true
     }
     
     override func didReceiveMemoryWarning() {
