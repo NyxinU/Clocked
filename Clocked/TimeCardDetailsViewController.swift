@@ -17,10 +17,13 @@ enum Rows: Int {
 class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
     
     let cellId = "cellId"
+    let datePickerCellId = "datePickerCellId"
     let managedContext: NSManagedObjectContext
     let payCycle: ManagedPayCycle
     var timeCard: ManagedTimeCard
     let newTimeCard: Bool
+    var timeCardDetails: [Any] = []
+    var datePickerIndexPath: IndexPath?
 
     init (payCycle: ManagedPayCycle, prevTimeCard: ManagedTimeCard?, managedContext: NSManagedObjectContext) {
         self.managedContext = managedContext
@@ -39,6 +42,9 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         super.viewDidLoad()
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(DatePickerTableViewCell.self,
+                           forCellReuseIdentifier: datePickerCellId)
+        
         tableView.tableFooterView = UIView()
         
         navigationItem.title = "New Entry"
@@ -58,7 +64,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         } else {
             navigationItem.rightBarButtonItem?.isEnabled = true
         }
-        
+        timeCardDetails = [timeCard.startTime as Any, timeCard.endTime as Any, timeCard.hoursAndMins(from: timeCard.startTime, to: timeCard.endTime) as Any]
         tableView.reloadData()
     }
     
@@ -67,64 +73,116 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        if datePickerIndexPath != nil {
+            return timeCardDetails.count + 1
+        } else {
+            return timeCardDetails.count
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // fix duration touch 
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-        let startTime: Date? = timeCard.startTime
-        let endTime: Date? = timeCard.endTime
-
-        var start: String = ""
-        var end: String = ""
-        let duration: String = timeCard.hoursAndMins(from: startTime, to: endTime)
-
-        if let startTime = startTime {
-            start = "\(startTime.dayOfWeek()) \(startTime.dateAsString()) at \(startTime.timeAsString())"
+        if datePickerIndexPath == indexPath {
+            let datePickerCell = tableView.dequeueReusableCell(withIdentifier:   datePickerCellId) as!  DatePickerTableViewCell
+            datePickerCell.updateCell(date: timeCardDetails[indexPath.row - 1] as? Date, indexPath: indexPath)
+            datePickerCell.delegate = self
+            
+            return datePickerCell
+        } else {
+            let dateCell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+//            dateCell.updateText(text: inputTexts[indexPath.row], date:  timeCardDetails[indexPath.row])
+            dateCell.textLabel?.text = "\(timeCardDetails[indexPath.row])"
+            return dateCell
         }
-
-        if let endTime = endTime {
-            end = "\(endTime.dayOfWeek()) \(endTime.dateAsString()) at \(endTime.timeAsString())"
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath == datePickerIndexPath {
+            return 216.0
         }
-
-        if let row = Rows(rawValue: indexPath.row) {
-            switch row {
-            case .start:
-                cell.textLabel?.text = "Start \(start)"
-            case .end:
-                cell.textLabel?.text = "End \(end)"
-            case .duration:
-                cell.textLabel?.text = "Duration \(duration)"
-            }
-        }
-        
-        return cell
+        return UITableView.automaticDimension
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let datePicker = DatePickerViewController(indexPath: indexPath.row)
-        datePicker.delegate = self
-        
-        if let row = Rows(rawValue: indexPath.row) {
-            switch row {
-            case .start:
-                if let startTime = timeCard.startTime {
-                    datePicker.datePicker.date = startTime
-                }
-            case .end:
-                if let endTime = timeCard.endTime {
-                    datePicker.datePicker.date = endTime
-                }
-            case .duration:
-                return
+        tableView.beginUpdates()
+        // 1
+        if let datePickerIndexPath = datePickerIndexPath,   datePickerIndexPath.row - 1 == indexPath.row {
+            tableView.deleteRows(at: [datePickerIndexPath], with: .fade)
+            self.datePickerIndexPath = nil
+        } else {
+            // 2
+            if let datePickerIndexPath = datePickerIndexPath {
+                tableView.deleteRows(at: [datePickerIndexPath], with: .fade)
             }
+            datePickerIndexPath = indexPathToInsertDatePicker(indexPath: indexPath)
+            tableView.insertRows(at: [datePickerIndexPath!], with: .fade)
+            tableView.deselectRow(at: indexPath, animated: true)
         }
-        
-        if indexPath.row != 2 {
-            navigationController?.pushViewController(datePicker, animated: true)
+        tableView.endUpdates()
+    }
+    
+    func indexPathToInsertDatePicker(indexPath: IndexPath) -> IndexPath {
+        if let datePickerIndexPath = datePickerIndexPath, datePickerIndexPath.row < indexPath.row {
+            return indexPath
+        } else {
+            return IndexPath(row: indexPath.row + 1, section: indexPath.section)
         }
     }
+    
+//    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        // fix duration touch
+//        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+//        let startTime: Date? = timeCard.startTime
+//        let endTime: Date? = timeCard.endTime
+//
+//        var start: String = ""
+//        var end: String = ""
+//        let duration: String = timeCard.hoursAndMins(from: startTime, to: endTime)
+//
+//        if let startTime = startTime {
+//            start = "\(startTime.dayOfWeek()) \(startTime.dateAsString()) at \(startTime.timeAsString())"
+//        }
+//
+//        if let endTime = endTime {
+//            end = "\(endTime.dayOfWeek()) \(endTime.dateAsString()) at \(endTime.timeAsString())"
+//        }
+//
+//        if let row = Rows(rawValue: indexPath.row) {
+//            switch row {
+//            case .start:
+//                cell.textLabel?.text = "Start \(start)"
+//            case .end:
+//                cell.textLabel?.text = "End \(end)"
+//            case .duration:
+//                cell.textLabel?.text = "Duration \(duration)"
+//            }
+//        }
+//
+//        return cell
+//    }
+    
+//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let datePicker = DatePickerViewController(indexPath: indexPath.row)
+//        datePicker.delegate = self
+//
+//        if let row = Rows(rawValue: indexPath.row) {
+//            switch row {
+//            case .start:
+//                if let startTime = timeCard.startTime {
+//                    datePicker.datePicker.date = startTime
+//                }
+//            case .end:
+//                if let endTime = timeCard.endTime {
+//                    datePicker.datePicker.date = endTime
+//                }
+//            case .duration:
+//                return
+//            }
+//        }
+//
+//        if indexPath.row != 2 {
+//            navigationController?.pushViewController(datePicker, animated: true)
+//        }
+//    }
     
     func dateTimeSelected(value: Date, indexPath: Int) {
         if let row = Rows(rawValue: indexPath) {
