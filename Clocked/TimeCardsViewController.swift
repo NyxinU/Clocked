@@ -61,14 +61,27 @@ class TimeCardsViewController: UITableViewController {
         }
     }
     
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return timeCards.count
+        if section == 0 {
+            return 1
+        }
+        return timeCards.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? TimeCardTableViewCell else {
             return UITableViewCell() }
+        
+        if indexPath.section == 0 {
+            let totalHours = Int(payCycle.totalHours)
+            cell.textLabel?.text = "Total: \(payCycle.hoursAndMins(from: totalHours))"
+            return cell
+        }
+        
         let timeCard = timeCards[indexPath.row]
         let startTime: Date? = timeCard.startTime
         let endTime: Date? = timeCard.endTime
@@ -76,7 +89,7 @@ class TimeCardsViewController: UITableViewController {
         cell.startDateLabel.text = "\(startTime?.dayOfWeek() ?? "") \(startTime?.dateAsString() ?? "")"
         cell.startTimeLabel.text = startTime?.timeAsString()
         cell.endTimeLabel.text = endTime?.timeAsString()
-        cell.durationLabel.text = timeCard.durationAsString(start: startTime, end: endTime)
+        cell.durationLabel.text = timeCard.hoursAndMins(from: startTime, to: endTime)
         
         return cell
     }
@@ -102,6 +115,7 @@ class TimeCardsViewController: UITableViewController {
                 timeCards.remove(at: indexPath.row)
                 tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: .automatic)
                 updatePayCycle()
+                tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
             } catch let error as NSError {
                 print("Could not delete. \(error), \(error.userInfo)")
             }
@@ -131,7 +145,7 @@ class TimeCardsViewController: UITableViewController {
         
         for managedTimeCard in timeCards {
             if let start = managedTimeCard.startTime, let end = managedTimeCard.endTime {
-                totalHours += managedTimeCard.durationBetween(start: start, end: end)
+                totalHours += managedTimeCard.duration(from: start, to: end)
             }
         }
         

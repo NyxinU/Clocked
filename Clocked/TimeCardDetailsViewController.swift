@@ -78,7 +78,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
 
         var start: String = ""
         var end: String = ""
-        let duration: String = timeCard.durationAsString(start: startTime, end: endTime)
+        let duration: String = timeCard.hoursAndMins(from: startTime, to: endTime)
 
         if let startTime = startTime {
             start = "\(startTime.dayOfWeek()) \(startTime.dateAsString()) at \(startTime.timeAsString())"

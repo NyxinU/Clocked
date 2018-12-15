@@ -66,15 +66,13 @@ class PayCyclesViewController: UITableViewController {
         
         cell.textLabel?.text = "New Pay Cycle"
         
-        let startDate = payCycles[indexPath.row].startDate?.dateAsString() ?? ""
-        let endDate = payCycles[indexPath.row].endDate?.dateAsString() ?? ""
-        let totalHours = payCycles[indexPath.row].totalHours
-        
-        let hours = Int(totalHours / 3600)
-        let minutes = Int((totalHours / 60) % 60)
+        let payCycle: ManagedPayCycle = payCycles[indexPath.row]
+        let startDate: String = payCycle.startDate?.dateAsString() ?? ""
+        let endDate: String = payCycle.endDate?.dateAsString() ?? ""
+        let totalHours: Int = Int(payCycle.totalHours)
         
         if startDate != "" && endDate != "" {
-           cell.textLabel?.text = "Start: \(startDate) End: \(endDate) \(hours) h \(minutes) m"
+           cell.textLabel?.text = "Start: \(startDate) End: \(endDate) \(payCycle.hoursAndMins(from: totalHours))"
         }
         
         return cell 

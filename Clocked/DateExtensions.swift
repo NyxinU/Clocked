@@ -9,16 +9,6 @@
 import UIKit
 
 extension Date {
-    func stringified() -> String {
-        let dateFormatter: DateFormatter = DateFormatter()
-        
-        dateFormatter.dateFormat = "EEE MMM dd, yyyy hh:mm a"
-        
-        let stringifiedDate: String = dateFormatter.string(from: self)
-        
-        return stringifiedDate
-    }
-    
     func dayOfWeek() -> String {
         let dateFormatter: DateFormatter = DateFormatter()
         
