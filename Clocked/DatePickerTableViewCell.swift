@@ -15,6 +15,11 @@ class DatePickerTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        datePicker.timeZone = NSTimeZone.local
+        datePicker.minuteInterval = 5
+        
+        datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
+        
         addSubview(datePicker)
     }
     
@@ -26,5 +31,10 @@ class DatePickerTableViewCell: UITableViewCell {
         if let date = date {
             datePicker.date = date
         }
+    }
+    
+    @objc func datePickerValueChanged(_ sender: UIDatePicker) {
+        delegate?.dateTimeSelected(value: sender.date)
+        print(sender.date)
     }
 }

@@ -15,7 +15,6 @@ enum Rows: Int {
 }
 
 class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
-    
     let cellId = "cellId"
     let datePickerCellId = "datePickerCellId"
     let managedContext: NSManagedObjectContext
@@ -59,11 +58,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        if (timeCard.startTime == nil) && (timeCard.endTime == nil) {
-            navigationItem.rightBarButtonItem?.isEnabled = false
-        } else {
-            navigationItem.rightBarButtonItem?.isEnabled = true
-        }
         timeCardDetails = [timeCard.startTime as Any, timeCard.endTime as Any, timeCard.hoursAndMins(from: timeCard.startTime, to: timeCard.endTime) as Any]
         tableView.reloadData()
     }
@@ -105,7 +99,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.beginUpdates()
         // 1
-        if let datePickerIndexPath = datePickerIndexPath,   datePickerIndexPath.row - 1 == indexPath.row {
+        if let datePickerIndexPath = datePickerIndexPath, datePickerIndexPath.row - 1 == indexPath.row {
             tableView.deleteRows(at: [datePickerIndexPath], with: .fade)
             self.datePickerIndexPath = nil
         } else {
@@ -184,13 +178,18 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
 //        }
 //    }
     
-    func dateTimeSelected(value: Date, indexPath: Int) {
-        if let row = Rows(rawValue: indexPath) {
+    func dateTimeSelected(value: Date) {
+        if let row = Rows(rawValue: datePickerIndexPath!.row - 1) {
+            // refactor
             switch row {
             case .start:
                 timeCard.startTime = value
+                timeCardDetails[datePickerIndexPath!.row - 1] = value
+                tableView.reloadRows(at: [IndexPath(row: datePickerIndexPath!.row - 1, section: datePickerIndexPath!.section)], with: .automatic)
             case .end:
                 timeCard.endTime = value
+                timeCardDetails[datePickerIndexPath!.row - 1] = value
+                tableView.reloadRows(at: [IndexPath(row: datePickerIndexPath!.row - 1, section: datePickerIndexPath!.section)], with: .automatic)
             default:
                 return
             }
