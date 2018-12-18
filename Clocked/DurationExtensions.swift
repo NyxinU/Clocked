@@ -57,12 +57,14 @@ extension Duration {
             time += " "
         }
         
-        // prevent negative hours and minutes 
+        // prevent negative hours and minutes
         if hours < 0 && minutes < 0 {
             minutes *= -1
         }
         
-        if minutes != 0 {
+        if hours != 0 && minutes == 0 {
+            return time
+        } else {
             time += "\(String(minutes))m"
         }
         
