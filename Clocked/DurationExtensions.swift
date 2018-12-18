@@ -28,7 +28,7 @@ extension Duration {
     }
     
     func hoursAndMins(from seconds: Int?) -> String {
-        guard var seconds = seconds else {
+        guard let seconds = seconds else {
             return ""
         }
         // remove last 2 place in seconds
@@ -47,6 +47,7 @@ extension Duration {
     
     func formatTime(hours: Int, minutes: Int) -> String {
         var time = ""
+        var minutes = minutes
         
         if hours != 0 {
             time += "\(String(hours))h"
@@ -54,6 +55,11 @@ extension Duration {
         
         if hours != 0 && minutes != 0 {
             time += " "
+        }
+        
+        // prevent negative hours and minutes 
+        if hours < 0 && minutes < 0 {
+            minutes *= -1
         }
         
         if minutes != 0 {
