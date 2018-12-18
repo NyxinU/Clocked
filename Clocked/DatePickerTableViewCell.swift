@@ -35,6 +35,5 @@ class DatePickerTableViewCell: UITableViewCell {
     
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         delegate?.dateTimeSelected(value: sender.date)
-        print(sender.date)
     }
 }
