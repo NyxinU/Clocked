@@ -17,6 +17,7 @@ class DatePickerTableViewCell: UITableViewCell {
         
         datePicker.timeZone = NSTimeZone.local
         datePicker.minuteInterval = 5
+
         
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
         
@@ -34,6 +35,10 @@ class DatePickerTableViewCell: UITableViewCell {
     }
     
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
-        delegate?.dateTimeSelected(value: sender.date)
+        // set seconds to 00
+        let date = sender.date
+        let ti = floor(date.timeIntervalSinceReferenceDate/60.0) * 60.0
+        let date1 = Date(timeIntervalSinceReferenceDate: ti)
+        delegate?.dateTimeSelected(value: date1)
     }
 }

@@ -95,6 +95,9 @@ class TimeCardsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 0 {
+            return
+        }
         let timeCardDetails = TimeCardDetailsViewController(payCycle: payCycle, prevTimeCard: timeCards[indexPath.row], managedContext: managedContext)
         
         navigationController?.pushViewController(timeCardDetails, animated: true)

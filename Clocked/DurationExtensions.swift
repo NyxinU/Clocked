@@ -15,18 +15,25 @@ protocol Duration {
 
 extension Duration {
     func duration(from start: Date, to end: Date) -> Int {
-        let dateInterval: DateInterval = DateInterval(start: start, end: end)
-        let seconds: Int = Int(dateInterval.duration)
-        return seconds
+        let dateInterval: DateInterval
+        if end < start {
+            dateInterval = DateInterval(start: end, end: start)
+            let seconds: Int = Int(dateInterval.duration)
+            return -seconds
+        } else {
+            dateInterval = DateInterval(start: start, end: end)
+            let seconds: Int = Int(dateInterval.duration)
+            return seconds
+        }
     }
     
     func hoursAndMins(from seconds: Int?) -> String {
-        guard let seconds = seconds else {
+        guard var seconds = seconds else {
             return ""
         }
+        // remove last 2 place in seconds
         let hours = Int(seconds / 3600)
         let minutes = Int((seconds / 60) % 60)
-        
         return formatTime(hours: hours, minutes: minutes)
     }
     
@@ -41,15 +48,15 @@ extension Duration {
     func formatTime(hours: Int, minutes: Int) -> String {
         var time = ""
         
-        if hours > 0 {
+        if hours != 0 {
             time += "\(String(hours))h"
         }
         
-        if hours > 0 && minutes > 0 {
+        if hours != 0 && minutes != 0 {
             time += " "
         }
         
-        if minutes > 0 {
+        if minutes != 0 {
             time += "\(String(minutes))m"
         }
         
