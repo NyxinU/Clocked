@@ -8,12 +8,12 @@
 
 import Foundation
 
-protocol Duration {
-//    func durationBetween(start: Date, end: Date) -> Int
-//    func hoursAndMins(from: Int) -> String
-}
-
-extension Duration {
+//protocol Duration {
+////    func durationBetween(start: Date, end: Date) -> Int
+////    func hoursAndMins(from: Int) -> String
+//}
+//
+//extension Duration {
     func duration(from start: Date, to end: Date) -> Int {
         let dateInterval: DateInterval
         if end < start {
@@ -70,7 +70,8 @@ extension Duration {
         
         return time
     }
-}
-
-extension ManagedTimeCard: Duration {}
-extension ManagedPayCycle: Duration {}
+//}
+//
+//extension ManagedTimeCard: Duration {}
+//extension ManagedPayCycle: Duration {}
+//extension TimeCardDetailsDurationItem: Duration {} 

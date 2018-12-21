@@ -39,6 +39,7 @@ class DatePickerTableViewCell: UITableViewCell {
         let date = sender.date
         let ti = floor(date.timeIntervalSinceReferenceDate/60.0) * 60.0
         let date1 = Date(timeIntervalSinceReferenceDate: ti)
+        
         delegate?.dateTimeSelected(value: date1)
     }
 }

@@ -15,6 +15,8 @@
 		5040C4E4219E2F64007C1031 /* DatePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5040C4E3219E2F64007C1031 /* DatePickerViewController.swift */; };
 		5093A81A21C34C4100A7C5A6 /* DurationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5093A81921C34C4100A7C5A6 /* DurationExtensions.swift */; };
 		5093A81C21C48B2B00A7C5A6 /* DatePickerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5093A81B21C48B2B00A7C5A6 /* DatePickerTableViewCell.swift */; };
+		5093A81E21CB00AD00A7C5A6 /* TimeCardDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5093A81D21CB00AD00A7C5A6 /* TimeCardDetailsVC.swift */; };
+		5093A82021CB013800A7C5A6 /* TimeCardDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5093A81F21CB013800A7C5A6 /* TimeCardDetails.swift */; };
 		50E16722219A750500A3510C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E16721219A750500A3510C /* AppDelegate.swift */; };
 		50E16724219A750500A3510C /* TimeCardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E16723219A750500A3510C /* TimeCardsViewController.swift */; };
 		50E16727219A750500A3510C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50E16725219A750500A3510C /* Main.storyboard */; };
@@ -51,6 +53,8 @@
 		5040C4E3219E2F64007C1031 /* DatePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerViewController.swift; sourceTree = "<group>"; };
 		5093A81921C34C4100A7C5A6 /* DurationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationExtensions.swift; sourceTree = "<group>"; };
 		5093A81B21C48B2B00A7C5A6 /* DatePickerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerTableViewCell.swift; sourceTree = "<group>"; };
+		5093A81D21CB00AD00A7C5A6 /* TimeCardDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardDetailsVC.swift; sourceTree = "<group>"; };
+		5093A81F21CB013800A7C5A6 /* TimeCardDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardDetails.swift; sourceTree = "<group>"; };
 		50E1671E219A750500A3510C /* Clocked.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clocked.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50E16721219A750500A3510C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		50E16723219A750500A3510C /* TimeCardsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardsViewController.swift; sourceTree = "<group>"; };
@@ -123,6 +127,8 @@
 				5093A81B21C48B2B00A7C5A6 /* DatePickerTableViewCell.swift */,
 				500E545621A52AFC00214F25 /* DatePickerDelegate.swift */,
 				5040C4E1219CD107007C1031 /* TimeCardDetailsViewController.swift */,
+				5093A81F21CB013800A7C5A6 /* TimeCardDetails.swift */,
+				5093A81D21CB00AD00A7C5A6 /* TimeCardDetailsVC.swift */,
 				500E546021B7071600214F25 /* PayCyclesViewController.swift */,
 				500E545A21A7786900214F25 /* DateExtensions.swift */,
 				50E16725219A750500A3510C /* Main.storyboard */,
@@ -288,11 +294,13 @@
 				5040C4E2219CD107007C1031 /* TimeCardDetailsViewController.swift in Sources */,
 				5040C4E4219E2F64007C1031 /* DatePickerViewController.swift in Sources */,
 				500E545F21AF6CB600214F25 /* TimeCardTableViewCell.swift in Sources */,
+				5093A82021CB013800A7C5A6 /* TimeCardDetails.swift in Sources */,
 				500E545B21A7786900214F25 /* DateExtensions.swift in Sources */,
 				500E546121B7071600214F25 /* PayCyclesViewController.swift in Sources */,
 				50E16724219A750500A3510C /* TimeCardsViewController.swift in Sources */,
 				5093A81C21C48B2B00A7C5A6 /* DatePickerTableViewCell.swift in Sources */,
 				50E1672A219A750500A3510C /* Clocked.xcdatamodeld in Sources */,
+				5093A81E21CB00AD00A7C5A6 /* TimeCardDetailsVC.swift in Sources */,
 				50E16722219A750500A3510C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
