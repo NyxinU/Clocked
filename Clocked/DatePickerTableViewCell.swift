@@ -27,8 +27,6 @@ class DatePickerTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
-    
     func updateCell(date: Date?, indexPath: IndexPath) {
         if let date = date {
             datePicker.date = date
@@ -38,9 +36,8 @@ class DatePickerTableViewCell: UITableViewCell {
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         // set seconds to 00
         let date = sender.date
-        let ti = floor(date.timeIntervalSinceReferenceDate/60.0) * 60.0
-        let parsedDate = Date(timeIntervalSinceReferenceDate: ti)
+        let newDate = date.setSecondsToZero()
         
-        delegate?.dateTimeSelected(date: parsedDate)
+        delegate?.dateTimeSelected(date: newDate)
     }
 }

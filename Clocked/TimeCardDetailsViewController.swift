@@ -120,11 +120,11 @@ class TimeCardDetailsViewController: UITableViewController {
                 // refactor
                 let times = items[indexPath.section] as! TimeCardDetailsTimesItem
                 if times.times[datePickerIndexPath!.row - 1] == nil {
-                    // fix for crash when delete and reload same at indexPath
+                    // fix for crash when delete and reload at same indexPath
                     tableView.endUpdates()
                     tableView.beginUpdates()
                     
-                    times.times[datePickerIndexPath!.row - 1] = Date().asNearestFiveMin()
+                    times.times[datePickerIndexPath!.row - 1] = Date().roundDownToNearestFiveMin()
                     tableView.reloadRows(at: [IndexPath(row: datePickerIndexPath!.row - 1, section: datePickerIndexPath!.section)], with: .automatic)
                 }
             case .duration:
