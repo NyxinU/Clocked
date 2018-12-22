@@ -49,15 +49,15 @@ class DatePickerTableViewCell: UITableViewCell {
     func updateCell(date: Date?, indexPath: IndexPath) {
         if let date = date {
             datePicker.date = date
-            self.indexPath = indexPath
         }
+        self.indexPath = indexPath
     }
     
     @objc func dateDidChanged(_ sender: UIDatePicker) {
         // set seconds to 00
         let date = sender.date
         let newDate = date.setSecondsToZero()
-        
+
         let indexPathForDisplayDate = IndexPath(row: indexPath.row - 1, section: indexPath.section)
         delegate?.didChangeDate(date: newDate, indexPath: indexPathForDisplayDate)
     }

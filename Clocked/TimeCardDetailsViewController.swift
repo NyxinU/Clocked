@@ -95,6 +95,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         let timeStampsItem = items[indexPath.section] as! TimeCardDetailsTimeStampsItem
         let timeStamps = timeStampsItem.timeStamps
         
+        print("updatedCell")
         datePickerCell.updateCell(date: timeStamps[indexPath.row - 1], indexPath: indexPath)
         datePickerCell.delegate = self
         
