@@ -78,7 +78,7 @@ class TimeCardsViewController: UITableViewController {
         
         if indexPath.section == 0 {
             let totalHours = Int(payCycle.totalHours)
-            cell.textLabel?.text = "Total: \(payCycle.hoursAndMins(from: totalHours))"
+            cell.textLabel?.text = "Total: \(hoursAndMins(from: totalHours))"
             return cell
         }
         
@@ -89,13 +89,14 @@ class TimeCardsViewController: UITableViewController {
         cell.startDateLabel.text = "\(startTime?.dayOfWeek() ?? "") \(startTime?.dateAsString() ?? "")"
         cell.startTimeLabel.text = startTime?.timeAsString()
         cell.endTimeLabel.text = endTime?.timeAsString()
-        cell.durationLabel.text = timeCard.hoursAndMins(from: startTime, to: endTime)
+        cell.durationLabel.text = hoursAndMins(from: startTime, to: endTime)
         
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
+            tableView.deselectRow(at: indexPath, animated: false)
             return
         }
         let timeCardDetails = TimeCardDetailsViewController(payCycle: payCycle, prevTimeCard: timeCards[indexPath.row], managedContext: managedContext)
@@ -104,7 +105,10 @@ class TimeCardsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
+        if indexPath.section != 0 {
+            return true
+        }
+        return false 
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -148,7 +152,7 @@ class TimeCardsViewController: UITableViewController {
         
         for managedTimeCard in timeCards {
             if let start = managedTimeCard.startTime, let end = managedTimeCard.endTime {
-                totalHours += managedTimeCard.duration(from: start, to: end)
+                totalHours += duration(from: start, to: end)
             }
         }
         

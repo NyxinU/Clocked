@@ -38,5 +38,11 @@ extension Date {
         
         return stringifiedTime
     }
+    
+    func asNearestFiveMin() -> Date {
+        let date = self
+        print(date)
+        return date 
+    }
 }
 

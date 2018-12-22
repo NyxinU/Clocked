@@ -10,7 +10,7 @@ import Foundation
 
 class TimeCardDetails {
     var times: [Date?] = []
-    var duration: String
+    var duration: String?
 //    var purchases: [Purchase]()
     
     init(timeCard: ManagedTimeCard) {
@@ -18,7 +18,7 @@ class TimeCardDetails {
         guard let start = timeCard.startTime, let end = timeCard.endTime else {
             return
         }
-        self.duration = hoursAndMins(from: <#T##Date?#>, to: <#T##Date?#>)
+        self.duration = hoursAndMins(from: start, to: end)
     }
 }
 
@@ -65,10 +65,10 @@ class TimeCardDetailsDurationItem: TimeCardDetailsItem {
         return .duration
     }
     
-    var duration: Double?
+    var duration: String?
     
-    init(duration: DateInterval?) {
-        self.duration = duration?.duration
+    init(duration: String?) {
+        self.duration = duration
     }
 }
 

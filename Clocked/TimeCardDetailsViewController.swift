@@ -19,6 +19,7 @@ class TimeCardDetailsViewController: UITableViewController {
     let newTimeCard: Bool
     var datePickerIndexPath: IndexPath?
     let timeCardDetails: TimeCardDetailsModel
+    var items: [TimeCardDetailsItem]
     
     init (payCycle: ManagedPayCycle, prevTimeCard: ManagedTimeCard?, managedContext: NSManagedObjectContext) {
         self.managedContext = managedContext
@@ -26,6 +27,7 @@ class TimeCardDetailsViewController: UITableViewController {
         self.timeCard = prevTimeCard ?? ManagedTimeCard(context: managedContext)
         self.newTimeCard = prevTimeCard == nil
         self.timeCardDetails = TimeCardDetailsModel(timeCard: self.timeCard)
+        self.items = self.timeCardDetails.items
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -37,7 +39,7 @@ class TimeCardDetailsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.register(UITableView.self, forCellReuseIdentifier: cellId)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         tableView.register(DatePickerTableViewCell.self, forCellReuseIdentifier: datePickerCellId)
         
         tableView.tableFooterView = UIView()
@@ -63,7 +65,6 @@ class TimeCardDetailsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let items = timeCardDetails.items
         
         if datePickerIndexPath == indexPath {
             guard let datePickerCell = tableView.dequeueReusableCell(withIdentifier: datePickerCellId) as? DatePickerTableViewCell else {
@@ -71,6 +72,7 @@ class TimeCardDetailsViewController: UITableViewController {
             let times = items[indexPath.section] as! TimeCardDetailsTimesItem
             datePickerCell.updateCell(date: times.times[indexPath.row - 1], indexPath: indexPath)
             datePickerCell.delegate = self
+
             return datePickerCell
         } else {
             // refactor and create custom cells
@@ -79,14 +81,91 @@ class TimeCardDetailsViewController: UITableViewController {
             switch items[indexPath.section].type {
             case .times:
                 let times = items[indexPath.section] as! TimeCardDetailsTimesItem
-                cell.textLabel?.text = "\(times.times[indexPath.row])"
+                cell.textLabel?.text = "\(times.times[indexPath.row]?.timeAsString() ?? "")"
                 return cell
             case .duration:
                 let duration = items[indexPath.section] as! TimeCardDetailsDurationItem
                 // refactor better naming
-                cell.textLabel?.text = duration.hoursAndMins(from: duration.duration.duration)
+                cell.textLabel?.text = duration.duration
+                return cell 
             }
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath == datePickerIndexPath {
+            return 216.0
+        }
+        return UITableView.automaticDimension
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        tableView.beginUpdates()
+        
+        // close date picker if open
+        if let datePickerIndexPath = datePickerIndexPath, datePickerIndexPath.row - 1 == indexPath.row {
+            tableView.deleteRows(at: [datePickerIndexPath], with: .fade)
+            self.datePickerIndexPath = nil
+            tableView.deselectRow(at: indexPath, animated: true)
+        } else {
+            switch items[indexPath.section].type {
+            case .times:
+                if let datePickerIndexPath = datePickerIndexPath {
+                    tableView.deleteRows(at: [datePickerIndexPath], with: .fade)
+                }
+                datePickerIndexPath = indexPathToInsertDatePicker(indexPath: indexPath)
+                tableView.insertRows(at: [datePickerIndexPath!], with: .fade)
+                tableView.deselectRow(at: indexPath, animated: true)
+                // refactor
+                let times = items[indexPath.section] as! TimeCardDetailsTimesItem
+                if times.times[datePickerIndexPath!.row - 1] == nil {
+                    // fix for crash when delete and reload same at indexPath
+                    tableView.endUpdates()
+                    tableView.beginUpdates()
+                    
+                    times.times[datePickerIndexPath!.row - 1] = Date().asNearestFiveMin()
+                    tableView.reloadRows(at: [IndexPath(row: datePickerIndexPath!.row - 1, section: datePickerIndexPath!.section)], with: .automatic)
+                }
+            case .duration:
+                tableView.deselectRow(at: indexPath, animated: false)
+            }
+        }
+        tableView.endUpdates()
+    }
+    
+    func indexPathToInsertDatePicker(indexPath: IndexPath) -> IndexPath {
+        if let datePickerIndexPath = datePickerIndexPath, datePickerIndexPath.row < indexPath.row {
+            return indexPath
+        } else {
+            return IndexPath(row: indexPath.row + 1, section: indexPath.section)
+        }
+    }
+    
+    func dateTimeSelected(date: Date) {
+        let section = datePickerIndexPath!.section
+        let row = datePickerIndexPath!.row - 1
+        let times = items[section] as! TimeCardDetailsTimesItem
+        
+        times.times[row] = date
+        
+        tableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .automatic)
+        updateDuration()
+    }
+    
+    func updateDuration() {
+        let section = datePickerIndexPath!.section
+        let times = items[section] as! TimeCardDetailsTimesItem
+        
+        guard let start = times.times[0], let end = times.times[1] else {
+            return
+        }
+        
+        let timeCardDetailsDurationItem = items[1] as! TimeCardDetailsDurationItem
+        
+        timeCardDetailsDurationItem.duration = hoursAndMins(from: start, to: end)
+        
+        tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
     }
     
     @objc func saveTimeCard(_ sender: UIBarButtonItem) {

@@ -72,7 +72,7 @@ class PayCyclesViewController: UITableViewController {
         let totalHours: Int = Int(payCycle.totalHours)
         
         if startDate != "" && endDate != "" {
-           cell.textLabel?.text = "Start: \(startDate) End: \(endDate) \(payCycle.hoursAndMins(from: totalHours))"
+           cell.textLabel?.text = "Start: \(startDate) End: \(endDate) \(hoursAndMins(from: totalHours))"
         }
         
         return cell 

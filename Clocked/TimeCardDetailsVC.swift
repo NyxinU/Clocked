@@ -154,7 +154,7 @@ class TimeCardDetailsVC: UITableViewController, DatePickerDelegate {
             return
         }
         
-        timeCardDetails[1][0] = timeCard.hoursAndMins(from: start, to: end)
+        timeCardDetails[1][0] = hoursAndMins(from: start, to: end)
         
         tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
     }
