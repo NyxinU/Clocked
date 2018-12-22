@@ -14,7 +14,7 @@ enum Rows: Int {
     case start = 0, end, duration
 }
 
-class TimeCardDetailsVC: UITableViewController, DatePickerDelegate {
+class TimeCardDetailsVC: UITableViewController {
     let cellId = "cellId"
     let datePickerCellId = "datePickerCellId"
     let managedContext: NSManagedObjectContext

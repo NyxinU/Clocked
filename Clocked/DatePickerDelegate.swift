@@ -10,6 +10,6 @@ import Foundation
 
 protocol DatePickerDelegate {
     var timeCard: ManagedTimeCard { get }
-    func dateTimeSelected(value: Date)
+    func didChangeDate(date: Date, indexPath: IndexPath)
     var datePickerIndexPath: IndexPath? { get set }
 }

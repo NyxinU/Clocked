@@ -10,7 +10,19 @@ import UIKit
 
 class DatePickerTableViewCell: UITableViewCell {
     let datePicker: UIDatePicker = UIDatePicker()
-    var delegate: TimeCardDetailsViewController?
+    weak var delegate: TimeCardDetailsViewController?
+    var indexPath: IndexPath!
+    static let height: CGFloat = 216.0
+    
+    // Reuser identifier
+    static func reuseIdentifier() -> String {
+        return "DatePickerTableViewCellIdentifier"
+    }
+    
+    // Nib name
+//    static func nibName() -> String {
+//        return "DatePickerTableViewCell"
+//    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -18,7 +30,7 @@ class DatePickerTableViewCell: UITableViewCell {
         datePicker.timeZone = NSTimeZone.local
         datePicker.minuteInterval = 5
         
-        datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
+        datePicker.addTarget(self, action: #selector(dateDidChanged(_:)), for: .valueChanged)
         
         addSubview(datePicker)
     }
@@ -27,17 +39,26 @@ class DatePickerTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        
+        // Configure the view for the selected state
+    }
+    
+    
     func updateCell(date: Date?, indexPath: IndexPath) {
         if let date = date {
             datePicker.date = date
+            self.indexPath = indexPath
         }
     }
     
-    @objc func datePickerValueChanged(_ sender: UIDatePicker) {
+    @objc func dateDidChanged(_ sender: UIDatePicker) {
         // set seconds to 00
         let date = sender.date
         let newDate = date.setSecondsToZero()
         
-        delegate?.dateTimeSelected(date: newDate)
+        let indexPathForDisplayDate = IndexPath(row: indexPath.row - 1, section: indexPath.section)
+        delegate?.didChangeDate(date: newDate, indexPath: indexPathForDisplayDate)
     }
 }

@@ -9,12 +9,12 @@
 import Foundation
 
 class TimeCardDetails {
-    var times: [Date?] = []
+    var timeStamps: [Date?] = []
     var duration: String?
 //    var purchases: [Purchase]()
     
     init(timeCard: ManagedTimeCard) {
-        self.times = [timeCard.startTime, timeCard.endTime]
+        self.timeStamps = [timeCard.startTime, timeCard.endTime]
         guard let start = timeCard.startTime, let end = timeCard.endTime else {
             return
         }
@@ -28,7 +28,7 @@ class TimeCardDetails {
 //}
 
 enum TimeCardDetailsItemType {
-    case times
+    case timeStamps
     case duration
 //    case purchases
 }
@@ -44,19 +44,23 @@ extension TimeCardDetailsItem {
     }
 }
 
-class TimeCardDetailsTimesItem: TimeCardDetailsItem {
+class TimeCardDetailsTimeStampsItem: TimeCardDetailsItem {
     var type: TimeCardDetailsItemType {
-        return .times
+        return .timeStamps
     }
     
     var rowCount: Int {
         return 2
     }
     
-    var times: [Date?]
+    var timeStamps: [Date?]
     
-    init(times: [Date?]) {
-        self.times = times
+    init(timeStamps: [Date?]) {
+        self.timeStamps = timeStamps
+    }
+    
+    func save(new timeStamps: [Date?]) {
+        self.timeStamps = timeStamps
     }
 }
 
@@ -78,8 +82,8 @@ class TimeCardDetailsModel: NSObject {
     init(timeCard: ManagedTimeCard) {
         let timeCardDetails = TimeCardDetails(timeCard: timeCard)
         
-        let times = TimeCardDetailsTimesItem(times: timeCardDetails.times)
-        items.append(times)
+        let timeStamps = TimeCardDetailsTimeStampsItem(timeStamps: timeCardDetails.timeStamps)
+        items.append(timeStamps)
         
         let duration = TimeCardDetailsDurationItem(duration: timeCardDetails.duration)
         
