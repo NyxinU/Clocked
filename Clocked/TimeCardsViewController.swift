@@ -111,9 +111,10 @@ class TimeCardsViewController: UITableViewController {
         return false 
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle:
+        UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
-
+//            tableView.beginUpdates()
             let timeCard: ManagedTimeCard = timeCards[indexPath.row]
             
             managedContext.delete(timeCard)

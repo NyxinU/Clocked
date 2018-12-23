@@ -95,7 +95,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         let timeStampsItem = items[indexPath.section] as! TimeCardDetailsTimeStampsItem
         let timeStamps = timeStampsItem.timeStamps
         
-        print("updatedCell")
         datePickerCell.updateCell(date: timeStamps[indexPath.row - 1], indexPath: indexPath)
         datePickerCell.delegate = self
         
@@ -187,7 +186,34 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
     }
     
     @objc func saveTimeCard(_ sender: UIBarButtonItem) {
+        let timeStampsItem = items[0] as! TimeCardDetailsTimeStampsItem
+        let timeStamps = timeStampsItem.timeStamps
         
+        if let start = timeStamps[0], let end = timeStamps[1] {
+            if duration(from: start, to: end) < 0 {
+                presentAlert()
+                return
+            }
+        }
+        
+        timeCard.startTime = timeStamps[0]
+        timeCard.endTime = timeStamps[1]
+        
+        do {
+            try managedContext.save()
+            if newTimeCard {
+                payCycle.addToTimeCards(timeCard)
+            }
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
+        navigationController?.popViewController(animated: true)
+    }
+    
+    func presentAlert() {
+        let alert = UIAlertController(title: "Invalid Time", message: "Entry's end cannot be before it's start.", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 }
 
