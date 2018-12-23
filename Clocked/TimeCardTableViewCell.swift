@@ -14,6 +14,10 @@ class TimeCardTableViewCell: UITableViewCell {
     let endTimeLabel = UILabel()
     let durationLabel = UILabel()
     
+    static func reuseIdentifier() -> String {
+        return "TimeCardTableViewCellIdentifier"
+    }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         

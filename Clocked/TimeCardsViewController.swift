@@ -28,7 +28,8 @@ class TimeCardsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.register(TimeCardTableViewCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(TimeCardTableViewCell.self, forCellReuseIdentifier: TimeCardTableViewCell.reuseIdentifier())
         
         navigationItem.title = "Time Cards"
         
@@ -73,25 +74,28 @@ class TimeCardsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? TimeCardTableViewCell else {
-            return UITableViewCell() }
-        
         if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
             let totalHours = Int(payCycle.totalHours)
+            
             cell.textLabel?.text = "Total: \(hoursAndMins(from: totalHours))"
+            
+            return cell
+        } else {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: TimeCardTableViewCell.reuseIdentifier()) as? TimeCardTableViewCell else {
+                return UITableViewCell()
+            }
+            let timeCard = timeCards[indexPath.row]
+            let startTime: Date? = timeCard.startTime
+            let endTime: Date? = timeCard.endTime
+            
+            cell.startDateLabel.text = "\(startTime?.dayOfWeek() ?? "") \(startTime?.dateAsString() ?? "")"
+            cell.startTimeLabel.text = startTime?.timeAsString()
+            cell.endTimeLabel.text = endTime?.timeAsString()
+            cell.durationLabel.text = hoursAndMins(from: startTime, to: endTime)
+            
             return cell
         }
-        
-        let timeCard = timeCards[indexPath.row]
-        let startTime: Date? = timeCard.startTime
-        let endTime: Date? = timeCard.endTime
-        
-        cell.startDateLabel.text = "\(startTime?.dayOfWeek() ?? "") \(startTime?.dateAsString() ?? "")"
-        cell.startTimeLabel.text = startTime?.timeAsString()
-        cell.endTimeLabel.text = endTime?.timeAsString()
-        cell.durationLabel.text = hoursAndMins(from: startTime, to: endTime)
-        
-        return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -114,20 +118,24 @@ class TimeCardsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle:
         UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
-//            tableView.beginUpdates()
+            tableView.beginUpdates()
+            
             let timeCard: ManagedTimeCard = timeCards[indexPath.row]
             
             managedContext.delete(timeCard)
+
             do {
                 try managedContext.save()
                 timeCards.remove(at: indexPath.row)
-                tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: .automatic)
+                tableView.deleteRows(at: [indexPath], with: .automatic)
                 updatePayCycle()
                 tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
             } catch let error as NSError {
                 print("Could not delete. \(error), \(error.userInfo)")
             }
         }
+        tableView.endUpdates()
+        print(timeCards)
     }
     
     @objc func addTimeCardButtonAction(_ sender: UIBarButtonItem) {
