@@ -50,6 +50,10 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         let backItem = UIBarButtonItem()
         backItem.title = "Cancel"
         navigationItem.backBarButtonItem = backItem
+        
+        if newTimeCard {
+            navigationItem.rightBarButtonItem?.isEnabled = false
+        }
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -119,6 +123,9 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         } else {
             switch items[indexPath.section].type {
             case .timeStamps:
+                // allow save after one time has been selected
+                navigationItem.rightBarButtonItem?.isEnabled = true
+                
                 // close prev date picker
                 if let datePickerIndexPath = datePickerIndexPath {
                     tableView.deleteRows(at: [datePickerIndexPath], with: .automatic)
