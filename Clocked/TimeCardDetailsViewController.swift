@@ -111,6 +111,12 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
                 cell.textLabel?.text = durationItem.duration
                 return cell
             case .purchases:
+                print(indexPath)
+                if indexPath.row == items[indexPath.section].rowCount {
+                    cell.textLabel?.text = "Add Purchase"
+                } else {
+                   cell.textLabel?.text = "purchase details"
+                }
                 return cell 
             }
         }
@@ -140,7 +146,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         
         // close open date picker
         if let datePickerIndexPath = datePickerIndexPath, datePickerIndexPath.row - 1 == indexPath.row {
-            tableView.deleteRows(at: [datePickerIndexPath], with: .automatic)
+            tableView.deleteRows(at: [datePickerIndexPath], with: .fade)
             self.datePickerIndexPath = nil
             tableView.deselectRow(at: indexPath, animated: true)
         } else {
@@ -175,6 +181,14 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
             case .duration:
                 tableView.deselectRow(at: indexPath, animated: false)
             case .purchases:
+                if indexPath.row == items[indexPath.section].rowCount {
+//                    tableView.endUpdates()
+//                    tableView.beginUpdates()
+                    
+                    let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
+                    purchaseItem.addToManagedPurchases(newPurchase: ManagedPurchase(context: managedContext))
+                    tableView.insertRows(at: [IndexPath(row: indexPath.row - 1, section: indexPath.section)], with: .automatic)
+                }
                 tableView.deselectRow(at: indexPath, animated: false)
             }
         }

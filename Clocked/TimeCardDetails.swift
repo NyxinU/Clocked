@@ -39,10 +39,10 @@ class TimeCardDetails {
 }
 
 class Purchase {
-    var name: String
+    var name: String?
     var price: Double?
 
-    init(name: String, price: Double?) {
+    init(name: String?, price: Double?) {
         self.name = name
         self.price = price
     }
@@ -98,12 +98,18 @@ class TimeCardDetailsPurchaseItem: TimeCardDetailsItem {
         return .purchases
     }
     
-    let rowCount: Int = 0
+    var rowCount: Int
     
     var managedPurchases: [ManagedPurchase]
     
     init(managedPurchases: [ManagedPurchase]) {
         self.managedPurchases = managedPurchases
+        self.rowCount = managedPurchases.count 
+    }
+    
+    func addToManagedPurchases(newPurchase: ManagedPurchase) {
+        managedPurchases.append(newPurchase)
+        rowCount = managedPurchases.count
     }
 }
 
