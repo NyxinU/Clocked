@@ -59,12 +59,6 @@ protocol TimeCardDetailsItem {
     var rowCount: Int { get }
 }
 
-extension TimeCardDetailsItem {
-    var rowCount: Int {
-        return 1
-    }
-}
-
 class TimeCardDetailsTimeStampsItem: TimeCardDetailsItem {
     var type: TimeCardDetailsItemType {
         return .timeStamps
@@ -90,6 +84,8 @@ class TimeCardDetailsDurationItem: TimeCardDetailsItem {
         return .duration
     }
     
+    let rowCount: Int = 1
+    
     var duration: String?
     
     init(duration: String?) {
@@ -101,6 +97,8 @@ class TimeCardDetailsPurchaseItem: TimeCardDetailsItem {
     var type: TimeCardDetailsItemType {
         return .purchases
     }
+    
+    let rowCount: Int = 0
     
     var managedPurchases: [ManagedPurchase]
     

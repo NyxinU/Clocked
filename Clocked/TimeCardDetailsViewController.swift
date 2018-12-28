@@ -79,19 +79,10 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         return UIView.init(frame: CGRect.zero)
     }
     
-//    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-//        switch items[section].type {
-//        case .timeStamps:
-//            return "Time Stamps"
-//        case .duration:
-//            return "Duration"
-//        case .purchases:
-//            return "Purchases"
-//        }
-//    }
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if items[section].type == .timeStamps && datePickerIndexPath != nil {
+            return items[section].rowCount + 1
+        } else if items[section].type == .purchases {
             return items[section].rowCount + 1
         }
         return items[section].rowCount
