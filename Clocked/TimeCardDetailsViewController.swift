@@ -25,7 +25,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         self.payCycle = payCycle
         self.timeCard = prevTimeCard ?? ManagedTimeCard(context: managedContext)
         self.newTimeCard = (prevTimeCard == nil)
-        self.timeCardDetails = TimeCardDetailsModel(timeCard: self.timeCard)
+        self.timeCardDetails = TimeCardDetailsModel(timeCard: self.timeCard, managedContext: managedContext)
         self.items = self.timeCardDetails.items
         
         super.init(nibName: nil, bundle: nil)
@@ -40,8 +40,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         tableView.register(DatePickerTableViewCell.self, forCellReuseIdentifier: DatePickerTableViewCell.reuseIdentifier())
-        
-        tableView.tableFooterView = UIView()
         
         navigationItem.title = "New Entry"
         
@@ -59,6 +57,38 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
     override func numberOfSections(in tableView: UITableView) -> Int {
         return items.count
     }
+    
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footerView = UIView()
+        
+        let backgroundColor = #colorLiteral(red: 0.9800000191, green: 0.9800000191, blue: 0.9800000191, alpha: 1)
+        footerView.backgroundColor = backgroundColor
+        
+        return footerView
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 0.01
+    }
+    
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return UIView.init(frame: CGRect.zero)
+    }
+    
+//    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//        switch items[section].type {
+//        case .timeStamps:
+//            return "Time Stamps"
+//        case .duration:
+//            return "Duration"
+//        case .purchases:
+//            return "Purchases"
+//        }
+//    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if items[section].type == .timeStamps && datePickerIndexPath != nil {
@@ -88,6 +118,8 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
                 
                 // refactor better naming
                 cell.textLabel?.text = durationItem.duration
+                return cell
+            case .purchases:
                 return cell 
             }
         }
@@ -128,10 +160,10 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
                 
                 // close prev date picker
                 if let datePickerIndexPath = datePickerIndexPath {
-                    tableView.deleteRows(at: [datePickerIndexPath], with: .automatic)
+                    tableView.deleteRows(at: [datePickerIndexPath], with: .fade)
                 }
                 datePickerIndexPath = indexPathToInsertDatePicker(indexPath: indexPath)
-                tableView.insertRows(at: [datePickerIndexPath!], with: .automatic)
+                tableView.insertRows(at: [datePickerIndexPath!], with: .fade)
                 tableView.deselectRow(at: indexPath, animated: true)
                 
                 // add current time to cell if empty
@@ -150,6 +182,8 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
                     updateDuration()
                 }
             case .duration:
+                tableView.deselectRow(at: indexPath, animated: false)
+            case .purchases:
                 tableView.deselectRow(at: indexPath, animated: false)
             }
         }

@@ -7,30 +7,51 @@
 //
 
 import Foundation
+import CoreData
 
 class TimeCardDetails {
     var timeStamps: [Date?] = []
     var duration: String?
-//    var purchases: [Purchase]()
+    var purchases: [ManagedPurchase] = []
     
-    init(timeCard: ManagedTimeCard) {
+    init(timeCard: ManagedTimeCard, managedContext: NSManagedObjectContext) {
         self.timeStamps = [timeCard.startTime, timeCard.endTime]
-        guard let start = timeCard.startTime, let end = timeCard.endTime else {
-            return
+        if let start = timeCard.startTime, let end = timeCard.endTime {
+            self.duration = hoursAndMins(from: start, to: end)
         }
-        self.duration = hoursAndMins(from: start, to: end)
+        self.purchases = fetchPurchases(timeCard: timeCard, managedContext: managedContext)
+    }
+    
+    func fetchPurchases(timeCard: ManagedTimeCard, managedContext: NSManagedObjectContext) -> [ManagedPurchase] {
+        var purchases: [ManagedPurchase] = []
+        let fetchRequest = NSFetchRequest<ManagedPurchase>(entityName: "ManagedPurchase")
+        
+        fetchRequest.predicate = NSPredicate(format: "timeCard == %@", timeCard)
+        
+        do {
+            purchases = try managedContext.fetch(fetchRequest)
+            return purchases
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        return []
     }
 }
 
-//class Purchase {
-//    var name: String?
-//    var price: Double?
-//}
+class Purchase {
+    var name: String
+    var price: Double?
+
+    init(name: String, price: Double?) {
+        self.name = name
+        self.price = price
+    }
+}
 
 enum TimeCardDetailsItemType {
     case timeStamps
     case duration
-//    case purchases
+    case purchases
 }
 
 protocol TimeCardDetailsItem {
@@ -76,17 +97,31 @@ class TimeCardDetailsDurationItem: TimeCardDetailsItem {
     }
 }
 
+class TimeCardDetailsPurchaseItem: TimeCardDetailsItem {
+    var type: TimeCardDetailsItemType {
+        return .purchases
+    }
+    
+    var managedPurchases: [ManagedPurchase]
+    
+    init(managedPurchases: [ManagedPurchase]) {
+        self.managedPurchases = managedPurchases
+    }
+}
+
 class TimeCardDetailsModel: NSObject {
     var items = [TimeCardDetailsItem]()
     
-    init(timeCard: ManagedTimeCard) {
-        let timeCardDetails = TimeCardDetails(timeCard: timeCard)
+    init(timeCard: ManagedTimeCard, managedContext: NSManagedObjectContext) {
+        let timeCardDetails = TimeCardDetails(timeCard: timeCard, managedContext: managedContext)
         
         let timeStamps = TimeCardDetailsTimeStampsItem(timeStamps: timeCardDetails.timeStamps)
         items.append(timeStamps)
         
         let duration = TimeCardDetailsDurationItem(duration: timeCardDetails.duration)
-        
         items.append(duration)
+        
+        let purchases = TimeCardDetailsPurchaseItem(managedPurchases: timeCardDetails.purchases)
+        items.append(purchases)
     }
 }
