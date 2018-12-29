@@ -111,7 +111,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
                 cell.textLabel?.text = durationItem.duration
                 return cell
             case .purchases:
-                print(indexPath)
                 if indexPath.row == items[indexPath.section].rowCount {
                     cell.textLabel?.text = "Add Purchase"
                 } else {
@@ -187,7 +186,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
                     
                     let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
                     purchaseItem.addToManagedPurchases(newPurchase: ManagedPurchase(context: managedContext))
-                    tableView.insertRows(at: [IndexPath(row: indexPath.row - 1, section: indexPath.section)], with: .automatic)
+                    tableView.insertRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: .automatic)
                 }
                 tableView.deselectRow(at: indexPath, animated: false)
             }
