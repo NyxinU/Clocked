@@ -135,7 +135,6 @@ class TimeCardsViewController: UITableViewController {
             }
         }
         tableView.endUpdates()
-        print(timeCards)
     }
     
     @objc func addTimeCardButtonAction(_ sender: UIBarButtonItem) {

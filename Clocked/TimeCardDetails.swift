@@ -111,6 +111,11 @@ class TimeCardDetailsPurchaseItem: TimeCardDetailsItem {
         managedPurchases.append(newPurchase)
         rowCount = managedPurchases.count
     }
+    
+    func removeFromManagedPurchases(at index: Int) {
+        managedPurchases.remove(at: index)
+        rowCount = managedPurchases.count
+    }
 }
 
 class TimeCardDetailsModel: NSObject {

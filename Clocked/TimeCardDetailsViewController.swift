@@ -52,6 +52,19 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         if newTimeCard {
             navigationItem.rightBarButtonItem?.isEnabled = false
         }
+        
+        //Looks for single or multiple taps.
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        
+        //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
+        tap.cancelsTouchesInView = false
+        
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        //Causes the view (or orne of its embedded text fields) to resign the first responder status.
+        view.endEditing(true)
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -114,7 +127,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
                 if indexPath.row == items[indexPath.section].rowCount {
                     cell.textLabel?.text = "Add Purchase"
                 } else {
-                   cell.textLabel?.text = "purchase details"
+                   return PurchaseTableViewCell()
                 }
                 return cell 
             }
@@ -138,6 +151,39 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
             return DatePickerTableViewCell.height
         }
         return UITableView.automaticDimension
+    }
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        let item = items[indexPath.section]
+        
+        if item.type == .purchases && item.rowCount != indexPath.row {
+            return true
+        }
+        return false
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == .delete) {
+            tableView.beginUpdates()
+            
+            let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
+            
+            var purchases = purchaseItem.managedPurchases
+            
+            let purchase = purchases[indexPath.row]
+            
+            managedContext.delete(purchase)
+            
+            do {
+                try managedContext.save()
+                purchaseItem.removeFromManagedPurchases(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+            } catch let error as NSError {
+                print("Could not delete. \(error), \(error.userInfo)")
+            }
+            
+            tableView.endUpdates()
+        }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -187,6 +233,8 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
                     let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
                     purchaseItem.addToManagedPurchases(newPurchase: ManagedPurchase(context: managedContext))
                     tableView.insertRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: .automatic)
+                } else {
+                   
                 }
                 tableView.deselectRow(at: indexPath, animated: false)
             }
