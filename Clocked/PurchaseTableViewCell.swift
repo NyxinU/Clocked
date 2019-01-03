@@ -40,15 +40,15 @@ class PurchaseTextField: UITextField, UITextFieldDelegate {
             self.frame = CGRect(x: 20, y: 0, width: 180, height: 40)
             self.placeholder = "Item Name"
             self.keyboardType = UIKeyboardType.default
+            self.clearButtonMode = UITextField.ViewMode.whileEditing
         case .price:
             self.frame = CGRect(x: 220, y: 0, width: 180, height: 40)
-            self.placeholder = "$0"
+            self.placeholder = "$0.00"
             self.keyboardType = UIKeyboardType.numberPad
         }
         
         self.autocorrectionType = UITextAutocorrectionType.no
         self.returnKeyType = UIReturnKeyType.done
-        self.clearButtonMode = UITextField.ViewMode.whileEditing
         self.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
         self.delegate = self
     }
@@ -58,19 +58,21 @@ class PurchaseTextField: UITextField, UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        // called when 'return' key pressed. return NO to ignore.
-        print("TextField should return method called")
         textField.resignFirstResponder()
         return true
     }
 }
 
 class PriceTextField: PurchaseTextField {
-    var amountTypedString: String?
+    var amountTypedString: String = ""
     init() {
         super.init(option: .price)
         
-        self.amountTypedString = self.text ?? ""
+        if let text = self.text {
+            self.amountTypedString = text
+        }
+        
+        self.textAlignment = .right
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -78,32 +80,31 @@ class PriceTextField: PurchaseTextField {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let formatter = NumberFormatter()
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 2
-        
         if string.count > 0 {
-            amountTypedString = amountTypedString! + string
-            let decNumber = NSDecimalNumber(string: amountTypedString).multiplying(by: 0.01)
-            let newString = "$" + formatter.string(from: decNumber)!
-            textField.text = newString
+            amountTypedString = amountTypedString + string
+            let amount = formatAsCurrency(from: amountTypedString)
+            textField.text = amount
         } else {
-            amountTypedString = String(amountTypedString!.dropLast())
-            if amountTypedString!.count > 0 {
-                let decNumber = NSDecimalNumber(string: amountTypedString).multiplying(by: 0.01)
-                let newString = "$" +  formatter.string(from: decNumber)!
-                textField.text = newString
+            amountTypedString = String(amountTypedString.dropLast())
+            if amountTypedString.count > 0 {
+                let amount = formatAsCurrency(from: amountTypedString)
+                textField.text = amount
             } else {
-                textField.text = "$0.00"
+                textField.text = ""
             }
-            
         }
         return false
-        
     }
     
-    func textFieldShouldClear(_ textField: UITextField) -> Bool {
-        amountTypedString = ""
-        return true
+    func formatAsCurrency(from string: String) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.locale = Locale.current
+        
+        let decNumber = NSDecimalNumber(string: string).multiplying(by: 0.01)
+        let currency = formatter.string(from: decNumber)!
+        
+        return currency
     }
+    
 }
