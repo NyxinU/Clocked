@@ -12,7 +12,6 @@
 		500E545F21AF6CB600214F25 /* TimeCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500E545E21AF6CB500214F25 /* TimeCardTableViewCell.swift */; };
 		500E546121B7071600214F25 /* PayCyclesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500E546021B7071600214F25 /* PayCyclesViewController.swift */; };
 		5040C4E2219CD107007C1031 /* TimeCardDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5040C4E1219CD107007C1031 /* TimeCardDetailsViewController.swift */; };
-		5040C4E4219E2F64007C1031 /* DatePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5040C4E3219E2F64007C1031 /* DatePickerViewController.swift */; };
 		5093A81A21C34C4100A7C5A6 /* DurationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5093A81921C34C4100A7C5A6 /* DurationExtensions.swift */; };
 		5093A81C21C48B2B00A7C5A6 /* DatePickerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5093A81B21C48B2B00A7C5A6 /* DatePickerTableViewCell.swift */; };
 		5093A82021CB013800A7C5A6 /* TimeCardDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5093A81F21CB013800A7C5A6 /* TimeCardDetails.swift */; };
@@ -50,7 +49,6 @@
 		500E545E21AF6CB500214F25 /* TimeCardTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardTableViewCell.swift; sourceTree = "<group>"; };
 		500E546021B7071600214F25 /* PayCyclesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayCyclesViewController.swift; sourceTree = "<group>"; };
 		5040C4E1219CD107007C1031 /* TimeCardDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardDetailsViewController.swift; sourceTree = "<group>"; };
-		5040C4E3219E2F64007C1031 /* DatePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerViewController.swift; sourceTree = "<group>"; };
 		5093A81921C34C4100A7C5A6 /* DurationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationExtensions.swift; sourceTree = "<group>"; };
 		5093A81B21C48B2B00A7C5A6 /* DatePickerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerTableViewCell.swift; sourceTree = "<group>"; };
 		5093A81F21CB013800A7C5A6 /* TimeCardDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardDetails.swift; sourceTree = "<group>"; };
@@ -123,7 +121,6 @@
 				50E16723219A750500A3510C /* TimeCardsViewController.swift */,
 				5093A81921C34C4100A7C5A6 /* DurationExtensions.swift */,
 				500E545E21AF6CB500214F25 /* TimeCardTableViewCell.swift */,
-				5040C4E3219E2F64007C1031 /* DatePickerViewController.swift */,
 				5093A81B21C48B2B00A7C5A6 /* DatePickerTableViewCell.swift */,
 				500E545621A52AFC00214F25 /* DatePickerDelegate.swift */,
 				5040C4E1219CD107007C1031 /* TimeCardDetailsViewController.swift */,
@@ -293,7 +290,6 @@
 				500E545721A52AFC00214F25 /* DatePickerDelegate.swift in Sources */,
 				5040C4E2219CD107007C1031 /* TimeCardDetailsViewController.swift in Sources */,
 				5093A82221D6CE2000A7C5A6 /* PurchaseTableViewCell.swift in Sources */,
-				5040C4E4219E2F64007C1031 /* DatePickerViewController.swift in Sources */,
 				500E545F21AF6CB600214F25 /* TimeCardTableViewCell.swift in Sources */,
 				5093A82021CB013800A7C5A6 /* TimeCardDetails.swift in Sources */,
 				500E545B21A7786900214F25 /* DateExtensions.swift in Sources */,
