@@ -12,7 +12,7 @@ import CoreData
 class TimeCardDetails {
     var timeStamps: [Date?] = []
     var duration: String?
-    var purchases: [ManagedPurchase] = []
+    var purchases: [Purchase] = []
     
     init(timeCard: ManagedTimeCard, managedContext: NSManagedObjectContext) {
         self.timeStamps = [timeCard.startTime, timeCard.endTime]
@@ -22,14 +22,15 @@ class TimeCardDetails {
         self.purchases = fetchPurchases(timeCard: timeCard, managedContext: managedContext)
     }
     
-    func fetchPurchases(timeCard: ManagedTimeCard, managedContext: NSManagedObjectContext) -> [ManagedPurchase] {
-        var purchases: [ManagedPurchase] = []
+    func fetchPurchases(timeCard: ManagedTimeCard, managedContext: NSManagedObjectContext) -> [Purchase] {
+        var purchases: [Purchase] = []
         let fetchRequest = NSFetchRequest<ManagedPurchase>(entityName: "ManagedPurchase")
         
         fetchRequest.predicate = NSPredicate(format: "timeCard == %@", timeCard)
         
         do {
-            purchases = try managedContext.fetch(fetchRequest)
+            let managedPurchases = try managedContext.fetch(fetchRequest)
+            purchases = managedPurchases.map { Purchase(name: $0.name, price: $0.price, isNew: false)}
             return purchases
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
@@ -39,12 +40,14 @@ class TimeCardDetails {
 }
 
 class Purchase {
+    var isNew: Bool
     var name: String?
     var price: Double?
 
-    init(name: String?, price: Double?) {
+    init(name: String?, price: Double?, isNew bool: Bool) {
         self.name = name
         self.price = price
+        self.isNew = bool
     }
 }
 
@@ -100,21 +103,21 @@ class TimeCardDetailsPurchaseItem: TimeCardDetailsItem {
     
     var rowCount: Int
     
-    var managedPurchases: [ManagedPurchase]
+    var purchases: [Purchase]
     
-    init(managedPurchases: [ManagedPurchase]) {
-        self.managedPurchases = managedPurchases
-        self.rowCount = managedPurchases.count 
+    init(purchases: [Purchase]) {
+        self.purchases = purchases
+        self.rowCount = purchases.count
     }
     
-    func addToManagedPurchases(newPurchase: ManagedPurchase) {
-        managedPurchases.append(newPurchase)
-        rowCount = managedPurchases.count
+    func addToPurchases(newPurchase: Purchase) {
+        purchases.append(newPurchase)
+        rowCount = purchases.count
     }
     
-    func removeFromManagedPurchases(at index: Int) {
-        managedPurchases.remove(at: index)
-        rowCount = managedPurchases.count
+    func removeFromPurchases(at index: Int) {
+        purchases.remove(at: index)
+        rowCount = purchases.count
     }
 }
 
@@ -130,7 +133,7 @@ class TimeCardDetailsModel: NSObject {
         let duration = TimeCardDetailsDurationItem(duration: timeCardDetails.duration)
         items.append(duration)
         
-        let purchases = TimeCardDetailsPurchaseItem(managedPurchases: timeCardDetails.purchases)
+        let purchases = TimeCardDetailsPurchaseItem(purchases: timeCardDetails.purchases)
         items.append(purchases)
     }
 }

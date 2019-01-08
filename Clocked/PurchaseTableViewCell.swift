@@ -15,12 +15,19 @@ enum PurchaseTextFieldOptions {
 }
 
 class PurchaseTableViewCell: UITableViewCell {
+    var itemNameTextField: PurchaseTextField
+    var priceTextField: PriceTextField
+    
+    static func reuseIdentifier() -> String {
+        return "PurchaseTableViewCellIdentifier"
+    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        let itemNameTextField = PurchaseTextField(option: .name)
-        let priceTextField = PriceTextField()
+        self.itemNameTextField = PurchaseTextField(option: .name)
+        self.priceTextField = PriceTextField()
+        
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         addSubview(itemNameTextField)
         addSubview(priceTextField)
@@ -35,6 +42,7 @@ class PurchaseTextField: UITextField, UITextFieldDelegate {
     init(frame: CGRect = CGRect.zero, option: PurchaseTextFieldOptions) {
         super.init(frame: frame)
         
+        // use auto layout instead of adjusting frame
         switch option {
         case .name:
             self.frame = CGRect(x: 20, y: 0, width: 180, height: 40)
@@ -95,7 +103,9 @@ class PriceTextField: PurchaseTextField {
         }
         return false
     }
-    
+}
+
+extension PriceTextField {
     func formatAsCurrency(from string: String) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
@@ -106,5 +116,4 @@ class PriceTextField: PurchaseTextField {
         
         return currency
     }
-    
 }

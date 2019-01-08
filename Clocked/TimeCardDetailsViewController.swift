@@ -40,6 +40,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         tableView.register(DatePickerTableViewCell.self, forCellReuseIdentifier: DatePickerTableViewCell.reuseIdentifier())
+        tableView.register(PurchaseTableViewCell.self, forCellReuseIdentifier: PurchaseTableViewCell.reuseIdentifier())
         
         navigationItem.title = "New Entry"
         
@@ -127,7 +128,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
                 if indexPath.row == items[indexPath.section].rowCount {
                     cell.textLabel?.text = "Add Purchase"
                 } else {
-                   return PurchaseTableViewCell()
+
                 }
                 return cell 
             }
@@ -144,6 +145,13 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         datePickerCell.delegate = self
         
         return datePickerCell
+    }
+    
+    func setupPurchaseCell(managedPurchase: ManagedPurchase?) -> UITableViewCell {
+        guard let purchaseCell = tableView.dequeueReusableCell(withIdentifier: PurchaseTableViewCell.reuseIdentifier()) as? PurchaseTableViewCell else {
+            return UITableViewCell()
+        }
+
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -164,25 +172,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
-            tableView.beginUpdates()
-            
-            let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
-            
-            var purchases = purchaseItem.managedPurchases
-            
-            let purchase = purchases[indexPath.row]
-            
-            managedContext.delete(purchase)
-            
-            do {
-                try managedContext.save()
-                purchaseItem.removeFromManagedPurchases(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath], with: .automatic)
-            } catch let error as NSError {
-                print("Could not delete. \(error), \(error.userInfo)")
-            }
-            
-            tableView.endUpdates()
+
         }
     }
     
@@ -226,17 +216,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
             case .duration:
                 tableView.deselectRow(at: indexPath, animated: false)
             case .purchases:
-                if indexPath.row == items[indexPath.section].rowCount {
-//                    tableView.endUpdates()
-//                    tableView.beginUpdates()
-                    
-                    let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
-                    purchaseItem.addToManagedPurchases(newPurchase: ManagedPurchase(context: managedContext))
-                    tableView.insertRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: .automatic)
-                } else {
-                   
-                }
-                tableView.deselectRow(at: indexPath, animated: false)
+
             }
         }
         tableView.endUpdates()
