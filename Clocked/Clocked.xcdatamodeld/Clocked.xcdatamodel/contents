@@ -15,7 +15,7 @@
         <attribute name="endTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="startTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="payCycle" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ManagedPayCycle" inverseName="timeCards" inverseEntity="ManagedPayCycle" syncable="YES"/>
-        <relationship name="purchases" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ManagedPurchase" inverseName="timeCard" inverseEntity="ManagedPurchase" syncable="YES"/>
+        <relationship name="purchases" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ManagedPurchase" inverseName="timeCard" inverseEntity="ManagedPurchase" syncable="YES"/>
     </entity>
     <elements>
         <element name="ManagedPayCycle" positionX="128.31640625" positionY="-18.94921875" width="128" height="105"/>

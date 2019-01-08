@@ -37,7 +37,6 @@ class TimeCardsViewController: UITableViewController {
         backItem.title = "Cancel"
         navigationItem.backBarButtonItem = backItem
         backItem.target = self
-        backItem.action = #selector(rollbackManagedContext)
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add", style: .plain, target: self, action:#selector(addTimeCardButtonAction(_:)))
         
@@ -173,10 +172,6 @@ class TimeCardsViewController: UITableViewController {
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
-    }
-    
-    @objc func rollbackManagedContext() {
-        managedContext.rollback()
     }
 }
 
