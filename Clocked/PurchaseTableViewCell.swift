@@ -15,15 +15,13 @@ enum PurchaseTextFieldOptions {
 }
 
 class PurchaseTableViewCell: UITableViewCell {
-    var itemNameTextField: PurchaseTextField
-    var priceTextField: PriceTextField
-    
+    let itemNameTextField: PurchaseTextField
+    let priceTextField: PriceTextField
     static func reuseIdentifier() -> String {
         return "PurchaseTableViewCellIdentifier"
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        
         self.itemNameTextField = PurchaseTextField(option: .name)
         self.priceTextField = PriceTextField()
         
@@ -59,26 +57,28 @@ class PurchaseTextField: UITextField, UITextFieldDelegate {
         self.returnKeyType = UIReturnKeyType.done
         self.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
         self.delegate = self
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        return true
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
+    
 }
 
 class PriceTextField: PurchaseTextField {
     var amountTypedString: String = ""
     init() {
-        super.init(option: .price)
-        
-        if let text = self.text {
-            self.amountTypedString = text
-        }
+        super.init(frame: .zero, option: .price)
         
         self.textAlignment = .right
     }
@@ -87,7 +87,8 @@ class PriceTextField: PurchaseTextField {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    override func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        print(amountTypedString)
         if string.count > 0 {
             amountTypedString = amountTypedString + string
             let amount = formatAsCurrency(from: amountTypedString)

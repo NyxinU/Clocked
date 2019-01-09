@@ -128,7 +128,10 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
                 if indexPath.row == items[indexPath.section].rowCount {
                     cell.textLabel?.text = "Add Purchase"
                 } else {
-
+                    let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
+                    let managedPurchases = purchaseItem.managedPurchases
+                    
+                    return setupPurchaseCell(managedPurchase: managedPurchases[indexPath.row])
                 }
                 return cell 
             }
@@ -147,11 +150,12 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         return datePickerCell
     }
     
-    func setupPurchaseCell(managedPurchase: ManagedPurchase?) -> UITableViewCell {
+    func setupPurchaseCell(managedPurchase: ManagedPurchase) -> UITableViewCell {
         guard let purchaseCell = tableView.dequeueReusableCell(withIdentifier: PurchaseTableViewCell.reuseIdentifier()) as? PurchaseTableViewCell else {
             return UITableViewCell()
         }
-
+        purchaseCell.itemNameTextField.text = managedPurchase.name
+        return purchaseCell
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -216,7 +220,12 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
             case .duration:
                 tableView.deselectRow(at: indexPath, animated: false)
             case .purchases:
-
+                let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
+                
+                if purchaseItem.rowCount == indexPath.row {
+                    purchaseItem.addTomanagedPurchases(newPurchase: ManagedPurchase(context: managedContext))
+                    tableView.insertRows(at: [indexPath], with: .automatic)
+                }
             }
         }
         tableView.endUpdates()
@@ -261,6 +270,8 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
     @objc func saveTimeCard(_ sender: UIBarButtonItem) {
         let timeStampsItem = items[0] as! TimeCardDetailsTimeStampsItem
         let timeStamps = timeStampsItem.timeStamps
+        let purchaseItem = items[2] as! TimeCardDetailsPurchaseItem
+        let managedPurchases = purchaseItem.managedPurchases
         
         if let start = timeStamps[0], let end = timeStamps[1] {
             if duration(from: start, to: end) < 0 {
@@ -274,9 +285,21 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         
         do {
             try managedContext.save()
+            try managedContext.parent?.save()
             if newTimeCard {
                 payCycle.addToTimeCards(timeCard)
             }
+            
+            let cells = self.tableView.visibleCells as! Array<UITableViewCell>
+            
+            for cell in cells {
+                print(cell.subviews)
+            }
+//            if purchaseItem.indexOfMostRecentPurchase < purchaseItem.rowCount {
+//                for idx in purchaseItem.indexOfMostRecentPurchase..<purchaseItem.rowCount {
+//                    timeCard.addToPurchases(managedPurchases[idx])
+//                }
+//            }
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }

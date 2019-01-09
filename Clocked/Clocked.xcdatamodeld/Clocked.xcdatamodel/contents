@@ -8,7 +8,7 @@
     </entity>
     <entity name="ManagedPurchase" representedClassName="ManagedPurchase" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="price" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="price" optional="YES" attributeType="Double" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="timeCard" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ManagedTimeCard" inverseName="purchases" inverseEntity="ManagedTimeCard" syncable="YES"/>
     </entity>
     <entity name="ManagedTimeCard" representedClassName="ManagedTimeCard" syncable="YES" codeGenerationType="class">
