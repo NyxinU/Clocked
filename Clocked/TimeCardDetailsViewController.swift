@@ -128,7 +128,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
                 if indexPath.row == items[indexPath.section].rowCount {
                     cell.textLabel?.text = "Add Purchase"
                 } else {
-                    return setupPurchaseCell()
+                    return setupPurchaseCell(forIndexPath: indexPath)
                 }
                 return cell 
             }
@@ -147,10 +147,15 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         return datePickerCell
     }
     
-    func setupPurchaseCell() -> UITableViewCell {
+    func setupPurchaseCell(forIndexPath indexPath: IndexPath) -> UITableViewCell {
         guard let purchaseCell = tableView.dequeueReusableCell(withIdentifier: PurchaseTableViewCell.reuseIdentifier()) as? PurchaseTableViewCell else {
             return UITableViewCell()
         }
+        let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
+        let purchases = purchaseItem.purchases
+        let purchase = purchases[indexPath.row]
+        
+        purchaseCell.itemNameTextField.text = purchase.name
         
         return purchaseCell
     }
@@ -219,7 +224,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
             case .purchases:
                 let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
                 if indexPath.row == purchaseItem.rowCount {
-                    purchaseItem.addToPurchases(newPurchase: Purchase(name: "new purchase", price: nil, isNew: true))
+                    purchaseItem.addToPurchases(newPurchase: Purchase(name: nil, price: nil, isNew: true))
                 tableView.insertRows(at: [indexPath], with: .automatic)
                 tableView.deselectRow(at: indexPath, animated: true)
                 }
@@ -282,6 +287,15 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
             try managedContext.save()
             if newTimeCard {
                 payCycle.addToTimeCards(timeCard)
+            }
+            
+            let cells = tableView.visibleCells
+            var idx = 0
+            for cell in cells {
+                if cell is PurchaseTableViewCell {
+                    let cell = cell as! PurchaseTableViewCell
+                    
+                }
             }
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
