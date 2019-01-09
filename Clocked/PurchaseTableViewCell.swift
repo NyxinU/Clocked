@@ -117,4 +117,9 @@ extension PriceTextField {
         
         return currency
     }
+    
+    func formatAsDouble() -> Double {
+        let decNumber = NSDecimalNumber(string: amountTypedString).multiplying(by: 0.01)
+        return Double(truncating: decNumber)
+    }
 }

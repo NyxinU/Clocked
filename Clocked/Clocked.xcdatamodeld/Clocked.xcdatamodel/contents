@@ -19,7 +19,7 @@
     </entity>
     <elements>
         <element name="ManagedPayCycle" positionX="128.31640625" positionY="-18.94921875" width="128" height="105"/>
-        <element name="ManagedTimeCard" positionX="-63" positionY="-18" width="128" height="105"/>
         <element name="ManagedPurchase" positionX="36" positionY="18" width="128" height="90"/>
+        <element name="ManagedTimeCard" positionX="-63" positionY="-18" width="128" height="105"/>
     </elements>
 </model>

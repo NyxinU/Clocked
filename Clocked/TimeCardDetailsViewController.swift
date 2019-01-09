@@ -294,10 +294,24 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
             try managedContext.save()
             
             let cells = self.tableView.visibleCells
-            
-            for cell in cells {
-                if cell is 
+            let purchaseTableViewCells = cells.filter {
+                $0 is PurchaseTableViewCell  }
+            for idx in 0..<purchaseTableViewCells.count {
+                let cell = purchaseTableViewCells[idx] as! PurchaseTableViewCell
+                let managedPurchase = managedPurchases[idx]
+                
+                managedPurchase.name = cell.itemNameTextField.text
+//                if let managedPurchase.price {
+//                    
+//                }
+//                managedPurchase.price = cell.priceTextField.formatAsDouble()
+                
+                if idx > purchaseItem.indexOfMostRecentPurchase {
+                    timeCard.addToPurchases(managedPurchase)
+                }
             }
+            try managedContext.save()
+
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
