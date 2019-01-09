@@ -284,22 +284,20 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         timeCard.endTime = timeStamps[1]
         
         do {
-            try managedContext.save()
-            try managedContext.parent?.save()
+//            try managedContext.save()
+
             if newTimeCard {
-                payCycle.addToTimeCards(timeCard)
+                let payCycleWithChildContext = managedContext.object(with: payCycle.objectID) as! ManagedPayCycle
+                payCycleWithChildContext.addToTimeCards(timeCard)
             }
             
-            let cells = self.tableView.visibleCells as! Array<UITableViewCell>
+            try managedContext.save()
+            
+            let cells = self.tableView.visibleCells
             
             for cell in cells {
-                print(cell.subviews)
+                if cell is 
             }
-//            if purchaseItem.indexOfMostRecentPurchase < purchaseItem.rowCount {
-//                for idx in purchaseItem.indexOfMostRecentPurchase..<purchaseItem.rowCount {
-//                    timeCard.addToPurchases(managedPurchases[idx])
-//                }
-//            }
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
