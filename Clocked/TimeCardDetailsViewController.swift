@@ -128,7 +128,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
                 if indexPath.row == items[indexPath.section].rowCount {
                     cell.textLabel?.text = "Add Purchase"
                 } else {
-
+                    return setupPurchaseCell()
                 }
                 return cell 
             }
@@ -147,7 +147,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         return datePickerCell
     }
     
-    func setupPurchaseCell(managedPurchase: ManagedPurchase?) -> UITableViewCell {
+    func setupPurchaseCell() -> UITableViewCell {
         guard let purchaseCell = tableView.dequeueReusableCell(withIdentifier: PurchaseTableViewCell.reuseIdentifier()) as? PurchaseTableViewCell else {
             return UITableViewCell()
         }
@@ -219,7 +219,9 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
             case .purchases:
                 let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
                 if indexPath.row == purchaseItem.rowCount {
-                    purchaseItem.addToPurchases(newPurchase: Purchase())
+                    purchaseItem.addToPurchases(newPurchase: Purchase(name: "new purchase", price: nil, isNew: true))
+                tableView.insertRows(at: [indexPath], with: .automatic)
+                tableView.deselectRow(at: indexPath, animated: true)
                 }
             }
         }

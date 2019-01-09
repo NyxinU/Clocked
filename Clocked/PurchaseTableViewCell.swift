@@ -23,7 +23,6 @@ class PurchaseTableViewCell: UITableViewCell {
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        
         self.itemNameTextField = PurchaseTextField(option: .name)
         self.priceTextField = PriceTextField()
         
