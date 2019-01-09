@@ -151,7 +151,8 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         guard let purchaseCell = tableView.dequeueReusableCell(withIdentifier: PurchaseTableViewCell.reuseIdentifier()) as? PurchaseTableViewCell else {
             return UITableViewCell()
         }
-
+        
+        return purchaseCell
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -216,7 +217,10 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
             case .duration:
                 tableView.deselectRow(at: indexPath, animated: false)
             case .purchases:
-
+                let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
+                if indexPath.row == purchaseItem.rowCount {
+                    purchaseItem.addToPurchases(newPurchase: Purchase())
+                }
             }
         }
         tableView.endUpdates()
