@@ -15,9 +15,8 @@ enum PurchaseTextFieldOptions {
 }
 
 class PurchaseTableViewCell: UITableViewCell {
-    var itemNameTextField: PurchaseTextField
-    var priceTextField: PriceTextField
-    
+    let itemNameTextField: PurchaseTextField
+    let priceTextField: PriceTextField
     static func reuseIdentifier() -> String {
         return "PurchaseTableViewCellIdentifier"
     }
@@ -44,12 +43,12 @@ class PurchaseTextField: UITextField, UITextFieldDelegate {
         // use auto layout instead of adjusting frame
         switch option {
         case .name:
-            self.frame = CGRect(x: 20, y: 0, width: 180, height: 40)
+            self.frame = CGRect(x: 20, y: 0, width: 170, height: 40)
             self.placeholder = "Item Name"
             self.keyboardType = UIKeyboardType.default
             self.clearButtonMode = UITextField.ViewMode.whileEditing
         case .price:
-            self.frame = CGRect(x: 220, y: 0, width: 180, height: 40)
+            self.frame = CGRect(x: 200, y: 0, width: 170, height: 40)
             self.placeholder = "$0.00"
             self.keyboardType = UIKeyboardType.numberPad
         }
@@ -58,26 +57,28 @@ class PurchaseTextField: UITextField, UITextFieldDelegate {
         self.returnKeyType = UIReturnKeyType.done
         self.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
         self.delegate = self
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        return true
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
+    
 }
 
 class PriceTextField: PurchaseTextField {
     var amountTypedString: String = ""
     init() {
-        super.init(option: .price)
-        
-        if let text = self.text {
-            self.amountTypedString = text
-        }
+        super.init(frame: .zero, option: .price)
         
         self.textAlignment = .right
     }
@@ -86,15 +87,15 @@ class PriceTextField: PurchaseTextField {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    override func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if string.count > 0 {
             amountTypedString = amountTypedString + string
-            let amount = formatAsCurrency(from: amountTypedString)
+            let amount = stringToCurrency(from: amountTypedString)
             textField.text = amount
         } else {
             amountTypedString = String(amountTypedString.dropLast())
             if amountTypedString.count > 0 {
-                let amount = formatAsCurrency(from: amountTypedString)
+                let amount = stringToCurrency(from: amountTypedString)
                 textField.text = amount
             } else {
                 textField.text = ""
@@ -105,14 +106,16 @@ class PriceTextField: PurchaseTextField {
 }
 
 extension PriceTextField {
-    func formatAsCurrency(from string: String) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.locale = Locale.current
-        
-        let decNumber = NSDecimalNumber(string: string).multiplying(by: 0.01)
-        let currency = formatter.string(from: decNumber)!
-        
-        return currency
+    
+    func updatePriceTextField(price: Float) {
+        if price <= 0.0 {
+            return
+        } else {
+            let amountString = String(Int(price * 100))
+            let amountCurrency = stringToCurrency(from: amountString)
+            
+            self.amountTypedString = amountString
+            self.text = amountCurrency
+        }
     }
 }

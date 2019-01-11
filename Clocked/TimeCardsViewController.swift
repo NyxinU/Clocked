@@ -14,10 +14,20 @@ class TimeCardsViewController: UITableViewController {
     let managedContext: NSManagedObjectContext
     let payCycle: ManagedPayCycle
     var timeCards: [ManagedTimeCard] = []
+    private lazy var childManagedObjectContext: NSManagedObjectContext = {
+        // Initialize Managed Object Context
+        let managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        
+        // Configure Managed Object Context
+        managedObjectContext.parent = self.managedContext
+        
+        return managedObjectContext
+    }()
     
     init (payCycle: ManagedPayCycle, managedContext: NSManagedObjectContext) {
         self.managedContext = managedContext
         self.payCycle = payCycle
+
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -37,7 +47,6 @@ class TimeCardsViewController: UITableViewController {
         backItem.title = "Cancel"
         navigationItem.backBarButtonItem = backItem
         backItem.target = self
-        backItem.action = #selector(rollbackManagedContext)
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add", style: .plain, target: self, action:#selector(addTimeCardButtonAction(_:)))
         
@@ -105,7 +114,7 @@ class TimeCardsViewController: UITableViewController {
             tableView.deselectRow(at: indexPath, animated: false)
             return
         }
-        let timeCardDetails = TimeCardDetailsViewController(payCycle: payCycle, prevTimeCard: timeCards[indexPath.row], managedContext: managedContext)
+        let timeCardDetails = TimeCardDetailsViewController(payCycle: payCycle, prevTimeCard: timeCards[indexPath.row], managedContext: childManagedObjectContext)
         
         navigationController?.pushViewController(timeCardDetails, animated: true)
     }
@@ -140,7 +149,7 @@ class TimeCardsViewController: UITableViewController {
     }
     
     @objc func addTimeCardButtonAction(_ sender: UIBarButtonItem) {
-        navigationController?.pushViewController(TimeCardDetailsViewController(payCycle: payCycle, prevTimeCard: nil, managedContext: managedContext), animated: true)
+        navigationController?.pushViewController(TimeCardDetailsViewController(payCycle: payCycle, prevTimeCard: nil, managedContext: childManagedObjectContext), animated: true)
     }
     
     func updatePayCycle() {
@@ -173,10 +182,6 @@ class TimeCardsViewController: UITableViewController {
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
-    }
-    
-    @objc func rollbackManagedContext() {
-        managedContext.rollback()
     }
 }
 

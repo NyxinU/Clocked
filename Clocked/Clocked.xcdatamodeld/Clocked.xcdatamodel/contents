@@ -8,18 +8,18 @@
     </entity>
     <entity name="ManagedPurchase" representedClassName="ManagedPurchase" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="price" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="price" optional="YES" attributeType="Float" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="timeCard" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ManagedTimeCard" inverseName="purchases" inverseEntity="ManagedTimeCard" syncable="YES"/>
     </entity>
     <entity name="ManagedTimeCard" representedClassName="ManagedTimeCard" syncable="YES" codeGenerationType="class">
         <attribute name="endTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="startTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="payCycle" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ManagedPayCycle" inverseName="timeCards" inverseEntity="ManagedPayCycle" syncable="YES"/>
-        <relationship name="purchases" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ManagedPurchase" inverseName="timeCard" inverseEntity="ManagedPurchase" syncable="YES"/>
+        <relationship name="purchases" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ManagedPurchase" inverseName="timeCard" inverseEntity="ManagedPurchase" syncable="YES"/>
     </entity>
     <elements>
         <element name="ManagedPayCycle" positionX="128.31640625" positionY="-18.94921875" width="128" height="105"/>
-        <element name="ManagedTimeCard" positionX="-63" positionY="-18" width="128" height="105"/>
         <element name="ManagedPurchase" positionX="36" positionY="18" width="128" height="90"/>
+        <element name="ManagedTimeCard" positionX="-63" positionY="-18" width="128" height="105"/>
     </elements>
 </model>
