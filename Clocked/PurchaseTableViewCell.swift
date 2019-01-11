@@ -55,7 +55,7 @@ class PurchaseTextField: UITextField, UITextFieldDelegate {
             self.keyboardType = UIKeyboardType.numberPad
         }
         
-        self.autocorrectionType = UITextAutocorrectionType.no
+        self.autocorrectionType = UITextAutocorrectionType.default
         self.returnKeyType = UIReturnKeyType.done
         self.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
         self.delegate = self

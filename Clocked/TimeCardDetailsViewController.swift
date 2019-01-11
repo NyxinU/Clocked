@@ -73,10 +73,15 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
     }
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        
         let footerView = UIView()
         
         let backgroundColor = #colorLiteral(red: 0.9800000191, green: 0.9800000191, blue: 0.9800000191, alpha: 1)
         footerView.backgroundColor = backgroundColor
+        
+        if section == (items.count - 1) {
+            footerView.isHidden = true
+        }
         
         return footerView
     }
@@ -244,6 +249,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
                     purchaseItem.addToManagedPurchases(newPurchase: ManagedPurchase(context: managedContext))
                     tableView.insertRows(at: [indexPath], with: .automatic)
                 }
+                tableView.deselectRow(at: indexPath, animated: false)
             }
         }
         tableView.endUpdates()
