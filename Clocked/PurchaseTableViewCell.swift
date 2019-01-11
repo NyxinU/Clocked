@@ -28,7 +28,7 @@ class PurchaseTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         addSubview(itemNameTextField)
-//        addSubview(priceTextField)
+        addSubview(priceTextField)
     }
     
     required init?(coder aDecoder: NSCoder) {
