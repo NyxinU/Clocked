@@ -64,7 +64,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
     }
     
     @objc func dismissKeyboard() {
-        //Causes the view (or orne of its embedded text fields) to resign the first responder status.
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
     }
     
@@ -154,9 +154,14 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         guard let purchaseCell = tableView.dequeueReusableCell(withIdentifier: PurchaseTableViewCell.reuseIdentifier()) as? PurchaseTableViewCell else {
             return UITableViewCell()
         }
+        
         purchaseCell.itemNameTextField.text = managedPurchase.name
+        purchaseCell.priceTextField.updatePriceTextField(price: managedPurchase.price)
+        
         return purchaseCell
     }
+    
+    
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath == datePickerIndexPath {
@@ -176,7 +181,16 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
-
+            tableView.beginUpdates()
+            let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
+            
+            managedContext.delete(purchaseItem.managedPurchases[indexPath.row])
+            purchaseItem.removeFromManagedPurchases(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            
+            print(purchaseItem.indexOfMostRecentPurchase)
+            
+            tableView.endUpdates()
         }
     }
     
@@ -223,7 +237,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
                 let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
                 
                 if purchaseItem.rowCount == indexPath.row {
-                    purchaseItem.addTomanagedPurchases(newPurchase: ManagedPurchase(context: managedContext))
+                    purchaseItem.addToManagedPurchases(newPurchase: ManagedPurchase(context: managedContext))
                     tableView.insertRows(at: [indexPath], with: .automatic)
                 }
             }
@@ -284,14 +298,10 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         timeCard.endTime = timeStamps[1]
         
         do {
-//            try managedContext.save()
-
             if newTimeCard {
                 let payCycleWithChildContext = managedContext.object(with: payCycle.objectID) as! ManagedPayCycle
                 payCycleWithChildContext.addToTimeCards(timeCard)
             }
-            
-            try managedContext.save()
             
             let cells = self.tableView.visibleCells
             let purchaseTableViewCells = cells.filter {
@@ -300,17 +310,18 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
                 let cell = purchaseTableViewCells[idx] as! PurchaseTableViewCell
                 let managedPurchase = managedPurchases[idx]
                 
-                managedPurchase.name = cell.itemNameTextField.text
-//                if let managedPurchase.price {
-//                    
-//                }
-//                managedPurchase.price = cell.priceTextField.formatAsDouble()
-                
-                if idx > purchaseItem.indexOfMostRecentPurchase {
-                    timeCard.addToPurchases(managedPurchase)
+                // do not add empty entries to timecard
+                if cell.itemNameTextField.text!.count > 0 {
+                    managedPurchase.name = cell.itemNameTextField.text
+                    managedPurchase.price = currencyToFloat(from: cell.priceTextField.amountTypedString)
+                    if idx >= purchaseItem.indexOfMostRecentPurchase {
+                        let timeCardWithChildContext = managedContext.object(with: timeCard.objectID) as! ManagedTimeCard
+                        timeCardWithChildContext.addToPurchases(managedPurchase)
+                    }
                 }
             }
             try managedContext.save()
+            try managedContext.parent?.save()
 
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")

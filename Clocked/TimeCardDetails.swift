@@ -30,7 +30,6 @@ class TimeCardDetails {
         
         do {
             purchases = try managedContext.fetch(fetchRequest)
-
             return purchases
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
@@ -109,20 +108,20 @@ class TimeCardDetailsPurchaseItem: TimeCardDetailsItem {
     init(managedPurchases: [ManagedPurchase]) {
         self.managedPurchases = managedPurchases
         self.rowCount = managedPurchases.count
-        self.indexOfMostRecentPurchase = managedPurchases.count
+        self.indexOfMostRecentPurchase = managedPurchases.count - 1
     }
     
-    func addTomanagedPurchases(newPurchase: ManagedPurchase) {
+    func addToManagedPurchases(newPurchase: ManagedPurchase) {
         managedPurchases.append(newPurchase)
         rowCount = managedPurchases.count
     }
     
-    func removeFrommanagedPurchases(at index: Int) {
+    func removeFromManagedPurchases(at index: Int) {
         managedPurchases.remove(at: index)
         rowCount = managedPurchases.count
         
         // decrement most recent if deleteing existing purchase 
-        if index < rowCount {
+        if index < indexOfMostRecentPurchase {
             indexOfMostRecentPurchase -= 1
         }
     }
