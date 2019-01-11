@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import Foundation
 
-class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
+class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, CloseDatePickerDelegate {
     let cellId = "cellId"
     let managedContext: NSManagedObjectContext
     let payCycle: ManagedPayCycle
@@ -156,7 +156,9 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         }
         
         purchaseCell.itemNameTextField.text = managedPurchase.name
+        purchaseCell.itemNameTextField.closeDatePickerDelegate = self
         purchaseCell.priceTextField.updatePriceTextField(price: managedPurchase.price)
+        purchaseCell.priceTextField.closeDatePickerDelegate = self
         
         return purchaseCell
     }
@@ -232,8 +234,10 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
                     updateDuration()
                 }
             case .duration:
+                closeDatePicker()
                 tableView.deselectRow(at: indexPath, animated: false)
             case .purchases:
+                closeDatePicker()
                 let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
                 
                 if purchaseItem.rowCount == indexPath.row {
@@ -264,6 +268,17 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate {
         
         tableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .automatic)
         updateDuration()
+    }
+    
+    func closeDatePicker() {
+        tableView.beginUpdates()
+        
+        if let datePickerIndexPath = datePickerIndexPath {
+            tableView.deleteRows(at: [datePickerIndexPath], with: .fade)
+            self.datePickerIndexPath = nil
+        }
+        
+        tableView.endUpdates()
     }
     
     func updateDuration() {

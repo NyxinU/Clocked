@@ -10,7 +10,7 @@ import UIKit
 
 class DatePickerTableViewCell: UITableViewCell {
     let datePicker: UIDatePicker = UIDatePicker()
-    weak var delegate: TimeCardDetailsViewController?
+    var delegate: DatePickerDelegate?
     var indexPath: IndexPath!
     static let height: CGFloat = 216.0
     

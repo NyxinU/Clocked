@@ -37,6 +37,8 @@ class PurchaseTableViewCell: UITableViewCell {
 }
 
 class PurchaseTextField: UITextField, UITextFieldDelegate {
+    var closeDatePickerDelegate: CloseDatePickerDelegate?
+    
     init(frame: CGRect = CGRect.zero, option: PurchaseTextFieldOptions) {
         super.init(frame: frame)
         
@@ -64,8 +66,8 @@ class PurchaseTextField: UITextField, UITextFieldDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        return true
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        closeDatePickerDelegate?.closeDatePicker()
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -73,6 +75,10 @@ class PurchaseTextField: UITextField, UITextFieldDelegate {
         return true
     }
     
+}
+
+protocol CloseDatePickerDelegate {
+    func closeDatePicker()
 }
 
 class PriceTextField: PurchaseTextField {
@@ -87,7 +93,7 @@ class PriceTextField: PurchaseTextField {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if string.count > 0 {
             amountTypedString = amountTypedString + string
             let amount = stringToCurrency(from: amountTypedString)
