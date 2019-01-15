@@ -3,7 +3,7 @@
     <entity name="ManagedPayCycle" representedClassName="ManagedPayCycle" syncable="YES" codeGenerationType="class">
         <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="totalHours" optional="YES" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="totalHours" optional="YES" attributeType="Integer 32" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="timeCards" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ManagedTimeCard" inverseName="payCycle" inverseEntity="ManagedTimeCard" syncable="YES"/>
     </entity>
     <entity name="ManagedPurchase" representedClassName="ManagedPurchase" syncable="YES" codeGenerationType="class">

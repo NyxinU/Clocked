@@ -117,7 +117,7 @@ extension PriceTextField {
         if price <= 0.0 {
             return
         } else {
-            let amountString = String(Int(price * 100))
+            let amountString = priceToString(from: price)
             let amountCurrency = stringToCurrency(from: amountString)
             
             self.amountTypedString = amountString

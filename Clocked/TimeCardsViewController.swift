@@ -14,6 +14,7 @@ class TimeCardsViewController: UITableViewController {
     let managedContext: NSManagedObjectContext
     let payCycle: ManagedPayCycle
     var timeCards: [ManagedTimeCard] = []
+    var purchases: [ManagedPurchase] = []
     private lazy var childManagedObjectContext: NSManagedObjectContext = {
         // Initialize Managed Object Context
         let managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
@@ -68,9 +69,14 @@ class TimeCardsViewController: UITableViewController {
         let sort = NSSortDescriptor(key: #keyPath(ManagedTimeCard.startTime), ascending: false)
         fetchRequest.predicate = NSPredicate(format: "payCycle == %@", payCycle)
         fetchRequest.sortDescriptors = [sort]
+//        fetchRequest.relationshipKeyPathsForPrefetching = ["purchases"]
+        let purchasesRequest = NSFetchRequest<ManagedPurchase>(entityName: "ManagedPurchase")
+        purchasesRequest.predicate = NSPredicate(format: "timeCard.payCycle == %@", payCycle)
+        
         
         do {
             timeCards = try managedContext.fetch(fetchRequest)
+            purchases = try managedContext.fetch(purchasesRequest)
             if timeCards.count > 0 {
                 updatePayCycle()
             }
@@ -81,14 +87,16 @@ class TimeCardsViewController: UITableViewController {
     }
     
     @objc func shareButtonAction(_ sender: UIBarButtonItem) {
-        let items = ["This app is my favorite"]
-
+        var items: [String] = []
+        let parsed = timeCardsToString(managedTimeCards: timeCards, totalHours: payCycle.totalHours, managedPurchases: purchases)
+        items.append(parsed)
+        
         let activityViewController = UIActivityViewController(
             activityItems: items,
             applicationActivities: nil)
-        if let popoverPresentationController = activityViewController.popoverPresentationController {
-            popoverPresentationController.barButtonItem = (sender as! UIBarButtonItem)
-        }
+//        if let popoverPresentationController = activityViewController.popoverPresentationController {
+//            popoverPresentationController.barButtonItem = (sender as! UIBarButtonItem)
+//        }
         present(activityViewController, animated: true, completion: nil)
     }
     
@@ -194,7 +202,7 @@ class TimeCardsViewController: UITableViewController {
             }
         }
         
-        payCycle.totalHours = Int64(totalHours)
+        payCycle.totalHours = Int32(totalHours)
         
         do {
             try managedContext.save()

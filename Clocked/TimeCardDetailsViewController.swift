@@ -42,7 +42,11 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         tableView.register(DatePickerTableViewCell.self, forCellReuseIdentifier: DatePickerTableViewCell.reuseIdentifier())
         tableView.register(PurchaseTableViewCell.self, forCellReuseIdentifier: PurchaseTableViewCell.reuseIdentifier())
         
-        navigationItem.title = "New Entry"
+        if newTimeCard {
+            navigationController?.title = "New Entry"
+        } else {
+            navigationController?.title = "Edit Entry"
+        }
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveTimeCard(_:)))
         
