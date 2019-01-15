@@ -10,8 +10,6 @@ import UIKit
 import CoreData
 
 class PayCyclesViewController: UITableViewController {
-    // what does this cellId mean?
-    let cellId = "cellId"
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     let managedContext: NSManagedObjectContext
     var payCycles: [ManagedPayCycle] = []
@@ -27,8 +25,8 @@ class PayCyclesViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(PayCycleTableViewCell.self, forCellReuseIdentifier: PayCycleTableViewCell.reuseIdentifier())
+        tableView.rowHeight = 45.0
         tableView.tableFooterView = UIView()
         
         navigationItem.title = "Pay Cycles"
@@ -61,21 +59,31 @@ class PayCyclesViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-        
-        cell.textLabel?.text = "New Pay Cycle"
-        
         let payCycle: ManagedPayCycle = payCycles[indexPath.row]
+        let cell = setupPayCycleCell(for: payCycle)
+        
+        return cell 
+    }
+    
+    func setupPayCycleCell(for payCycle: ManagedPayCycle) -> UITableViewCell {
+        guard let payCycleCell = tableView.dequeueReusableCell(withIdentifier: PayCycleTableViewCell.reuseIdentifier()) as? PayCycleTableViewCell else {
+            return UITableViewCell()
+        }
+        
         let startDate: String = payCycle.startDate?.dateAsString() ?? ""
         let endDate: String = payCycle.endDate?.dateAsString() ?? ""
         let totalHours: Int = Int(payCycle.totalHours)
-        
+
         if startDate != "" && endDate != "" {
-           cell.textLabel?.text = "Start: \(startDate) End: \(endDate) \(hoursAndMins(from: totalHours))"
+//            payCycleCell.startDateLabel.text = "From: \(startDate)"
+//            payCycleCell.endDateLabel.text = "To: \(endDate)"
+            payCycleCell.dateRangeLabel.text = "\(startDate) - \(endDate)"
+            payCycleCell.totalHoursLabel.text = hoursAndMins(from: totalHours)
+        } else {
+            payCycleCell.textLabel?.text = "New Entry"
         }
         
-        return cell 
+        return payCycleCell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

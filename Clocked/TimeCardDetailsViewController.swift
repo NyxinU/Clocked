@@ -172,8 +172,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         return purchaseCell
     }
     
-    
-    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath == datePickerIndexPath {
             return DatePickerTableViewCell.height

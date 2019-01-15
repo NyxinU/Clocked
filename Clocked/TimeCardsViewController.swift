@@ -50,8 +50,6 @@ class TimeCardsViewController: UITableViewController {
         backItem.target = self
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add", style: .plain, target: self, action:#selector(addTimeCardButtonAction(_:)))
-        
-//        tableView.rowHeight = 60
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -35,14 +35,13 @@ class TimeCardTableViewCell: UITableViewCell {
         super.layoutSubviews()
         
         let labels: [UILabel] = [startDateLabel,startTimeLabel, endTimeLabel, durationLabel]
+        let padding: CGFloat = 20
         
         for label in labels {
             label.translatesAutoresizingMaskIntoConstraints = false
-            label.font = UIFont.systemFont(ofSize: 18, weight: .regular)
         }
         
         let timeLabelWidth: CGFloat = 0.25
-        let padding: CGFloat = 20
         
         startTimeLabel.textColor = .cyan
         endTimeLabel.textColor = .red

@@ -37,7 +37,7 @@ func timeCardsToString(managedTimeCards: [ManagedTimeCard], totalHours: Int32, m
     var totalAmountOfExpenses: Float = 0.0
     
     let totalHours = "Total: \(hoursAndMins(from: Int(totalHours)))\n"
-    // iterate in reverse order for ascending 
+    // iterate in reverse order for ascending
     let timeCards = managedTimeCards.reversed()
     
     for managedTimeCard in timeCards {
