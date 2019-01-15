@@ -55,7 +55,14 @@ class TimeCardsViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // add toolbar
+        navigationController?.setToolbarHidden(false, animated: true)
+        var items:[UIBarButtonItem] = []
+        let shareButton =  UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareButtonAction(_:)))
+        items.append(shareButton)
+        self.setToolbarItems(items, animated: true)
         
+        // fetch timecards
         let fetchRequest = NSFetchRequest<ManagedTimeCard>(entityName: "ManagedTimeCard")
         
         let sort = NSSortDescriptor(key: #keyPath(ManagedTimeCard.startTime), ascending: false)
@@ -71,6 +78,18 @@ class TimeCardsViewController: UITableViewController {
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
+    }
+    
+    @objc func shareButtonAction(_ sender: UIBarButtonItem) {
+        let items = ["This app is my favorite"]
+
+        let activityViewController = UIActivityViewController(
+            activityItems: items,
+            applicationActivities: nil)
+        if let popoverPresentationController = activityViewController.popoverPresentationController {
+            popoverPresentationController.barButtonItem = (sender as! UIBarButtonItem)
+        }
+        present(activityViewController, animated: true, completion: nil)
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
