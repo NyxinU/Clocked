@@ -40,7 +40,7 @@ class PayCycleTableViewCell: UITableViewCell {
         for label in labels {
             label.translatesAutoresizingMaskIntoConstraints = false
         }
-        totalHoursLabel.textAlignment = .right
+        totalHoursLabel.textAlignment = .natural
         
         NSLayoutConstraint.activate([
 //            startDateLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: padding),
@@ -59,7 +59,7 @@ class PayCycleTableViewCell: UITableViewCell {
             dateRangeLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             
             totalHoursLabel.leftAnchor.constraint(equalTo: dateRangeLabel.rightAnchor),
-            totalHoursLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -padding),
+            totalHoursLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: padding),
             totalHoursLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             totalHoursLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             
