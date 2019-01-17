@@ -35,7 +35,7 @@ class TimeCardTableViewCell: UITableViewCell {
         super.layoutSubviews()
         
         let labels: [UILabel] = [startDateLabel,startTimeLabel, endTimeLabel, durationLabel]
-        let padding: CGFloat = 20
+        let padding: CGFloat = 16
         
         for label in labels {
             label.translatesAutoresizingMaskIntoConstraints = false

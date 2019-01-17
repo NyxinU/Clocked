@@ -44,6 +44,8 @@ class TimeCardsViewController: UITableViewController {
     func setupTableView() {
         tableView.register(TotalHoursTableViewCell.self, forCellReuseIdentifier: TotalHoursTableViewCell.resuseIdentifier())
         tableView.register(TimeCardTableViewCell.self, forCellReuseIdentifier: TimeCardTableViewCell.reuseIdentifier())
+
+        tableView.rowHeight = 45.0
     }
     
     func setupNavigationItem() {

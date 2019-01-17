@@ -20,7 +20,7 @@ class TotalHoursTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        totalLabel.text = "Total: "
+        totalLabel.text = "Total"
         
         addSubview(totalLabel)
         addSubview(amountLabel)
@@ -41,16 +41,18 @@ class TotalHoursTableViewCell: UITableViewCell {
         
         let padding: CGFloat = 16
         
+        amountLabel.textAlignment = .right
+        
         NSLayoutConstraint.activate([
             totalLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: padding),
             totalLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.65),
             totalLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            totalLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            totalLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor),
             
             amountLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -padding),
             amountLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.25),
             amountLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            amountLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+            amountLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor)
         ])
     }
 }
