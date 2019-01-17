@@ -10,11 +10,9 @@ import UIKit
 import CoreData
 class TimeCardsViewController: UITableViewController {
     
-    let cellId = "cellId"
     let managedContext: NSManagedObjectContext
     let payCycle: ManagedPayCycle
     var timeCards: [ManagedTimeCard] = []
-    var purchases: [ManagedPurchase] = []
     private lazy var childManagedObjectContext: NSManagedObjectContext = {
         // Initialize Managed Object Context
         let managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
@@ -39,53 +37,50 @@ class TimeCardsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        setupTableView()
+        setupNavigationItem()
+    }
+    
+    func setupTableView() {
+        tableView.register(TotalHoursTableViewCell.self, forCellReuseIdentifier: TotalHoursTableViewCell.resuseIdentifier())
         tableView.register(TimeCardTableViewCell.self, forCellReuseIdentifier: TimeCardTableViewCell.reuseIdentifier())
-        
+    }
+    
+    func setupNavigationItem() {
         navigationItem.title = "Time Cards"
         
-        let backItem = UIBarButtonItem()
-        backItem.title = "Cancel"
+        let backItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: nil)
         navigationItem.backBarButtonItem = backItem
-        backItem.target = self
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add", style: .plain, target: self, action:#selector(addTimeCardButtonAction(_:)))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTimeCardButtonAction(_:)))
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // add toolbar
-        navigationController?.setToolbarHidden(false, animated: true)
-        var items:[UIBarButtonItem] = []
-        let shareButton =  UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareButtonAction(_:)))
-        items.append(shareButton)
-        self.setToolbarItems(items, animated: true)
+        setupToolbar()
         
-        // fetch timecards
-        let fetchRequest = NSFetchRequest<ManagedTimeCard>(entityName: "ManagedTimeCard")
-        
-        let sort = NSSortDescriptor(key: #keyPath(ManagedTimeCard.startTime), ascending: false)
-        fetchRequest.predicate = NSPredicate(format: "payCycle == %@", payCycle)
-        fetchRequest.sortDescriptors = [sort]
-        let purchasesRequest = NSFetchRequest<ManagedPurchase>(entityName: "ManagedPurchase")
-        purchasesRequest.predicate = NSPredicate(format: "timeCard.payCycle == %@", payCycle)
-        
-        
-        do {
-            timeCards = try managedContext.fetch(fetchRequest)
-            purchases = try managedContext.fetch(purchasesRequest)
+        if fetchedTimeCards(from: managedContext, for: payCycle, to: &timeCards) {
             if timeCards.count > 0 {
                 updatePayCycle()
             }
             tableView.reloadData()
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
         }
+    }
+    
+    func setupToolbar() {
+        navigationController?.setToolbarHidden(false, animated: true)
+        var items:[UIBarButtonItem] = []
+        let shareButton =  UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareButtonAction(_:)))
+        
+        items.append(shareButton)
+        self.setToolbarItems(items, animated: true)
     }
     
     @objc func shareButtonAction(_ sender: UIBarButtonItem) {
         var items: [String] = []
+        let purchases = fetchPurchases(from: managedContext, for: payCycle)
         let parsed = timeCardsToString(managedTimeCards: timeCards, totalHours: payCycle.totalHours, managedPurchases: purchases)
+
         items.append(parsed)
         
         let activityViewController = UIActivityViewController(
@@ -107,27 +102,46 @@ class TimeCardsViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-            let totalHours = Int(payCycle.totalHours)
-            
-            cell.textLabel?.text = "Total: \(hoursAndMins(from: totalHours))"
-            
-            return cell
+            return setupTotalHoursCell()
         } else {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: TimeCardTableViewCell.reuseIdentifier()) as? TimeCardTableViewCell else {
-                return UITableViewCell()
-            }
-            let timeCard = timeCards[indexPath.row]
-            let startTime: Date? = timeCard.startTime
-            let endTime: Date? = timeCard.endTime
-            
-            cell.startDateLabel.text = "\(startTime?.dayOfWeek() ?? "") \(startTime?.dateAsString() ?? "")"
-            cell.startTimeLabel.text = startTime?.timeAsString()
-            cell.endTimeLabel.text = endTime?.timeAsString()
-            cell.durationLabel.text = hoursAndMins(from: startTime, to: endTime)
-            
-            return cell
+            return setupTimeCardTableViewCell(for: timeCards[indexPath.row])
         }
+    }
+    
+    func setupTotalHoursCell() -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TotalHoursTableViewCell.resuseIdentifier()) as? TotalHoursTableViewCell else {
+            return UITableViewCell()
+        }
+        let totalHours = Int(payCycle.totalHours)
+        
+        cell.amountLabel.text = hoursAndMins(from: totalHours)
+        
+        return cell
+    }
+    
+    func prepTimeCardCellForResuse(_ cell: TimeCardTableViewCell) {
+        cell.textLabel?.text = nil
+        cell.startDateLabel.text = nil
+        cell.startTimeLabel.text = nil
+        cell.endTimeLabel.text = nil
+        cell.durationLabel.text = nil
+    }
+    
+    func setupTimeCardTableViewCell(for timeCard: ManagedTimeCard) -> UITableViewCell {
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TimeCardTableViewCell.reuseIdentifier()) as? TimeCardTableViewCell else {
+            return UITableViewCell()
+        }
+        
+        let startTime: Date? = timeCard.startTime
+        let endTime: Date? = timeCard.endTime
+        
+        cell.startDateLabel.text = "\(startTime?.dayOfWeek() ?? "") \(startTime?.dateAsString() ?? "")"
+        cell.startTimeLabel.text = startTime?.timeAsString()
+        cell.endTimeLabel.text = endTime?.timeAsString()
+        cell.durationLabel.text = hoursAndMins(from: startTime, to: endTime)
+        
+        return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

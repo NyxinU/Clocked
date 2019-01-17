@@ -43,12 +43,12 @@ class TotalHoursTableViewCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             totalLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: padding),
-            totalLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.45),
+            totalLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.65),
             totalLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             totalLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             
             amountLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -padding),
-            amountLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.45),
+            amountLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.25),
             amountLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             amountLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
         ])

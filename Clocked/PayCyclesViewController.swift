@@ -50,8 +50,9 @@ class PayCyclesViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        managedPayCycles = fetchPayCycles(from: managedContext, inAscending: false)
-        tableView.reloadData()
+        if fetchedPayCycles(from: managedContext, to: &managedPayCycles) {
+           tableView.reloadData()
+        }
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -70,8 +71,7 @@ class PayCyclesViewController: UITableViewController {
         if indexPath.section == 0 {
             return setupTotalHoursCell()
         } else {
-            let payCycle: ManagedPayCycle = managedPayCycles[indexPath.row]
-            return setupPayCycleCell(for: payCycle)
+            return setupPayCycleCell(for: managedPayCycles[indexPath.row])
         }
 
     }
@@ -125,7 +125,11 @@ class PayCyclesViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
+        if indexPath.section == 1 {
+            return true
+        } else {
+            return false
+        }
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {

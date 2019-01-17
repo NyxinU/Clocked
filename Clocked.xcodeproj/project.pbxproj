@@ -137,13 +137,13 @@
 				50E1672D219A750600A3510C /* LaunchScreen.storyboard */,
 				50E16725219A750500A3510C /* Main.storyboard */,
 				500E546021B7071600214F25 /* PayCyclesViewController.swift */,
-				5093A83121F03B0100A7C5A6 /* TotalHoursTableViewCell.swift */,
 				5093A82921EE8E1700A7C5A6 /* PayCycleTableViewCell.swift */,
 				5093A82121D6CE2000A7C5A6 /* PurchaseTableViewCell.swift */,
 				5093A81F21CB013800A7C5A6 /* TimeCardDetails.swift */,
 				5040C4E1219CD107007C1031 /* TimeCardDetailsViewController.swift */,
 				50E16723219A750500A3510C /* TimeCardsViewController.swift */,
 				500E545E21AF6CB500214F25 /* TimeCardTableViewCell.swift */,
+				5093A83121F03B0100A7C5A6 /* TotalHoursTableViewCell.swift */,
 				5093A82321E80ABC00A7C5A6 /* TypeCoversions.swift */,
 			);
 			path = Clocked;
