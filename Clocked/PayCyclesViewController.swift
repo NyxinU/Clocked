@@ -31,6 +31,7 @@ class PayCyclesViewController: UITableViewController {
     }
     
     func setupTableView() {
+        tableView.register(TotalHoursTableViewCell.self, forCellReuseIdentifier: TotalHoursTableViewCell.resuseIdentifier())
         tableView.register(PayCycleTableViewCell.self, forCellReuseIdentifier: PayCycleTableViewCell.reuseIdentifier())
         tableView.rowHeight = 45.0
         
@@ -67,14 +68,28 @@ class PayCyclesViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            let cell = UITableViewCell()
-            cell.textLabel?.text = "Total: "
-            return cell
+            return setupTotalHoursCell()
+        } else {
+            let payCycle: ManagedPayCycle = managedPayCycles[indexPath.row]
+            return setupPayCycleCell(for: payCycle)
         }
-        let payCycle: ManagedPayCycle = managedPayCycles[indexPath.row]
-        let cell = setupPayCycleCell(for: payCycle)
+
+    }
+    
+    func setupTotalHoursCell() -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TotalHoursTableViewCell.resuseIdentifier()) as? TotalHoursTableViewCell else {
+            return UITableViewCell()
+        }
         
-        return cell 
+        cell.amountLabel.text = ""
+        
+        return cell
+    }
+    
+    func prepPayCycleCellForResuse(_ cell: PayCycleTableViewCell) {
+        cell.textLabel?.text = nil
+        cell.dateRangeLabel.text = nil
+        cell.totalHoursLabel.text = nil
     }
     
     func setupPayCycleCell(for payCycle: ManagedPayCycle) -> UITableViewCell {
@@ -82,13 +97,13 @@ class PayCyclesViewController: UITableViewController {
             return UITableViewCell()
         }
         
+        prepPayCycleCellForResuse(payCycleCell)
         
         let startDate: String = payCycle.startDate?.dateAsString() ?? ""
         let endDate: String = payCycle.endDate?.dateAsString() ?? ""
         let totalHours: Int = Int(payCycle.totalHours)
 
         if startDate != "" && endDate != "" {
-            payCycleCell.textLabel?.text = nil
             payCycleCell.dateRangeLabel.text = "\(startDate) - \(endDate)"
             payCycleCell.totalHoursLabel.text = hoursAndMins(from: totalHours)
         } else {
@@ -113,27 +128,6 @@ class PayCyclesViewController: UITableViewController {
         return true
     }
     
-//    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-//        if (editingStyle == .delete) {
-//            // handle delete (by removing the data from your array and updating the tableview)
-//            tableView.beginUpdates()
-//            
-//            let payCycleObject: ManagedPayCycle = managedPayCycles[indexPath.row]
-//            
-//            managedContext.delete(payCycleObject)
-//            do {
-//                try managedContext.save()
-//                managedPayCycles.remove(at: indexPath.row)
-//                tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: UITableView.RowAnimation.automatic)
-//            } catch let error as NSError {
-//                print("Could not delete. \(error), \(error.localizedDescription), \(error.localizedFailureReason ?? "")")
-//            }
-//            
-//            tableView.endUpdates()
-//            
-//        }
-//    }
-    
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
             tableView.beginUpdates()
@@ -148,12 +142,13 @@ class PayCyclesViewController: UITableViewController {
     
     @objc func addPayCycleButtonAction(_ sender: UIBarButtonItem) {
         tableView.beginUpdates()
+        
         let payCycle: ManagedPayCycle = ManagedPayCycle(context: managedContext)
         
         do {
             try managedContext.save()
             managedPayCycles.insert(payCycle, at: 0)
-            tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+            tableView.insertRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
         } catch let error as NSError {
             print("Could not add. \(error), \(error.localizedDescription), \(error.localizedFailureReason ?? "")")
         }

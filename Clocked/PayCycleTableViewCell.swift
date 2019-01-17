@@ -35,38 +35,23 @@ class PayCycleTableViewCell: UITableViewCell {
         super.layoutSubviews()
         
         let labels: [UILabel] = [dateRangeLabel, totalHoursLabel]
-        let padding: CGFloat = 20
+        let padding: CGFloat = 16
         
         for label in labels {
             label.translatesAutoresizingMaskIntoConstraints = false
         }
-        totalHoursLabel.textAlignment = .natural
+        totalHoursLabel.textAlignment = .right
         
         NSLayoutConstraint.activate([
-//            startDateLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: padding),
-//            startDateLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.5),
-//            startDateLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-//            startDateLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.5),
-//
-//            endDateLabel.leftAnchor.constraint(equalTo: startDateLabel.rightAnchor, constant: padding),
-//            endDateLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: padding),
-//            endDateLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-//            endDateLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.5),
-
             dateRangeLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: padding),
-            dateRangeLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.75),
+            dateRangeLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.65, constant: padding),
             dateRangeLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             dateRangeLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             
-            totalHoursLabel.leftAnchor.constraint(equalTo: dateRangeLabel.rightAnchor),
-            totalHoursLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: padding),
+            totalHoursLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -padding),
+            totalHoursLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.25),
             totalHoursLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             totalHoursLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-            
-//            totalHoursLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: padding),
-//            totalHoursLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: padding),
-//            totalHoursLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-//            totalHoursLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.5),
         ])
     }
 }

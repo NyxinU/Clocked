@@ -147,29 +147,6 @@ class TimeCardsViewController: UITableViewController {
         return false 
     }
     
-//    override func tableView(_ tableView: UITableView, commit editingStyle:
-//        UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-//        if (editingStyle == .delete) {
-//            tableView.beginUpdates()
-//
-//            let timeCard: ManagedTimeCard = timeCards[indexPath.row]
-//
-//            managedContext.delete(timeCard)
-//
-//            do {
-//                try managedContext.save()
-//                timeCards.remove(at: indexPath.row)
-//                tableView.deleteRows(at: [indexPath], with: .automatic)
-//                updatePayCycle()
-//                tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-//            } catch let error as NSError {
-//                print("Could not delete. \(error), \(error.userInfo)")
-//            }
-//        }
-//        tableView.endUpdates()
-//    }
-
-    
     override func tableView(_ tableView: UITableView, commit editingStyle:
         UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
