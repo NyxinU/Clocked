@@ -1,5 +1,5 @@
 //
-//  FetchRequests.swift
+//  CoreDataHelpers.swift
 //  Clocked
 //
 //  Created by Nix on 1/15/19.
@@ -37,3 +37,19 @@ func prependNewPayCycles(managedPayCycles: [ManagedPayCycle]) -> [ManagedPayCycl
     }
     return newPayCycles + copy
 }
+
+func removed<T>(from array: inout [T], at indexPath: IndexPath, in managedContext: NSManagedObjectContext) -> Bool {
+    
+    let managedObject: T = array[indexPath.row]
+    managedContext.delete(managedObject as! NSManagedObject)
+    
+    do {
+        try managedContext.save()
+        array.remove(at: indexPath.row)
+        return true
+    } catch let error as NSError {
+        print("Could not delete. \(error), \(error.localizedDescription), \(error.localizedFailureReason ?? "")")
+        return false
+    }
+}
+

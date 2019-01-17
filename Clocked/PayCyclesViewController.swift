@@ -51,14 +51,26 @@ class PayCyclesViewController: UITableViewController {
         
         managedPayCycles = fetchPayCycles(from: managedContext, inAscending: false)
         tableView.reloadData()
-        print(managedPayCycles)
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return managedPayCycles.count
+        if section == 0 {
+            return 1
+        } else {
+            return managedPayCycles.count
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 0 {
+            let cell = UITableViewCell()
+            cell.textLabel?.text = "Total: "
+            return cell
+        }
         let payCycle: ManagedPayCycle = managedPayCycles[indexPath.row]
         let cell = setupPayCycleCell(for: payCycle)
         
@@ -69,6 +81,7 @@ class PayCyclesViewController: UITableViewController {
         guard let payCycleCell = tableView.dequeueReusableCell(withIdentifier: PayCycleTableViewCell.reuseIdentifier()) as? PayCycleTableViewCell else {
             return UITableViewCell()
         }
+        
         
         let startDate: String = payCycle.startDate?.dateAsString() ?? ""
         let endDate: String = payCycle.endDate?.dateAsString() ?? ""
@@ -86,6 +99,11 @@ class PayCyclesViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 0 {
+            tableView.deselectRow(at: indexPath, animated: false)
+            return
+        }
+        
         let timeCardViewController = TimeCardsViewController(payCycle: managedPayCycles[indexPath.row], managedContext: managedContext)
         
         navigationController?.pushViewController(timeCardViewController, animated: true)
@@ -95,22 +113,35 @@ class PayCyclesViewController: UITableViewController {
         return true
     }
     
+//    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+//        if (editingStyle == .delete) {
+//            // handle delete (by removing the data from your array and updating the tableview)
+//            tableView.beginUpdates()
+//            
+//            let payCycleObject: ManagedPayCycle = managedPayCycles[indexPath.row]
+//            
+//            managedContext.delete(payCycleObject)
+//            do {
+//                try managedContext.save()
+//                managedPayCycles.remove(at: indexPath.row)
+//                tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: UITableView.RowAnimation.automatic)
+//            } catch let error as NSError {
+//                print("Could not delete. \(error), \(error.localizedDescription), \(error.localizedFailureReason ?? "")")
+//            }
+//            
+//            tableView.endUpdates()
+//            
+//        }
+//    }
+    
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
-            // handle delete (by removing the data from your array and updating the tableview)
             tableView.beginUpdates()
             
-            let payCycleObject: ManagedPayCycle = managedPayCycles[indexPath.row]
-            
-            managedContext.delete(payCycleObject)
-            do {
-                try managedContext.save()
-                managedPayCycles.remove(at: indexPath.row)
-                tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: UITableView.RowAnimation.automatic)
-            } catch let error as NSError {
-                print("Could not delete. \(error), \(error.localizedDescription), \(error.localizedFailureReason ?? "")")
+            if removed(from: &managedPayCycles, at: indexPath, in: managedContext) {
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+                tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
             }
-            
             tableView.endUpdates()
         }
     }

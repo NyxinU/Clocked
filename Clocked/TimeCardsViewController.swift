@@ -67,7 +67,6 @@ class TimeCardsViewController: UITableViewController {
         let sort = NSSortDescriptor(key: #keyPath(ManagedTimeCard.startTime), ascending: false)
         fetchRequest.predicate = NSPredicate(format: "payCycle == %@", payCycle)
         fetchRequest.sortDescriptors = [sort]
-//        fetchRequest.relationshipKeyPathsForPrefetching = ["purchases"]
         let purchasesRequest = NSFetchRequest<ManagedPurchase>(entityName: "ManagedPurchase")
         purchasesRequest.predicate = NSPredicate(format: "timeCard.payCycle == %@", payCycle)
         
@@ -92,9 +91,6 @@ class TimeCardsViewController: UITableViewController {
         let activityViewController = UIActivityViewController(
             activityItems: items,
             applicationActivities: nil)
-//        if let popoverPresentationController = activityViewController.popoverPresentationController {
-//            popoverPresentationController.barButtonItem = (sender as! UIBarButtonItem)
-//        }
         present(activityViewController, animated: true, completion: nil)
     }
     
@@ -151,26 +147,41 @@ class TimeCardsViewController: UITableViewController {
         return false 
     }
     
+//    override func tableView(_ tableView: UITableView, commit editingStyle:
+//        UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+//        if (editingStyle == .delete) {
+//            tableView.beginUpdates()
+//
+//            let timeCard: ManagedTimeCard = timeCards[indexPath.row]
+//
+//            managedContext.delete(timeCard)
+//
+//            do {
+//                try managedContext.save()
+//                timeCards.remove(at: indexPath.row)
+//                tableView.deleteRows(at: [indexPath], with: .automatic)
+//                updatePayCycle()
+//                tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+//            } catch let error as NSError {
+//                print("Could not delete. \(error), \(error.userInfo)")
+//            }
+//        }
+//        tableView.endUpdates()
+//    }
+
+    
     override func tableView(_ tableView: UITableView, commit editingStyle:
         UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
             tableView.beginUpdates()
             
-            let timeCard: ManagedTimeCard = timeCards[indexPath.row]
-            
-            managedContext.delete(timeCard)
-
-            do {
-                try managedContext.save()
-                timeCards.remove(at: indexPath.row)
+            if removed(from: &timeCards, at: indexPath, in: managedContext) {
                 tableView.deleteRows(at: [indexPath], with: .automatic)
-                updatePayCycle()
                 tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-            } catch let error as NSError {
-                print("Could not delete. \(error), \(error.userInfo)")
+                updatePayCycle()
             }
+            tableView.endUpdates()
         }
-        tableView.endUpdates()
     }
     
     @objc func addTimeCardButtonAction(_ sender: UIBarButtonItem) {
