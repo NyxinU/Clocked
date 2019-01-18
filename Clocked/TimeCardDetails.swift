@@ -19,23 +19,23 @@ class TimeCardDetails {
         if let start = timeCard.startTime, let end = timeCard.endTime {
             self.duration = hoursAndMins(from: start, to: end)
         }
-        self.managedPurchases = fetchPurchases(timeCard: timeCard, managedContext: managedContext)
+        self.managedPurchases = fetchPurchases(from: managedContext, for: timeCard)
     }
     
-    func fetchPurchases(timeCard: ManagedTimeCard, managedContext: NSManagedObjectContext) -> [ManagedPurchase] {
-        var purchases: [ManagedPurchase] = []
-        let fetchRequest = NSFetchRequest<ManagedPurchase>(entityName: "ManagedPurchase")
-        
-        fetchRequest.predicate = NSPredicate(format: "timeCard == %@", timeCard)
-        
-        do {
-            purchases = try managedContext.fetch(fetchRequest)
-            return purchases
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
-        return purchases
-    }
+//    func fetchPurchases(timeCard: ManagedTimeCard, managedContext: NSManagedObjectContext) -> [ManagedPurchase] {
+//        var purchases: [ManagedPurchase] = []
+//        let fetchRequest = NSFetchRequest<ManagedPurchase>(entityName: "ManagedPurchase")
+//
+//        fetchRequest.predicate = NSPredicate(format: "timeCard == %@", timeCard)
+//
+//        do {
+//            purchases = try managedContext.fetch(fetchRequest)
+//            return purchases
+//        } catch let error as NSError {
+//            print("Could not fetch. \(error), \(error.userInfo)")
+//        }
+//        return purchases
+//    }
 }
 
 //class Purchase {

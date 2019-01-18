@@ -63,7 +63,7 @@ class TimeCardsViewController: UITableViewController {
         
         if fetchedTimeCards(from: managedContext, for: payCycle, to: &timeCards) {
             if timeCards.count > 0 {
-                updatePayCycle()
+                updatePayCycleAttrs(with: timeCards, for: payCycle, in: managedContext)
             }
             tableView.reloadData()
         }
@@ -157,10 +157,11 @@ class TimeCardsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.section != 0 {
+        if indexPath.section == 1 {
             return true
+        } else {
+            return false
         }
-        return false 
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle:
@@ -171,7 +172,7 @@ class TimeCardsViewController: UITableViewController {
             if removed(from: &timeCards, at: indexPath, in: managedContext) {
                 tableView.deleteRows(at: [indexPath], with: .automatic)
                 tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-                updatePayCycle()
+                updatePayCycleAttrs(with: timeCards, for: payCycle, in: managedContext)
             }
             tableView.endUpdates()
         }
@@ -179,38 +180,6 @@ class TimeCardsViewController: UITableViewController {
     
     @objc func addTimeCardButtonAction(_ sender: UIBarButtonItem) {
         navigationController?.pushViewController(TimeCardDetailsViewController(payCycle: payCycle, prevTimeCard: nil, managedContext: childManagedObjectContext), animated: true)
-    }
-    
-    func updatePayCycle() {
-        var totalHours: Int = 0
-        
-        for index in stride(from: timeCards.count - 1, through: 0, by: -1) {
-            if let startDate = timeCards[index].startTime {
-                payCycle.startDate = startDate
-                break
-            }
-        }
-        
-        for timeCard in timeCards {
-            if let endDate = timeCard.endTime {
-                payCycle.endDate = endDate
-                break
-            }
-        }
-        
-        for managedTimeCard in timeCards {
-            if let start = managedTimeCard.startTime, let end = managedTimeCard.endTime {
-                totalHours += duration(from: start, to: end)
-            }
-        }
-        
-        payCycle.totalHours = Int32(totalHours)
-        
-        do {
-            try managedContext.save()
-        } catch let error as NSError {
-            print("Could not save. \(error), \(error.userInfo)")
-        }
     }
 }
 

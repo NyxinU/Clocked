@@ -68,10 +68,21 @@ func fetchedTimeCards(from managedContext: NSManagedObjectContext, for payCycle:
     }
 }
 
-func fetchPurchases(from managedContext: NSManagedObjectContext, for payCycle: ManagedPayCycle) -> [ManagedPurchase] {
+func fetchPurchases<T: NSManagedObject>(from managedContext: NSManagedObjectContext, for obj: T) -> [ManagedPurchase] {
     var purchases: [ManagedPurchase] = []
     let purchasesRequest = NSFetchRequest<ManagedPurchase>(entityName: "ManagedPurchase")
-    purchasesRequest.predicate = NSPredicate(format: "timeCard.payCycle == %@", payCycle)
+//    purchasesRequest.predicate = NSPredicate(format: "timeCard.payCycle == %@", payCycle)
+    
+    purchasesRequest.predicate = {
+        switch NSStringFromClass(T.self) {
+        case "ManagedTimeCard":
+            return NSPredicate(format: "timeCard == %@", obj as! ManagedTimeCard)
+        case "ManagedPayCyle":
+            return NSPredicate(format: "timeCard.payCycle == %@", obj as! ManagedPayCycle)
+        default:
+            return nil
+        }
+    }()
     
     do {
         purchases = try managedContext.fetch(purchasesRequest)
@@ -80,4 +91,38 @@ func fetchPurchases(from managedContext: NSManagedObjectContext, for payCycle: M
     }
     return purchases
 }
+
+func updatePayCycleAttrs(with timeCards: [ManagedTimeCard], for payCycle: ManagedPayCycle, in managedContext: NSManagedObjectContext) {
+    var totalHours: Int = 0
+    
+    for index in stride(from: timeCards.count - 1, through: 0, by: -1) {
+        if let startDate = timeCards[index].startTime {
+            payCycle.startDate = startDate
+            break
+        }
+    }
+    
+    for timeCard in timeCards {
+        if let endDate = timeCard.endTime {
+            payCycle.endDate = endDate
+            break
+        }
+    }
+    
+    for managedTimeCard in timeCards {
+        if let start = managedTimeCard.startTime, let end = managedTimeCard.endTime {
+            totalHours += duration(from: start, to: end)
+        }
+    }
+    
+    payCycle.totalHours = Int32(totalHours)
+    
+    do {
+        try managedContext.save()
+    } catch let error as NSError {
+        print("Could not save. \(error), \(error.localizedDescription), \(error.localizedFailureReason ?? "")")
+    }
+}
+
+
 
