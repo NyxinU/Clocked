@@ -70,4 +70,14 @@ class TimeCardTableViewCell: UITableViewCell {
                 
         ])
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self.textLabel?.text = nil
+        self.startDateLabel.text = nil
+        self.startTimeLabel.text = nil
+        self.endTimeLabel.text = nil
+        self.durationLabel.text = nil
+    }
 }

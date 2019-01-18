@@ -37,34 +37,39 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupTableView()
+        setupNavigationItem()
+    }
+    
+    func setupTableView() {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         tableView.register(DatePickerTableViewCell.self, forCellReuseIdentifier: DatePickerTableViewCell.reuseIdentifier())
         tableView.register(PurchaseTableViewCell.self, forCellReuseIdentifier: PurchaseTableViewCell.reuseIdentifier())
         
+        //Looks for single or multiple taps.
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        
+        //tap does not interfere and cancel other interactions.
+        tap.cancelsTouchesInView = false
+        
+        view.addGestureRecognizer(tap)
+    }
+    
+    func setupNavigationItem() {
         if newTimeCard {
             navigationController?.title = "New Entry"
         } else {
             navigationController?.title = "Edit Entry"
         }
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveTimeCard(_:)))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveTimeCard(_:)))
         
-        let backItem = UIBarButtonItem()
-        backItem.title = "Cancel"
+        let backItem = UIBarButtonItem(barButtonSystemItem: .camera, target: nil, action: nil)
         navigationItem.backBarButtonItem = backItem
         
         if newTimeCard {
             navigationItem.rightBarButtonItem?.isEnabled = false
         }
-        
-        //Looks for single or multiple taps.
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        
-        //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
-        tap.cancelsTouchesInView = false
-        
-        view.addGestureRecognizer(tap)
     }
     
     @objc func dismissKeyboard() {
@@ -76,6 +81,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         return items.count
     }
     
+    // refactor fix footer not show during keyboard shown
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         
         let footerView = UIView()
@@ -83,6 +89,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         let backgroundColor = #colorLiteral(red: 0.9800000191, green: 0.9800000191, blue: 0.9800000191, alpha: 1)
         footerView.backgroundColor = backgroundColor
         
+        // last footer should expend to bottom unless keyboard open
         if section == (items.count - 1) {
             footerView.isHidden = true
         }
@@ -92,14 +99,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return UITableView.automaticDimension
-    }
-    
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 0.01
-    }
-    
-    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return UIView.init(frame: CGRect.zero)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -119,6 +118,8 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         } else {
             // refactor and create custom cells
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+    
+            cell.textLabel?.text = nil
             
             switch items[indexPath.section].type {
             case .timeStamps:
@@ -129,13 +130,16 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
                 return cell
             case .duration:
                 let durationItem = items[indexPath.section] as! TimeCardDetailsDurationItem
-                
-                // refactor better naming
+
                 cell.textLabel?.text = durationItem.duration
+                
                 return cell
             case .purchases:
                 if indexPath.row == items[indexPath.section].rowCount {
                     cell.textLabel?.text = "Add Purchase"
+                    cell.addSubview(
+                        UIButton(type: .contactAdd)
+                    )
                 } else {
                     let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
                     let managedPurchases = purchaseItem.managedPurchases

@@ -54,4 +54,11 @@ class PayCycleTableViewCell: UITableViewCell {
             totalHoursLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
         ])
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.textLabel?.text = nil
+        self.dateRangeLabel.text = nil
+        self.totalHoursLabel.text = nil
+    }
 }

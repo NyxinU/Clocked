@@ -31,7 +31,7 @@ class PayCyclesViewController: UITableViewController {
     }
     
     func setupTableView() {
-        tableView.register(TotalHoursTableViewCell.self, forCellReuseIdentifier: TotalHoursTableViewCell.resuseIdentifier())
+        tableView.register(LRLabelTableViewCell.self, forCellReuseIdentifier: LRLabelTableViewCell.resuseIdentifier())
         tableView.register(PayCycleTableViewCell.self, forCellReuseIdentifier: PayCycleTableViewCell.reuseIdentifier())
         tableView.rowHeight = 45.0
         
@@ -77,27 +77,18 @@ class PayCyclesViewController: UITableViewController {
     }
     
     func setupTotalHoursCell() -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: TotalHoursTableViewCell.resuseIdentifier()) as? TotalHoursTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: LRLabelTableViewCell.resuseIdentifier()) as? LRLabelTableViewCell else {
             return UITableViewCell()
         }
         
-        cell.amountLabel.text = ""
         
         return cell
-    }
-    
-    func prepPayCycleCellForResuse(_ cell: PayCycleTableViewCell) {
-        cell.textLabel?.text = nil
-        cell.dateRangeLabel.text = nil
-        cell.totalHoursLabel.text = nil
     }
     
     func setupPayCycleCell(for payCycle: ManagedPayCycle) -> UITableViewCell {
         guard let payCycleCell = tableView.dequeueReusableCell(withIdentifier: PayCycleTableViewCell.reuseIdentifier()) as? PayCycleTableViewCell else {
             return UITableViewCell()
         }
-        
-        prepPayCycleCellForResuse(payCycleCell)
         
         let startDate: String = payCycle.startDate?.dateAsString() ?? ""
         let endDate: String = payCycle.endDate?.dateAsString() ?? ""

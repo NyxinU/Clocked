@@ -19,7 +19,7 @@
 		5093A82421E80ABC00A7C5A6 /* TypeCoversions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5093A82321E80ABC00A7C5A6 /* TypeCoversions.swift */; };
 		5093A82A21EE8E1700A7C5A6 /* PayCycleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5093A82921EE8E1700A7C5A6 /* PayCycleTableViewCell.swift */; };
 		5093A82C21EEB24F00A7C5A6 /* CoreDataHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5093A82B21EEB24F00A7C5A6 /* CoreDataHelpers.swift */; };
-		5093A83221F03B0100A7C5A6 /* TotalHoursTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5093A83121F03B0100A7C5A6 /* TotalHoursTableViewCell.swift */; };
+		5093A83221F03B0100A7C5A6 /* LRLabelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5093A83121F03B0100A7C5A6 /* LRLabelTableViewCell.swift */; };
 		50E16722219A750500A3510C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E16721219A750500A3510C /* AppDelegate.swift */; };
 		50E16724219A750500A3510C /* TimeCardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E16723219A750500A3510C /* TimeCardsViewController.swift */; };
 		50E16727219A750500A3510C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50E16725219A750500A3510C /* Main.storyboard */; };
@@ -60,7 +60,7 @@
 		5093A82321E80ABC00A7C5A6 /* TypeCoversions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeCoversions.swift; sourceTree = "<group>"; };
 		5093A82921EE8E1700A7C5A6 /* PayCycleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayCycleTableViewCell.swift; sourceTree = "<group>"; };
 		5093A82B21EEB24F00A7C5A6 /* CoreDataHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelpers.swift; sourceTree = "<group>"; };
-		5093A83121F03B0100A7C5A6 /* TotalHoursTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalHoursTableViewCell.swift; sourceTree = "<group>"; };
+		5093A83121F03B0100A7C5A6 /* LRLabelTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LRLabelTableViewCell.swift; sourceTree = "<group>"; };
 		50E1671E219A750500A3510C /* Clocked.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clocked.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50E16721219A750500A3510C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		50E16723219A750500A3510C /* TimeCardsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardsViewController.swift; sourceTree = "<group>"; };
@@ -143,7 +143,7 @@
 				5040C4E1219CD107007C1031 /* TimeCardDetailsViewController.swift */,
 				50E16723219A750500A3510C /* TimeCardsViewController.swift */,
 				500E545E21AF6CB500214F25 /* TimeCardTableViewCell.swift */,
-				5093A83121F03B0100A7C5A6 /* TotalHoursTableViewCell.swift */,
+				5093A83121F03B0100A7C5A6 /* LRLabelTableViewCell.swift */,
 				5093A82321E80ABC00A7C5A6 /* TypeCoversions.swift */,
 			);
 			path = Clocked;
@@ -298,7 +298,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5093A83221F03B0100A7C5A6 /* TotalHoursTableViewCell.swift in Sources */,
+				5093A83221F03B0100A7C5A6 /* LRLabelTableViewCell.swift in Sources */,
 				5093A82C21EEB24F00A7C5A6 /* CoreDataHelpers.swift in Sources */,
 				5093A81A21C34C4100A7C5A6 /* DurationExtensions.swift in Sources */,
 				500E545721A52AFC00214F25 /* DatePickerDelegate.swift in Sources */,

@@ -71,7 +71,6 @@ func fetchedTimeCards(from managedContext: NSManagedObjectContext, for payCycle:
 func fetchPurchases<T: NSManagedObject>(from managedContext: NSManagedObjectContext, for obj: T) -> [ManagedPurchase] {
     var purchases: [ManagedPurchase] = []
     let purchasesRequest = NSFetchRequest<ManagedPurchase>(entityName: "ManagedPurchase")
-//    purchasesRequest.predicate = NSPredicate(format: "timeCard.payCycle == %@", payCycle)
     
     purchasesRequest.predicate = {
         switch NSStringFromClass(T.self) {

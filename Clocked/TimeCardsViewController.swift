@@ -42,7 +42,7 @@ class TimeCardsViewController: UITableViewController {
     }
     
     func setupTableView() {
-        tableView.register(TotalHoursTableViewCell.self, forCellReuseIdentifier: TotalHoursTableViewCell.resuseIdentifier())
+        tableView.register(LRLabelTableViewCell.self, forCellReuseIdentifier: LRLabelTableViewCell.resuseIdentifier())
         tableView.register(TimeCardTableViewCell.self, forCellReuseIdentifier: TimeCardTableViewCell.reuseIdentifier())
 
         tableView.rowHeight = 45.0
@@ -111,22 +111,15 @@ class TimeCardsViewController: UITableViewController {
     }
     
     func setupTotalHoursCell() -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: TotalHoursTableViewCell.resuseIdentifier()) as? TotalHoursTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: LRLabelTableViewCell.resuseIdentifier()) as? LRLabelTableViewCell else {
             return UITableViewCell()
         }
         let totalHours = Int(payCycle.totalHours)
         
-        cell.amountLabel.text = hoursAndMins(from: totalHours)
+        cell.leftLabel.text = "Total"
+        cell.rightLabel.text = hoursAndMins(from: totalHours)
         
         return cell
-    }
-    
-    func prepTimeCardCellForResuse(_ cell: TimeCardTableViewCell) {
-        cell.textLabel?.text = nil
-        cell.startDateLabel.text = nil
-        cell.startTimeLabel.text = nil
-        cell.endTimeLabel.text = nil
-        cell.durationLabel.text = nil
     }
     
     func setupTimeCardTableViewCell(for timeCard: ManagedTimeCard) -> UITableViewCell {
