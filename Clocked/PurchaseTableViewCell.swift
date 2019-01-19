@@ -34,6 +34,30 @@ class PurchaseTableViewCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        let textFields = [itemNameTextField, priceTextField]
+        
+        for textField in textFields {
+            textField.translatesAutoresizingMaskIntoConstraints = false
+        }
+        
+        let padding: CGFloat = 16
+        
+        NSLayoutConstraint.activate([
+            itemNameTextField.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: padding),
+            itemNameTextField.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.55),
+            itemNameTextField.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            itemNameTextField.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor),
+            
+            priceTextField.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -padding),
+            priceTextField.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.35),
+            priceTextField.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            priceTextField.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor),
+        ])
+    }
 }
 
 class PurchaseTextField: UITextField, UITextFieldDelegate {
@@ -45,12 +69,10 @@ class PurchaseTextField: UITextField, UITextFieldDelegate {
         // use auto layout instead of adjusting frame
         switch option {
         case .name:
-            self.frame = CGRect(x: 20, y: 0, width: 170, height: 40)
             self.placeholder = "Item Name"
             self.keyboardType = UIKeyboardType.default
             self.clearButtonMode = UITextField.ViewMode.whileEditing
         case .price:
-            self.frame = CGRect(x: 200, y: 0, width: 170, height: 40)
             self.placeholder = "$0.00"
             self.keyboardType = UIKeyboardType.numberPad
         }
@@ -112,7 +134,6 @@ class PriceTextField: PurchaseTextField {
 }
 
 extension PriceTextField {
-    
     func updatePriceTextField(price: Float) {
         if price <= 0.0 {
             return

@@ -45,7 +45,8 @@ class TimeCardsViewController: UITableViewController {
         tableView.register(LRLabelTableViewCell.self, forCellReuseIdentifier: LRLabelTableViewCell.resuseIdentifier())
         tableView.register(TimeCardTableViewCell.self, forCellReuseIdentifier: TimeCardTableViewCell.reuseIdentifier())
 
-        tableView.rowHeight = 45.0
+        tableView.estimatedRowHeight = 45
+        tableView.rowHeight = 45
     }
     
     func setupNavigationItem() {
@@ -125,7 +126,7 @@ class TimeCardsViewController: UITableViewController {
     func setupTimeCardTableViewCell(for timeCard: ManagedTimeCard) -> UITableViewCell {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TimeCardTableViewCell.reuseIdentifier()) as? TimeCardTableViewCell else {
-            return UITableViewCell()
+            return TimeCardTableViewCell()
         }
         
         let startTime: Date? = timeCard.startTime

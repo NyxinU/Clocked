@@ -11,7 +11,6 @@ import CoreData
 import Foundation
 
 class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, CloseDatePickerDelegate {
-    let cellId = "cellId"
     let managedContext: NSManagedObjectContext
     let payCycle: ManagedPayCycle
     var timeCard: ManagedTimeCard
@@ -42,9 +41,12 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
     }
     
     func setupTableView() {
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(LRLabelTableViewCell.self, forCellReuseIdentifier: LRLabelTableViewCell.resuseIdentifier())
         tableView.register(DatePickerTableViewCell.self, forCellReuseIdentifier: DatePickerTableViewCell.reuseIdentifier())
         tableView.register(PurchaseTableViewCell.self, forCellReuseIdentifier: PurchaseTableViewCell.reuseIdentifier())
+        
+        tableView.estimatedRowHeight = 45
+        tableView.rowHeight = 45
         
         //Looks for single or multiple taps.
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -81,26 +83,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         return items.count
     }
     
-    // refactor fix footer not show during keyboard shown
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        
-        let footerView = UIView()
-        
-        let backgroundColor = #colorLiteral(red: 0.9800000191, green: 0.9800000191, blue: 0.9800000191, alpha: 1)
-        footerView.backgroundColor = backgroundColor
-        
-        // last footer should expend to bottom unless keyboard open
-        if section == (items.count - 1) {
-            footerView.isHidden = true
-        }
-        
-        return footerView
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return UITableView.automaticDimension
-    }
-    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if items[section].type == .timeStamps && datePickerIndexPath != nil {
             return items[section].rowCount + 1
@@ -117,29 +99,35 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
             return datePickerCell
         } else {
             // refactor and create custom cells
-            let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-    
-            cell.textLabel?.text = nil
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: LRLabelTableViewCell.resuseIdentifier()) as? LRLabelTableViewCell else {
+                return LRLabelTableViewCell()
+            }
             
             switch items[indexPath.section].type {
             case .timeStamps:
                 let timeStampsItem = items[indexPath.section] as! TimeCardDetailsTimeStampsItem
                 let timeStamps = timeStampsItem.timeStamps
+                let timestamp = timeStamps[indexPath.row]
                 
-                cell.textLabel?.text = "\(timeStamps[indexPath.row]?.timeAsString() ?? "")"
+                if indexPath.row == 0 {
+                    cell.leftLabel.text = "Start"
+                } else if indexPath.row == 1 {
+                    cell.leftLabel.text = "End"
+                }
+                
+                cell.rightLabel.text = "\(timestamp?.dayOfWeek() ?? "") \(timestamp?.dateAsString() ?? "") at \(timestamp?.timeAsString() ?? "")"
+                
                 return cell
             case .duration:
                 let durationItem = items[indexPath.section] as! TimeCardDetailsDurationItem
-
-                cell.textLabel?.text = durationItem.duration
+                
+                cell.leftLabel.text = "Duration"
+                cell.rightLabel.text = durationItem.duration
                 
                 return cell
             case .purchases:
                 if indexPath.row == items[indexPath.section].rowCount {
                     cell.textLabel?.text = "Add Purchase"
-                    cell.addSubview(
-                        UIButton(type: .contactAdd)
-                    )
                 } else {
                     let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
                     let managedPurchases = purchaseItem.managedPurchases
@@ -153,7 +141,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
     
     func setupDatePickerCell(indexPath: IndexPath) -> UITableViewCell {
         guard let datePickerCell = tableView.dequeueReusableCell(withIdentifier: DatePickerTableViewCell.reuseIdentifier()) as? DatePickerTableViewCell else {
-            return UITableViewCell() }
+            return DatePickerTableViewCell() }
         let timeStampsItem = items[indexPath.section] as! TimeCardDetailsTimeStampsItem
         let timeStamps = timeStampsItem.timeStamps
         
@@ -165,7 +153,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
     
     func setupPurchaseCell(managedPurchase: ManagedPurchase) -> UITableViewCell {
         guard let purchaseCell = tableView.dequeueReusableCell(withIdentifier: PurchaseTableViewCell.reuseIdentifier()) as? PurchaseTableViewCell else {
-            return UITableViewCell()
+            return PurchaseTableViewCell()
         }
         
         purchaseCell.itemNameTextField.text = managedPurchase.name
@@ -179,8 +167,9 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath == datePickerIndexPath {
             return DatePickerTableViewCell.height
+        } else {
+            return tableView.rowHeight
         }
-        return UITableView.automaticDimension
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

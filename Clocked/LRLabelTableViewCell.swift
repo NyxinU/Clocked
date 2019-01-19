@@ -43,12 +43,12 @@ class LRLabelTableViewCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             leftLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: padding),
-            leftLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.45),
+            leftLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.20),
             leftLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             leftLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor),
             
             rightLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -padding),
-            rightLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.45),
+            rightLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.70),
             rightLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             rightLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor)
         ])

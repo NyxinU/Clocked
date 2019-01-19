@@ -33,7 +33,9 @@ class PayCyclesViewController: UITableViewController {
     func setupTableView() {
         tableView.register(LRLabelTableViewCell.self, forCellReuseIdentifier: LRLabelTableViewCell.resuseIdentifier())
         tableView.register(PayCycleTableViewCell.self, forCellReuseIdentifier: PayCycleTableViewCell.reuseIdentifier())
-        tableView.rowHeight = 45.0
+
+        tableView.estimatedRowHeight = 45
+        tableView.rowHeight = 45
         
         tableView.tableFooterView = UIView()
     }
@@ -78,16 +80,17 @@ class PayCyclesViewController: UITableViewController {
     
     func setupTotalHoursCell() -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: LRLabelTableViewCell.resuseIdentifier()) as? LRLabelTableViewCell else {
-            return UITableViewCell()
+            return LRLabelTableViewCell()
         }
         
+        cell.leftLabel.text = "Total"
         
         return cell
     }
     
     func setupPayCycleCell(for payCycle: ManagedPayCycle) -> UITableViewCell {
         guard let payCycleCell = tableView.dequeueReusableCell(withIdentifier: PayCycleTableViewCell.reuseIdentifier()) as? PayCycleTableViewCell else {
-            return UITableViewCell()
+            return PayCycleTableViewCell()
         }
         
         let startDate: String = payCycle.startDate?.dateAsString() ?? ""

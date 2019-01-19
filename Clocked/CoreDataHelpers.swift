@@ -122,6 +122,3 @@ func updatePayCycleAttrs(with timeCards: [ManagedTimeCard], for payCycle: Manage
         print("Could not save. \(error), \(error.localizedDescription), \(error.localizedFailureReason ?? "")")
     }
 }
-
-
-
