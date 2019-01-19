@@ -115,7 +115,15 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
                     cell.leftLabel.text = "End"
                 }
                 
-                cell.rightLabel.text = "\(timestamp?.dayOfWeek() ?? "") \(timestamp?.dateAsString() ?? "") at \(timestamp?.timeAsString() ?? "")"
+                cell.rightLabel.text = {
+                    guard let timestamp = timestamp else {
+                        return ""
+                    }
+                    
+                    return "\(timestamp.dayOfWeek()) \(timestamp.dateAsString()) \(timestamp.timeAsString())"
+                }()
+                
+                cell.rightLabel.text = "\(timestamp?.dayOfWeek() ?? "") \(timestamp?.dateAsString() ?? "") \(timestamp?.timeAsString() ?? "")"
                 
                 return cell
             case .duration:
