@@ -28,11 +28,9 @@ func prependNewPayCycles(managedPayCycles: [ManagedPayCycle]) -> [ManagedPayCycl
     var copy = managedPayCycles
     var newPayCycles: [ManagedPayCycle] = []
     
-    if copy.count > 0 {
-        while(copy[copy.count - 1].startDate == nil) {
-            if let last = copy.popLast() {
-                newPayCycles.append(last)
-            }
+    while copy.count > 0 && (copy[copy.count - 1].startDate == nil) {
+        if let last = copy.popLast() {
+            newPayCycles.append(last)
         }
     }
     return newPayCycles + copy
