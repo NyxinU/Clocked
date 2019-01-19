@@ -64,7 +64,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
             navigationController?.title = "Edit Entry"
         }
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveTimeCard(_:)))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveButtonAction(_:)))
         
         let backItem = UIBarButtonItem(barButtonSystemItem: .camera, target: nil, action: nil)
         navigationItem.backBarButtonItem = backItem
@@ -126,6 +126,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
                 
                 return cell
             case .purchases:
+                // refactor replace with add purchase button
                 if indexPath.row == items[indexPath.section].rowCount {
                     cell.textLabel?.text = "Add Purchase"
                 } else {
@@ -142,6 +143,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
     func setupDatePickerCell(indexPath: IndexPath) -> UITableViewCell {
         guard let datePickerCell = tableView.dequeueReusableCell(withIdentifier: DatePickerTableViewCell.reuseIdentifier()) as? DatePickerTableViewCell else {
             return DatePickerTableViewCell() }
+        
         let timeStampsItem = items[indexPath.section] as! TimeCardDetailsTimeStampsItem
         let timeStamps = timeStampsItem.timeStamps
         
@@ -177,8 +179,9 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         
         if item.type == .purchases && item.rowCount != indexPath.row {
             return true
+        } else {
+            return false
         }
-        return false
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -189,8 +192,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
             managedContext.delete(purchaseItem.managedPurchases[indexPath.row])
             purchaseItem.removeFromManagedPurchases(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
-            
-            print(purchaseItem.indexOfMostRecentPurchase)
             
             tableView.endUpdates()
         }
@@ -215,21 +216,25 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
                     tableView.deleteRows(at: [datePickerIndexPath], with: .fade)
                 }
                 datePickerIndexPath = indexPathToInsertDatePicker(indexPath: indexPath)
-                tableView.insertRows(at: [datePickerIndexPath!], with: .fade)
+                guard let datePickerIndexPath = datePickerIndexPath else {
+                    return
+                }
+                
+                tableView.insertRows(at: [datePickerIndexPath], with: .fade)
                 tableView.deselectRow(at: indexPath, animated: true)
                 
                 // add current time to cell if empty
                 let timeStampsItem = items[indexPath.section] as! TimeCardDetailsTimeStampsItem
                 var timeStamps = timeStampsItem.timeStamps
 
-                if timeStamps[datePickerIndexPath!.row - 1] == nil {
+                if timeStamps[datePickerIndexPath.row - 1] == nil {
                     // fix for crash when delete and reload at same indexPath
                     tableView.endUpdates()
                     tableView.beginUpdates()
                     
-                    timeStamps[datePickerIndexPath!.row - 1] = Date().roundDownToNearestFiveMin()
+                    timeStamps[datePickerIndexPath.row - 1] = Date().roundDownToNearestFiveMin()
                     timeStampsItem.save(new: timeStamps)
-                    tableView.reloadRows(at: [IndexPath(row: datePickerIndexPath!.row - 1, section: datePickerIndexPath!.section)], with: .automatic)
+                    tableView.reloadRows(at: [IndexPath(row: datePickerIndexPath.row - 1, section: datePickerIndexPath.section)], with: .automatic)
                     
                     updateDuration()
                 }
@@ -259,8 +264,11 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
     }
     
     func didChangeDate(date: Date, indexPath: IndexPath) {
-        let section = datePickerIndexPath!.section
-        let row = datePickerIndexPath!.row - 1
+        guard let datePickerIndexPath = datePickerIndexPath else {
+            return
+        }
+        let section = datePickerIndexPath.section
+        let row = datePickerIndexPath.row - 1
         let timeStampsItem = items[section] as! TimeCardDetailsTimeStampsItem
         var timeStamps = timeStampsItem.timeStamps
 
@@ -283,8 +291,13 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
     }
     
     func updateDuration() {
-        let section = datePickerIndexPath!.section
-        let timeStampsItem = items[section] as! TimeCardDetailsTimeStampsItem
+        guard let datePickerIndexPath = datePickerIndexPath else {
+            return
+        }
+        let section = datePickerIndexPath.section
+        guard let timeStampsItem = items[section] as? TimeCardDetailsTimeStampsItem else {
+            return
+        }
         let timeStamps = timeStampsItem.timeStamps
         
         guard let start = timeStamps[0], let end = timeStamps[1] else {
@@ -297,11 +310,23 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
     }
     
-    @objc func saveTimeCard(_ sender: UIBarButtonItem) {
-        let timeStampsItem = items[0] as! TimeCardDetailsTimeStampsItem
+    @objc func saveButtonAction(_ sender: UIBarButtonItem) {
+        saveTimeStamps()
+        savePurchases()
+        do {
+            try managedContext.save()
+            try managedContext.parent?.save()
+            navigationController?.popViewController(animated: true)
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.localizedDescription), \(error.localizedFailureReason ?? "")")
+        }
+    }
+    
+    func saveTimeStamps() {
+        guard let timeStampsItem = items[0] as? TimeCardDetailsTimeStampsItem else {
+            return
+        }
         let timeStamps = timeStampsItem.timeStamps
-        let purchaseItem = items[2] as! TimeCardDetailsPurchaseItem
-        let managedPurchases = purchaseItem.managedPurchases
         
         if let start = timeStamps[0], let end = timeStamps[1] {
             if duration(from: start, to: end) < 0 {
@@ -313,36 +338,41 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         timeCard.startTime = timeStamps[0]
         timeCard.endTime = timeStamps[1]
         
-        do {
-            if newTimeCard {
-                let payCycleWithChildContext = managedContext.object(with: payCycle.objectID) as! ManagedPayCycle
-                payCycleWithChildContext.addToTimeCards(timeCard)
+        if newTimeCard {
+            guard let payCycleWithChildContext = managedContext.object(with: payCycle.objectID) as? ManagedPayCycle else {
+                return
             }
+            payCycleWithChildContext.addToTimeCards(timeCard)
+        }
+    }
+    
+    func savePurchases() {
+        guard let purchaseItem = items[2] as? TimeCardDetailsPurchaseItem else {
+            return
+        }
+        guard let timeCardWithChildContext = managedContext.object(with: timeCard.objectID) as? ManagedTimeCard else {
+            return
+        }
+        let managedPurchases = purchaseItem.managedPurchases
+        
+        let cells = self.tableView.visibleCells
+        let purchaseTableViewCells = cells.filter {
+            $0 is PurchaseTableViewCell  }
+        for idx in 0..<purchaseTableViewCells.count {
+            guard let cell = purchaseTableViewCells[idx] as? PurchaseTableViewCell else {
+                return
+            }
+            let managedPurchase = managedPurchases[idx]
             
-            let cells = self.tableView.visibleCells
-            let purchaseTableViewCells = cells.filter {
-                $0 is PurchaseTableViewCell  }
-            for idx in 0..<purchaseTableViewCells.count {
-                let cell = purchaseTableViewCells[idx] as! PurchaseTableViewCell
-                let managedPurchase = managedPurchases[idx]
-                
-                // do not add empty entries to timecard
-                if cell.itemNameTextField.text!.count > 0 {
-                    managedPurchase.name = cell.itemNameTextField.text
-                    managedPurchase.price = currencyToFloat(from: cell.priceTextField.amountTypedString)
-                    if idx >= purchaseItem.indexOfMostRecentPurchase {
-                        let timeCardWithChildContext = managedContext.object(with: timeCard.objectID) as! ManagedTimeCard
-                        timeCardWithChildContext.addToPurchases(managedPurchase)
-                    }
+            // do not add empty entries to timecard
+            if cell.itemNameTextField.text!.count > 0 {
+                managedPurchase.name = cell.itemNameTextField.text
+                managedPurchase.price = currencyToFloat(from: cell.priceTextField.amountTypedString)
+                if idx >= purchaseItem.indexOfMostRecentPurchase {
+                    timeCardWithChildContext.addToPurchases(managedPurchase)
                 }
             }
-            try managedContext.save()
-            try managedContext.parent?.save()
-
-        } catch let error as NSError {
-            print("Could not save. \(error), \(error.userInfo)")
         }
-        navigationController?.popViewController(animated: true)
     }
     
     func presentAlert() {
