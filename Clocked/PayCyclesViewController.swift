@@ -16,7 +16,7 @@ class PayCyclesViewController: UITableViewController {
     
     init() {
         self.managedContext = appDelegate.persistentContainer.viewContext
-        super.init(nibName: nil, bundle: nil)
+        super.init(style: .grouped)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -31,13 +31,12 @@ class PayCyclesViewController: UITableViewController {
     }
     
     func setupTableView() {
+        tableView.contentInset = UIEdgeInsets(top: -19, left: 0, bottom: 0, right: 0)
         tableView.register(LRLabelTableViewCell.self, forCellReuseIdentifier: LRLabelTableViewCell.resuseIdentifier())
         tableView.register(PayCycleTableViewCell.self, forCellReuseIdentifier: PayCycleTableViewCell.reuseIdentifier())
-
+        
         tableView.estimatedRowHeight = 45
         tableView.rowHeight = 45
-        
-        tableView.tableFooterView = UIView()
     }
     
     func setupNavigationItem() {

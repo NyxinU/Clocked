@@ -27,7 +27,7 @@ class TimeCardsViewController: UITableViewController {
         self.managedContext = managedContext
         self.payCycle = payCycle
 
-        super.init(nibName: nil, bundle: nil)
+        super.init(style: .grouped)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -42,13 +42,12 @@ class TimeCardsViewController: UITableViewController {
     }
     
     func setupTableView() {
+        tableView.contentInset = UIEdgeInsets(top: -19, left: 0, bottom: 0, right: 0)
         tableView.register(LRLabelTableViewCell.self, forCellReuseIdentifier: LRLabelTableViewCell.resuseIdentifier())
         tableView.register(TimeCardTableViewCell.self, forCellReuseIdentifier: TimeCardTableViewCell.reuseIdentifier())
 
         tableView.estimatedRowHeight = 45
         tableView.rowHeight = 45
-        
-        tableView.tableFooterView = UIView()
     }
     
     func setupNavigationItem() {

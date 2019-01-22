@@ -27,7 +27,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         self.timeCardDetails = TimeCardDetailsModel(timeCard: self.timeCard, managedContext: managedContext)
         self.items = self.timeCardDetails.items
         
-        super.init(nibName: nil, bundle: nil)
+        super.init(style: .grouped)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -38,15 +38,19 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         super.viewDidLoad()
         setupTableView()
         setupNavigationItem()
+        setupToolbar()
     }
     
     func setupTableView() {
+        tableView.contentInset = UIEdgeInsets(top: -19, left: 0, bottom: 0, right: 0)
         tableView.register(LRLabelTableViewCell.self, forCellReuseIdentifier: LRLabelTableViewCell.resuseIdentifier())
         tableView.register(DatePickerTableViewCell.self, forCellReuseIdentifier: DatePickerTableViewCell.reuseIdentifier())
         tableView.register(PurchaseTableViewCell.self, forCellReuseIdentifier: PurchaseTableViewCell.reuseIdentifier())
         
         tableView.estimatedRowHeight = 45
         tableView.rowHeight = 45
+        
+        tableView.tableFooterView = UIView()
         
         //Looks for single or multiple taps.
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -74,6 +78,24 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         }
     }
     
+    func setupToolbar() {
+        navigationController?.setToolbarHidden(false, animated: true)
+        var items:[UIBarButtonItem] = []
+        let addPurchaseButton = UIBarButtonItem(title: "Add Purchase", style: .plain, target: self, action: #selector(addPurchaseButtonAction))
+        
+        items.append(addPurchaseButton)
+        self.setToolbarItems(items, animated: true)
+    }
+    
+    @objc func addPurchaseButtonAction() {
+        guard let purchaseItem = items[2] as? TimeCardDetailsPurchaseItem else {
+            return
+        }
+        
+        purchaseItem.addToManagedPurchases(newPurchase: ManagedPurchase(context: managedContext))
+        tableView.insertRows(at: [IndexPath(row: purchaseItem.rowCount - 1, section: 2)], with: .automatic)
+    }
+    
     @objc func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
@@ -86,10 +108,10 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if items[section].type == .timeStamps && datePickerIndexPath != nil {
             return items[section].rowCount + 1
-        } else if items[section].type == .purchases {
-            return items[section].rowCount + 1
+        } else {
+            return items[section].rowCount
         }
-        return items[section].rowCount
+
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -134,16 +156,10 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
                 
                 return cell
             case .purchases:
-                // refactor replace with add purchase button
-                if indexPath.row == items[indexPath.section].rowCount {
-                    cell.textLabel?.text = "Add Purchase"
-                } else {
-                    let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
-                    let managedPurchases = purchaseItem.managedPurchases
+                let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
+                let managedPurchases = purchaseItem.managedPurchases
                     
-                    return setupPurchaseCell(managedPurchase: managedPurchases[indexPath.row])
-                }
-                return cell 
+                return setupPurchaseCell(managedPurchase: managedPurchases[indexPath.row])
             }
         }
     }
@@ -234,7 +250,9 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
                 tableView.deselectRow(at: indexPath, animated: true)
                 
                 // add current time to cell if empty
-                let timeStampsItem = items[indexPath.section] as! TimeCardDetailsTimeStampsItem
+                guard let timeStampsItem = items[indexPath.section] as? TimeCardDetailsTimeStampsItem else {
+                    return
+                }
                 var timeStamps = timeStampsItem.timeStamps
 
                 if timeStamps[datePickerIndexPath.row - 1] == nil {
@@ -248,18 +266,15 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
                     
                     updateDuration()
                 }
-            case .duration:
+            default:
                 closeDatePicker()
                 tableView.deselectRow(at: indexPath, animated: false)
-            case .purchases:
-                closeDatePicker()
-                let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
-                
-                if purchaseItem.rowCount == indexPath.row {
-                    purchaseItem.addToManagedPurchases(newPurchase: ManagedPurchase(context: managedContext))
-                    tableView.insertRows(at: [indexPath], with: .automatic)
-                }
-                tableView.deselectRow(at: indexPath, animated: false)
+//            case .duration:
+//                closeDatePicker()
+//                tableView.deselectRow(at: indexPath, animated: false)
+//            case .purchases:
+//                closeDatePicker()
+//                tableView.deselectRow(at: indexPath, animated: false)
             }
         }
         tableView.endUpdates()
@@ -417,16 +432,16 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
     }
     
     func presentAlert(for errorType: TimeCardError) {
-        let title: String = "Could Not Save"
+        let title: String = "Cannot Save Entry"
         var message: String
         
         switch errorType {
         case .noStartTime:
-            message = "Entry must have start time"
+            message = "An entry must have a start time"
         case .invalidTimes:
-            message = "Entry's end cannot be before it's start."
+            message = "The start time must be before the end time"
         case .purchaseWithNoName:
-            message = "Purchase must have name"
+            message = "A purchase must have a name"
         default:
             message = "Unknown Error"
         }

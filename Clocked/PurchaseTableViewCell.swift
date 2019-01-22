@@ -48,12 +48,12 @@ class PurchaseTableViewCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             itemNameTextField.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: padding),
-            itemNameTextField.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.55),
+            itemNameTextField.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.70),
             itemNameTextField.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             itemNameTextField.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor),
             
             priceTextField.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -padding),
-            priceTextField.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.35),
+            priceTextField.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.20),
             priceTextField.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             priceTextField.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor),
         ])
