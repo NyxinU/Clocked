@@ -47,6 +47,8 @@ class TimeCardsViewController: UITableViewController {
 
         tableView.estimatedRowHeight = 45
         tableView.rowHeight = 45
+        
+        tableView.tableFooterView = UIView()
     }
     
     func setupNavigationItem() {
