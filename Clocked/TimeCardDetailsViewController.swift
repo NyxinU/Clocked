@@ -216,8 +216,10 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         } else {
             switch items[indexPath.section].type {
             case .timeStamps:
-                // allow save after one time has been selected
-                navigationItem.rightBarButtonItem?.isEnabled = true
+                // allow save if start time is selected
+                if indexPath.row == 0 {
+                    navigationItem.rightBarButtonItem?.isEnabled = true
+                }
                 
                 // close prev date picker
                 if let datePickerIndexPath = datePickerIndexPath {
