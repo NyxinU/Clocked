@@ -324,6 +324,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         case noTimeStampItem
         case invalidTimes
         case noStartTime
+        case purchaseWithNoName
         case unknown
     }
     
@@ -340,8 +341,14 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
             presentAlert(for: .unknown)
         }
 
-        savePurchases()
-        
+        do {
+            try savePurchases()
+        } catch TimeCardError.purchaseWithNoName {
+            presentAlert(for: .purchaseWithNoName)
+        } catch {
+            presentAlert(for: .unknown)
+        }
+            
         do {
             try managedContext.save()
             try managedContext.parent?.save()
@@ -350,30 +357,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
             print("Could not save. \(error), \(error.localizedDescription), \(error.localizedFailureReason ?? "")")
         }
     }
-    
-//    func saveTimeStamps() {
-//        guard let timeStampsItem = items[0] as? TimeCardDetailsTimeStampsItem else {
-//            return
-//        }
-//        let timeStamps = timeStampsItem.timeStamps
-//
-//        if let start = timeStamps[0], let end = timeStamps[1] {
-//            if duration(from: start, to: end) < 0 {
-//                presentAlert()
-//                return
-//            }
-//        }
-//
-//        timeCard.startTime = timeStamps[0]
-//        timeCard.endTime = timeStamps[1]
-//
-//        if newTimeCard {
-//            guard let payCycleWithChildContext = managedContext.object(with: payCycle.objectID) as? ManagedPayCycle else {
-//                return
-//            }
-//            payCycleWithChildContext.addToTimeCards(timeCard)
-//        }
-//    }
     func saveTimeStamps() throws {
         guard let timeStampsItem = items[0] as? TimeCardDetailsTimeStampsItem else {
             throw TimeCardError.noTimeStampItem
@@ -402,7 +385,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         }
     }
     
-    func savePurchases() {
+    func savePurchases() throws {
         guard let purchaseItem = items[2] as? TimeCardDetailsPurchaseItem else {
             return
         }
@@ -421,12 +404,14 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
             let managedPurchase = managedPurchases[idx]
             
             // do not add empty entries to timecard
-            if cell.itemNameTextField.text!.count > 0 {
+            if let itemName = cell.itemNameTextField.text, itemName.count > 0 {
                 managedPurchase.name = cell.itemNameTextField.text
                 managedPurchase.price = currencyToFloat(from: cell.priceTextField.amountTypedString)
                 if idx >= purchaseItem.indexOfMostRecentPurchase {
                     timeCardWithChildContext.addToPurchases(managedPurchase)
                 }
+            } else if cell.priceTextField.amountTypedString.count > 0 {
+                throw TimeCardError.purchaseWithNoName
             }
         }
     }
@@ -440,6 +425,8 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
             message = "Entry must have start time"
         case .invalidTimes:
             message = "Entry's end cannot be before it's start."
+        case .purchaseWithNoName:
+            message = "Purchase must have name"
         default:
             message = "Unknown Error"
         }
