@@ -318,6 +318,11 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
     }
     
+    enum TimeCardError: Error {
+        case invalidTimes
+        case noStartTime
+    }
+    
     @objc func saveButtonAction(_ sender: UIBarButtonItem) {
         saveTimeStamps()
         savePurchases()

@@ -143,10 +143,11 @@ class PayCyclesViewController: UITableViewController {
         
         let payCycle: ManagedPayCycle = ManagedPayCycle(context: managedContext)
         
+        
         do {
             try managedContext.save()
-            managedPayCycles.insert(payCycle, at: 0)
-            tableView.insertRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
+            let timeCardViewController = TimeCardsViewController(payCycle: payCycle, managedContext: managedContext)
+            navigationController?.pushViewController(timeCardViewController, animated: true)
         } catch let error as NSError {
             print("Could not add. \(error), \(error.localizedDescription), \(error.localizedFailureReason ?? "")")
         }
