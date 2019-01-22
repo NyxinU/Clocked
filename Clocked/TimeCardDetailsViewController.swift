@@ -319,13 +319,27 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
     }
     
     enum TimeCardError: Error {
+        case noTimeStampItem
         case invalidTimes
         case noStartTime
+        case unknown
     }
     
     @objc func saveButtonAction(_ sender: UIBarButtonItem) {
-        saveTimeStamps()
+        do {
+            try saveTimeStamps()
+        } catch TimeCardError.noTimeStampItem {
+            return
+        } catch TimeCardError.invalidTimes {
+            presentAlert(for: .invalidTimes)
+        } catch TimeCardError.noStartTime {
+            presentAlert(for: .noStartTime)
+        } catch {
+            presentAlert(for: .unknown)
+        }
+
         savePurchases()
+        
         do {
             try managedContext.save()
             try managedContext.parent?.save()
@@ -335,22 +349,49 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         }
     }
     
-    func saveTimeStamps() {
+//    func saveTimeStamps() {
+//        guard let timeStampsItem = items[0] as? TimeCardDetailsTimeStampsItem else {
+//            return
+//        }
+//        let timeStamps = timeStampsItem.timeStamps
+//
+//        if let start = timeStamps[0], let end = timeStamps[1] {
+//            if duration(from: start, to: end) < 0 {
+//                presentAlert()
+//                return
+//            }
+//        }
+//
+//        timeCard.startTime = timeStamps[0]
+//        timeCard.endTime = timeStamps[1]
+//
+//        if newTimeCard {
+//            guard let payCycleWithChildContext = managedContext.object(with: payCycle.objectID) as? ManagedPayCycle else {
+//                return
+//            }
+//            payCycleWithChildContext.addToTimeCards(timeCard)
+//        }
+//    }
+    func saveTimeStamps() throws {
         guard let timeStampsItem = items[0] as? TimeCardDetailsTimeStampsItem else {
-            return
+            throw TimeCardError.noTimeStampItem
         }
+        
         let timeStamps = timeStampsItem.timeStamps
         
-        if let start = timeStamps[0], let end = timeStamps[1] {
-            if duration(from: start, to: end) < 0 {
-                presentAlert()
-                return
+        guard let start = timeStamps[0] else {
+            throw TimeCardError.noStartTime
+        }
+        
+        if let end = timeStamps[1] {
+            guard duration(from: start, to: end) > 0 else {
+                throw TimeCardError.invalidTimes
             }
         }
         
         timeCard.startTime = timeStamps[0]
         timeCard.endTime = timeStamps[1]
-        
+
         if newTimeCard {
             guard let payCycleWithChildContext = managedContext.object(with: payCycle.objectID) as? ManagedPayCycle else {
                 return
@@ -388,8 +429,20 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         }
     }
     
-    func presentAlert() {
-        let alert = UIAlertController(title: "Invalid Time", message: "Entry's end cannot be before it's start.", preferredStyle: UIAlertController.Style.alert)
+    func presentAlert(for errorType: TimeCardError) {
+        let title: String = "Could Not Save"
+        var message: String
+        
+        switch errorType {
+        case .noStartTime:
+            message = "Entry must have start time"
+        case .invalidTimes:
+            message = "Entry's end cannot be before it's start."
+        default:
+            message = "Unknown Error"
+        }
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
