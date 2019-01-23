@@ -168,7 +168,7 @@ class PayCyclesViewController: UITableViewController {
             let timeCardViewController = TimeCardsViewController(payCycle: payCycle, managedContext: managedContext)
             navigationController?.pushViewController(timeCardViewController, animated: true)
         } catch let error as NSError {
-            print("Could not add. \(error), \(error.localizedDescription), \(error.localizedFailureReason ?? "")")
+            print("Could not add. \(error), \(error.userInfo)")
         }
         
         tableView.endUpdates()
