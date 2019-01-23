@@ -42,9 +42,9 @@ class TimeCardsViewController: UITableViewController {
     }
     
     func setupTableView() {
-        tableView.contentInset = UIEdgeInsets(top: -19, left: 0, bottom: 0, right: 0)
         tableView.register(LRLabelTableViewCell.self, forCellReuseIdentifier: LRLabelTableViewCell.resuseIdentifier())
         tableView.register(TimeCardTableViewCell.self, forCellReuseIdentifier: TimeCardTableViewCell.reuseIdentifier())
+        tableView.register(HeaderFooterView.self, forHeaderFooterViewReuseIdentifier: HeaderFooterView.reuseIdentifier())
 
         tableView.estimatedRowHeight = 45
         tableView.rowHeight = 45
@@ -102,6 +102,24 @@ class TimeCardsViewController: UITableViewController {
             return 1
         }
         return timeCards.count
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        guard let view = tableView.dequeueReusableCell(withIdentifier: HeaderFooterView.reuseIdentifier()) else {
+            return UIView()
+        }
+        return view
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let view = tableView.dequeueReusableCell(withIdentifier: HeaderFooterView.reuseIdentifier()) else {
+            return UIView()
+        }
+        return view
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return CGFloat.leastNormalMagnitude
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

@@ -20,6 +20,7 @@
 		5093A82A21EE8E1700A7C5A6 /* PayCycleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5093A82921EE8E1700A7C5A6 /* PayCycleTableViewCell.swift */; };
 		5093A82C21EEB24F00A7C5A6 /* CoreDataHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5093A82B21EEB24F00A7C5A6 /* CoreDataHelpers.swift */; };
 		5093A83221F03B0100A7C5A6 /* LRLabelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5093A83121F03B0100A7C5A6 /* LRLabelTableViewCell.swift */; };
+		50CCF18C21F7E29B0045E402 /* HeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50CCF18B21F7E29B0045E402 /* HeaderFooterView.swift */; };
 		50E16722219A750500A3510C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E16721219A750500A3510C /* AppDelegate.swift */; };
 		50E16724219A750500A3510C /* TimeCardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E16723219A750500A3510C /* TimeCardsViewController.swift */; };
 		50E16727219A750500A3510C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50E16725219A750500A3510C /* Main.storyboard */; };
@@ -61,6 +62,7 @@
 		5093A82921EE8E1700A7C5A6 /* PayCycleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayCycleTableViewCell.swift; sourceTree = "<group>"; };
 		5093A82B21EEB24F00A7C5A6 /* CoreDataHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelpers.swift; sourceTree = "<group>"; };
 		5093A83121F03B0100A7C5A6 /* LRLabelTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LRLabelTableViewCell.swift; sourceTree = "<group>"; };
+		50CCF18B21F7E29B0045E402 /* HeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderFooterView.swift; sourceTree = "<group>"; };
 		50E1671E219A750500A3510C /* Clocked.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clocked.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50E16721219A750500A3510C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		50E16723219A750500A3510C /* TimeCardsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCardsViewController.swift; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 				50E1672D219A750600A3510C /* LaunchScreen.storyboard */,
 				50E16725219A750500A3510C /* Main.storyboard */,
 				500E546021B7071600214F25 /* PayCyclesViewController.swift */,
+				50CCF18B21F7E29B0045E402 /* HeaderFooterView.swift */,
 				5093A82921EE8E1700A7C5A6 /* PayCycleTableViewCell.swift */,
 				5093A82121D6CE2000A7C5A6 /* PurchaseTableViewCell.swift */,
 				5093A81F21CB013800A7C5A6 /* TimeCardDetails.swift */,
@@ -302,6 +305,7 @@
 				5093A82C21EEB24F00A7C5A6 /* CoreDataHelpers.swift in Sources */,
 				5093A81A21C34C4100A7C5A6 /* DurationExtensions.swift in Sources */,
 				500E545721A52AFC00214F25 /* DatePickerDelegate.swift in Sources */,
+				50CCF18C21F7E29B0045E402 /* HeaderFooterView.swift in Sources */,
 				5040C4E2219CD107007C1031 /* TimeCardDetailsViewController.swift in Sources */,
 				5093A82221D6CE2000A7C5A6 /* PurchaseTableViewCell.swift in Sources */,
 				500E545F21AF6CB600214F25 /* TimeCardTableViewCell.swift in Sources */,

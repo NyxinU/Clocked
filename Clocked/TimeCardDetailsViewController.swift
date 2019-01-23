@@ -42,10 +42,10 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
     }
     
     func setupTableView() {
-        tableView.contentInset = UIEdgeInsets(top: -19, left: 0, bottom: 0, right: 0)
         tableView.register(LRLabelTableViewCell.self, forCellReuseIdentifier: LRLabelTableViewCell.resuseIdentifier())
         tableView.register(DatePickerTableViewCell.self, forCellReuseIdentifier: DatePickerTableViewCell.reuseIdentifier())
         tableView.register(PurchaseTableViewCell.self, forCellReuseIdentifier: PurchaseTableViewCell.reuseIdentifier())
+        tableView.register(HeaderFooterView.self, forHeaderFooterViewReuseIdentifier: HeaderFooterView.reuseIdentifier())
         
         tableView.estimatedRowHeight = 45
         tableView.rowHeight = 45
@@ -105,6 +105,24 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         return items.count
     }
     
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        guard let view = tableView.dequeueReusableCell(withIdentifier: HeaderFooterView.reuseIdentifier()) else {
+            return UIView()
+        }
+        return view
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let view = tableView.dequeueReusableCell(withIdentifier: HeaderFooterView.reuseIdentifier()) else {
+            return UIView()
+        }
+        return view
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return CGFloat.leastNormalMagnitude
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if items[section].type == .timeStamps && datePickerIndexPath != nil {
             return items[section].rowCount + 1
@@ -132,9 +150,9 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
                 let timestamp = timeStamps[indexPath.row]
                 
                 if indexPath.row == 0 {
-                    cell.leftLabel.text = "Start"
+                    cell.leftLabel.text = "Starts"
                 } else if indexPath.row == 1 {
-                    cell.leftLabel.text = "End"
+                    cell.leftLabel.text = "Ends"
                 }
                 
                 cell.rightLabel.text = {
@@ -142,10 +160,8 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
                         return ""
                     }
                     
-                    return "\(timestamp.dayOfWeek()) \(timestamp.dateAsString()) \(timestamp.timeAsString())"
+                    return "\(timestamp.dateAsString())    \(timestamp.timeAsString())"
                 }()
-                
-                cell.rightLabel.text = "\(timestamp?.dayOfWeek() ?? "") \(timestamp?.dateAsString() ?? "") \(timestamp?.timeAsString() ?? "")"
                 
                 return cell
             case .duration:
