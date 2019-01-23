@@ -19,7 +19,7 @@ func fetchedPayCycles(from managedContext: NSManagedObjectContext, to payCycles:
         payCycles = prependNewPayCycles(managedPayCycles: data)
         return true
     } catch let error as NSError {
-        print("Could not fetch. \(error), \(error.localizedDescription), \(error.localizedFailureReason ?? "")")
+        print("Could not fetch. \(error), \(error.userInfo)")
         return false
     }
 }
@@ -46,7 +46,7 @@ func removed<T>(from array: inout [T], at indexPath: IndexPath, in managedContex
         array.remove(at: indexPath.row)
         return true
     } catch let error as NSError {
-        print("Could not delete. \(error), \(error.localizedDescription), \(error.localizedFailureReason ?? "")")
+        print("Could not delete. \(error), \(error.userInfo)")
         return false
     }
 }
@@ -61,7 +61,7 @@ func fetchedTimeCards(from managedContext: NSManagedObjectContext, for payCycle:
         timeCards = try managedContext.fetch(fetchRequest)
         return true
     } catch let error as NSError {
-        print("Could not fetch. \(error), \(error.localizedDescription), \(error.localizedFailureReason ?? "")")
+        print("Could not fetch. \(error), \(error.userInfo)")
         return false
     }
 }
@@ -84,7 +84,7 @@ func fetchPurchases<T: NSManagedObject>(from managedContext: NSManagedObjectCont
     do {
         purchases = try managedContext.fetch(purchasesRequest)
     } catch let error as NSError {
-        print("Could not fetch. \(error), \(error.localizedDescription), \(error.localizedFailureReason ?? "")")
+        print("Could not fetch. \(error), \(error.userInfo)")
     }
     return purchases
 }
@@ -117,6 +117,6 @@ func updatePayCycleAttrs(with timeCards: [ManagedTimeCard], for payCycle: Manage
     do {
         try managedContext.save()
     } catch let error as NSError {
-        print("Could not save. \(error), \(error.localizedDescription), \(error.localizedFailureReason ?? "")")
+        print("Could not save. \(error), \(error.userInfo)")
     }
 }

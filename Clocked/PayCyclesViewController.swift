@@ -10,6 +10,7 @@ import UIKit
 import CoreData
 
 class PayCyclesViewController: UITableViewController {
+    var cummulativeHours: Int = 0
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     let managedContext: NSManagedObjectContext
     var managedPayCycles: [ManagedPayCycle] = []
@@ -58,12 +59,21 @@ class PayCyclesViewController: UITableViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addPayCycleButtonAction(_:)))
     }
     
+    func dismissToolbar() {
+        navigationController?.setToolbarHidden(true, animated: true)
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        dismissToolbar()
         if fetchedPayCycles(from: managedContext, to: &managedPayCycles) {
-           tableView.reloadData()
+            calculateCumulativeHours()
+            tableView.reloadData()
         }
+    }
+    
+    func calculateCumulativeHours() {
+        cummulativeHours = Int(managedPayCycles.reduce(0, { $0 + $1.totalHours }))
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -92,6 +102,7 @@ class PayCyclesViewController: UITableViewController {
         }
         
         cell.leftLabel.text = "Total"
+        cell.rightLabel.text = "\(hoursAndMins(from: cummulativeHours))"
         
         return cell
     }
