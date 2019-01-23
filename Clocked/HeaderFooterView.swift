@@ -15,9 +15,23 @@ class HeaderFooterView: UITableViewHeaderFooterView {
     }
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
+
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            self.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            self.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            self.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
+            self.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor)
+        ])
     }
 }

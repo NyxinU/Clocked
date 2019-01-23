@@ -16,7 +16,7 @@ class PayCyclesViewController: UITableViewController {
     
     init() {
         self.managedContext = appDelegate.persistentContainer.viewContext
-        super.init(style: .grouped)
+        super.init(style: .plain)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -34,6 +34,16 @@ class PayCyclesViewController: UITableViewController {
         tableView.register(LRLabelTableViewCell.self, forCellReuseIdentifier: LRLabelTableViewCell.resuseIdentifier())
         tableView.register(PayCycleTableViewCell.self, forCellReuseIdentifier: PayCycleTableViewCell.reuseIdentifier())
         tableView.register(HeaderFooterView.self, forHeaderFooterViewReuseIdentifier: HeaderFooterView.reuseIdentifier())
+        
+        let footerView = { () -> HeaderFooterView in
+            guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: HeaderFooterView.reuseIdentifier()) as? HeaderFooterView else {
+                return HeaderFooterView()
+            }
+            return view
+        }()
+        
+        tableView.backgroundColor = #colorLiteral(red: 0.9418308139, green: 0.9425446987, blue: 0.9419413209, alpha: 1)
+        tableView.tableFooterView = footerView
         
         tableView.estimatedRowHeight = 45
         tableView.rowHeight = 45
@@ -66,24 +76,6 @@ class PayCyclesViewController: UITableViewController {
         } else {
             return managedPayCycles.count
         }
-    }
-    
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        guard let view = tableView.dequeueReusableCell(withIdentifier: HeaderFooterView.reuseIdentifier()) else {
-            return UIView()
-        }
-        return view
-    }
-    
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let view = tableView.dequeueReusableCell(withIdentifier: HeaderFooterView.reuseIdentifier()) else {
-            return UIView()
-        }
-        return view
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return CGFloat.leastNormalMagnitude
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

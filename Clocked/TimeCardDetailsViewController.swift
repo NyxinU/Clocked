@@ -27,7 +27,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         self.timeCardDetails = TimeCardDetailsModel(timeCard: self.timeCard, managedContext: managedContext)
         self.items = self.timeCardDetails.items
         
-        super.init(style: .grouped)
+        super.init(style: .plain)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -47,10 +47,17 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         tableView.register(PurchaseTableViewCell.self, forCellReuseIdentifier: PurchaseTableViewCell.reuseIdentifier())
         tableView.register(HeaderFooterView.self, forHeaderFooterViewReuseIdentifier: HeaderFooterView.reuseIdentifier())
         
+        let footerView = { () -> HeaderFooterView in
+            guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: HeaderFooterView.reuseIdentifier()) as? HeaderFooterView else {
+                return HeaderFooterView()
+            }
+            return view
+        }()
+        tableView.backgroundColor = #colorLiteral(red: 0.9418308139, green: 0.9425446987, blue: 0.9419413209, alpha: 1)
+        tableView.tableFooterView = footerView
+        
         tableView.estimatedRowHeight = 45
         tableView.rowHeight = 45
-        
-        tableView.tableFooterView = UIView()
         
         //Looks for single or multiple taps.
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -106,21 +113,18 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
     }
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        guard let view = tableView.dequeueReusableCell(withIdentifier: HeaderFooterView.reuseIdentifier()) else {
-            return UIView()
-        }
-        return view
-    }
-    
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let view = tableView.dequeueReusableCell(withIdentifier: HeaderFooterView.reuseIdentifier()) else {
-            return UIView()
+        guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: HeaderFooterView.reuseIdentifier()) as? HeaderFooterView else {
+            return HeaderFooterView()
         }
         return view
     }
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return CGFloat.leastNormalMagnitude
+        if section == 1 {
+            return UITableView.automaticDimension
+        } else {
+            return CGFloat.leastNormalMagnitude
+        }
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -129,13 +133,12 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         } else {
             return items[section].rowCount
         }
-
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if datePickerIndexPath == indexPath {
             let datePickerCell = setupDatePickerCell(indexPath: indexPath)
-
+            
             return datePickerCell
         } else {
             // refactor and create custom cells
@@ -174,7 +177,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
             case .purchases:
                 let purchaseItem = items[indexPath.section] as! TimeCardDetailsPurchaseItem
                 let managedPurchases = purchaseItem.managedPurchases
-                    
+                
                 return setupPurchaseCell(managedPurchase: managedPurchases[indexPath.row])
             }
         }
@@ -285,12 +288,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
             default:
                 closeDatePicker()
                 tableView.deselectRow(at: indexPath, animated: false)
-//            case .duration:
-//                closeDatePicker()
-//                tableView.deselectRow(at: indexPath, animated: false)
-//            case .purchases:
-//                closeDatePicker()
-//                tableView.deselectRow(at: indexPath, animated: false)
             }
         }
         tableView.endUpdates()
