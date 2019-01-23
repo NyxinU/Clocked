@@ -100,7 +100,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         }
         
         purchaseItem.addToManagedPurchases(newPurchase: ManagedPurchase(context: managedContext))
-        tableView.insertRows(at: [IndexPath(row: purchaseItem.rowCount - 1, section: 2)], with: .automatic)
+        tableView.insertRows(at: [IndexPath(row: purchaseItem.rowCount - 1, section: 2)], with: .top)
     }
     
     @objc func dismissKeyboard() {
