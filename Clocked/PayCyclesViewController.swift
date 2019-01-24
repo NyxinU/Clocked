@@ -26,9 +26,17 @@ class PayCyclesViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        pushVCWithFirstPayCycle()
         
         setupTableView()
         setupNavigationItem()
+    }
+    
+    func pushVCWithFirstPayCycle() {
+        if fetchedPayCycles(from: managedContext, to: &managedPayCycles), managedPayCycles.count > 0 {
+            let timeCardViewController = TimeCardsViewController(payCycle: managedPayCycles[0], managedContext: managedContext)
+            navigationController?.pushViewController(timeCardViewController, animated: false)
+        }
     }
     
     func setupTableView() {
