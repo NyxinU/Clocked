@@ -4,6 +4,7 @@
         <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="totalHours" optional="YES" attributeType="Integer 32" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="activeTimeCard" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ManagedTimeCard" inverseName="payCycleForActiveTimeCard" inverseEntity="ManagedTimeCard" syncable="YES"/>
         <relationship name="timeCards" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ManagedTimeCard" inverseName="payCycle" inverseEntity="ManagedTimeCard" syncable="YES"/>
     </entity>
     <entity name="ManagedPurchase" representedClassName="ManagedPurchase" syncable="YES" codeGenerationType="class">
@@ -15,11 +16,12 @@
         <attribute name="endTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="startTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="payCycle" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ManagedPayCycle" inverseName="timeCards" inverseEntity="ManagedPayCycle" syncable="YES"/>
+        <relationship name="payCycleForActiveTimeCard" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ManagedPayCycle" inverseName="activeTimeCard" inverseEntity="ManagedPayCycle" syncable="YES"/>
         <relationship name="purchases" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ManagedPurchase" inverseName="timeCard" inverseEntity="ManagedPurchase" syncable="YES"/>
     </entity>
     <elements>
-        <element name="ManagedPayCycle" positionX="128.31640625" positionY="-18.94921875" width="128" height="105"/>
+        <element name="ManagedPayCycle" positionX="128.31640625" positionY="-18.94921875" width="128" height="120"/>
         <element name="ManagedPurchase" positionX="36" positionY="18" width="128" height="90"/>
-        <element name="ManagedTimeCard" positionX="-63" positionY="-18" width="128" height="105"/>
+        <element name="ManagedTimeCard" positionX="-63" positionY="-18" width="128" height="120"/>
     </elements>
 </model>

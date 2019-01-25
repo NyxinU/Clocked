@@ -13,6 +13,10 @@ class TimeCardsViewController: UITableViewController {
     let managedContext: NSManagedObjectContext
     let payCycle: ManagedPayCycle
     var timeCards: [ManagedTimeCard] = []
+    var clockInButton: UIBarButtonItem!
+    var clockOutButton: UIBarButtonItem!
+    var items = [UIBarButtonItem]()
+    
     private lazy var childManagedObjectContext: NSManagedObjectContext = {
         // Initialize Managed Object Context
         let managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
@@ -82,16 +86,22 @@ class TimeCardsViewController: UITableViewController {
     }
     
     func setupToolbar() {
+        items = []
         navigationController?.setToolbarHidden(false, animated: true)
-        var items = [UIBarButtonItem]()
         let shareButton =  UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareButtonAction(_:)))
-        let clockInButton = UIBarButtonItem(title: "Clock In Now", style: .plain, target: self, action: nil)
-        let clockOutButton = UIBarButtonItem(title: "Clock Out Now", style: .plain, target: self, action: nil)
         let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        
+        clockInButton = UIBarButtonItem(title: "Clock In Now", style: .plain, target: self, action: #selector(clockInButtonAction(_:)))
+        clockOutButton = UIBarButtonItem(title: "Clock Out Now", style: .plain, target: self, action: #selector(clockOutButtonAction(_:)))
         
         items.append(shareButton)
         items.append(space)
-        items.append(clockInButton)
+
+        if payCycle.activeTimeCard == nil {
+            items.append(clockInButton)
+        } else {
+            items.append(clockOutButton)
+        }
         
         self.setToolbarItems(items, animated: true)
     }
@@ -107,6 +117,44 @@ class TimeCardsViewController: UITableViewController {
             activityItems: items,
             applicationActivities: nil)
         present(activityViewController, animated: true, completion: nil)
+    }
+    
+    @objc func clockInButtonAction(_ sender: UIBarButtonItem) {
+        let currentTime = Date().roundDownToNearestFiveMin()
+        let newTimeCard = ManagedTimeCard(context: managedContext)
+        newTimeCard.startTime = currentTime
+        payCycle.activeTimeCard = newTimeCard
+        
+        do {
+            try managedContext.save()
+            
+            _ = items.popLast()
+            items.append(clockOutButton)
+            setToolbarItems(items, animated: true)
+        } catch let error as NSError  {
+            print("Could not save \(error), \(error.userInfo)")
+        }
+    }
+    
+    @objc func clockOutButtonAction(_ sender: UIBarButtonItem) {
+        let currentTime = Date().roundDownToNearestFiveMin()
+        guard let timeCard = payCycle.activeTimeCard else {
+            return
+        }
+        timeCard.endTime = currentTime
+        payCycle.addToTimeCards(timeCard)
+        payCycle.activeTimeCard = nil
+        
+        do {
+            try managedContext.save()
+            timeCards.insert(timeCard, at: 0)
+            tableView.insertRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
+            _ = items.popLast()
+            items.append(clockInButton)
+            setToolbarItems(items, animated: true)
+        } catch let error as NSError {
+            print("Could not save \(error), \(error.userInfo)")
+        }
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
