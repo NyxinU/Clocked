@@ -83,10 +83,16 @@ class TimeCardsViewController: UITableViewController {
     
     func setupToolbar() {
         navigationController?.setToolbarHidden(false, animated: true)
-        var items:[UIBarButtonItem] = []
+        var items = [UIBarButtonItem]()
         let shareButton =  UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareButtonAction(_:)))
+        let clockInButton = UIBarButtonItem(title: "Clock In Now", style: .plain, target: self, action: nil)
+        let clockOutButton = UIBarButtonItem(title: "Clock Out Now", style: .plain, target: self, action: nil)
+        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         
         items.append(shareButton)
+        items.append(space)
+        items.append(clockInButton)
+        
         self.setToolbarItems(items, animated: true)
     }
     
