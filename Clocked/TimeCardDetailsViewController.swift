@@ -97,6 +97,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
     }
     
     @objc func addPurchaseButtonAction() {
+        closeDatePicker()
         guard let purchaseItem = items[2] as? TimeCardDetailsPurchaseItem else {
             return
         }

@@ -232,18 +232,41 @@ class TimeCardsViewController: UITableViewController {
         }
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle:
-        UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if (editingStyle == .delete) {
-            tableView.beginUpdates()
-            
-            if removed(from: &timeCards, at: indexPath, in: managedContext) {
-                tableView.deleteRows(at: [indexPath], with: .automatic)
-                tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-                updatePayCycleAttrs(with: timeCards, for: payCycle, in: managedContext)
-            }
-            tableView.endUpdates()
+//    override func tableView(_ tableView: UITableView, commit editingStyle:
+//        UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+//        if (editingStyle == .delete) {
+//            tableView.beginUpdates()
+//            presentDeleteConfirmation(for: indexPath)
+//
+//            tableView.endUpdates()
+//        }
+//    }
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+            self.presentDeleteConfirmation(for: indexPath)
         }
+        
+        return [delete]
+    }
+    
+    func presentDeleteConfirmation(for indexPath: IndexPath) {
+        let alert = UIAlertController(title: "Confirmation", message: "Are you sure you want to delete this timecard?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (alert: UIAlertAction!) in
+            self.handleDelete(at: indexPath)
+        }))
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func handleDelete(at indexPath: IndexPath) {
+        tableView.beginUpdates()
+        if removed(from: &timeCards, at: indexPath, in: managedContext) {
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+            updatePayCycleAttrs(with: timeCards, for: payCycle, in: managedContext)
+        }
+        tableView.endUpdates()
     }
     
     @objc func addTimeCardButtonAction(_ sender: UIBarButtonItem) {
