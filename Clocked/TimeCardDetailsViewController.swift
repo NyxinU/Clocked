@@ -88,8 +88,10 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
     func setupToolbar() {
         navigationController?.setToolbarHidden(false, animated: true)
         var items:[UIBarButtonItem] = []
+        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let addPurchaseButton = UIBarButtonItem(title: "Add Purchase", style: .plain, target: self, action: #selector(addPurchaseButtonAction))
         
+        items.append(space)
         items.append(addPurchaseButton)
         self.setToolbarItems(items, animated: true)
     }
@@ -162,7 +164,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
                     guard let timestamp = timestamp else {
                         return ""
                     }
-                    
+                                        
                     return "\(timestamp.dateAsString())    \(timestamp.timeAsString())"
                 }()
                 
@@ -379,7 +381,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
             
         do {
             try managedContext.save()
-            try managedContext.parent?.save()
+//            try managedContext.parent?.save()
             navigationController?.popViewController(animated: true)
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
@@ -440,6 +442,8 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
                 }
             } else if cell.priceTextField.amountTypedString.count > 0 {
                 throw TimeCardError.purchaseWithNoName
+            } else {
+                managedContext.delete(managedPurchase)
             }
         }
     }

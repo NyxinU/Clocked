@@ -101,6 +101,7 @@ class PayCyclesViewController: UITableViewController {
         if indexPath.section == 0 {
             return setupTotalHoursCell()
         } else {
+            print(fetchPurchases(from: managedContext, for: managedPayCycles[indexPath.row]))
             return setupPayCycleCell(for: managedPayCycles[indexPath.row])
         }
     }

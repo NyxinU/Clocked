@@ -73,6 +73,14 @@ class TimeCardsViewController: UITableViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTimeCardButtonAction(_:)))
     }
     
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 1 {
+            return 50
+        } else {
+            return 45 
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupToolbar()
@@ -147,6 +155,7 @@ class TimeCardsViewController: UITableViewController {
         
         do {
             try managedContext.save()
+            
             timeCards.insert(timeCard, at: 0)
             tableView.insertRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
             _ = items.popLast()

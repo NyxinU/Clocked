@@ -14,7 +14,7 @@
     </entity>
     <entity name="ManagedTimeCard" representedClassName="ManagedTimeCard" syncable="YES" codeGenerationType="class">
         <attribute name="endTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="startTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="startTime" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="payCycle" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ManagedPayCycle" inverseName="timeCards" inverseEntity="ManagedPayCycle" syncable="YES"/>
         <relationship name="payCycleForActiveTimeCard" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ManagedPayCycle" inverseName="activeTimeCard" inverseEntity="ManagedPayCycle" syncable="YES"/>
         <relationship name="purchases" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ManagedPurchase" inverseName="timeCard" inverseEntity="ManagedPurchase" syncable="YES"/>

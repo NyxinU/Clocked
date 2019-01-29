@@ -74,7 +74,7 @@ func fetchPurchases<T: NSManagedObject>(from managedContext: NSManagedObjectCont
         switch NSStringFromClass(T.self) {
         case "ManagedTimeCard":
             return NSPredicate(format: "timeCard == %@", obj as! ManagedTimeCard)
-        case "ManagedPayCyle":
+        case "ManagedPayCycle":
             return NSPredicate(format: "timeCard.payCycle == %@", obj as! ManagedPayCycle)
         default:
             return nil

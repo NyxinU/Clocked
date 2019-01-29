@@ -36,6 +36,7 @@ class TimeCardTableViewCell: UITableViewCell {
         
         let labels: [UILabel] = [startDateLabel,startTimeLabel, endTimeLabel, durationLabel]
         let padding: CGFloat = 16
+        let topBotPadding: CGFloat = 1
         
         for label in labels {
             label.translatesAutoresizingMaskIntoConstraints = false
@@ -43,30 +44,30 @@ class TimeCardTableViewCell: UITableViewCell {
         
         let timeLabelWidth: CGFloat = 0.25
         
-        startTimeLabel.textColor = .cyan
+        startTimeLabel.textColor = #colorLiteral(red: 0, green: 0.8563780049, blue: 0.8644709708, alpha: 1)
         endTimeLabel.textColor = .red
         durationLabel.textAlignment = .right
         
         NSLayoutConstraint.activate([
             startDateLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: padding),
-                startDateLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
-                startDateLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.5),
-                startDateLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
-                
-                startTimeLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: padding),
-                startTimeLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: timeLabelWidth),
-                startTimeLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
-                startTimeLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.5),
-                
-                endTimeLabel.leftAnchor.constraint(equalTo: startTimeLabel.rightAnchor, constant: padding),
-                endTimeLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: timeLabelWidth),
-                endTimeLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
-                endTimeLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.5),
-                
-                durationLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -padding),
-                durationLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: timeLabelWidth),
-                durationLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
-                durationLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.5),
+            startDateLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
+            startDateLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.5),
+            startDateLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: topBotPadding),
+            
+            startTimeLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: padding),
+            startTimeLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: timeLabelWidth),
+            startTimeLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -topBotPadding),
+            startTimeLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.5),
+            
+            endTimeLabel.leftAnchor.constraint(equalTo: startTimeLabel.rightAnchor, constant: padding),
+            endTimeLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: timeLabelWidth),
+            endTimeLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -topBotPadding),
+            endTimeLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.5),
+            
+            durationLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -padding),
+            durationLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: timeLabelWidth),
+            durationLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -topBotPadding),
+            durationLabel.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor, multiplier: 0.5),
                 
         ])
     }
