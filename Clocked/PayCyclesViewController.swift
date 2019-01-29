@@ -101,7 +101,6 @@ class PayCyclesViewController: UITableViewController {
         if indexPath.section == 0 {
             return setupTotalHoursCell()
         } else {
-            print(fetchPurchases(from: managedContext, for: managedPayCycles[indexPath.row]))
             return setupPayCycleCell(for: managedPayCycles[indexPath.row])
         }
     }
@@ -161,6 +160,7 @@ class PayCyclesViewController: UITableViewController {
             
             if removed(from: &managedPayCycles, at: indexPath, in: managedContext) {
                 tableView.deleteRows(at: [indexPath], with: .automatic)
+                calculateCumulativeHours()
                 tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
             }
             tableView.endUpdates()

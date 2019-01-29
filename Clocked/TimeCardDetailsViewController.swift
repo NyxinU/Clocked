@@ -399,7 +399,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         }
         
         if let end = timeStamps[1] {
-            guard duration(from: start, to: end) > 0 else {
+            guard duration(from: start, to: end) >= 0 else {
                 throw TimeCardError.invalidTimes
             }
         }
