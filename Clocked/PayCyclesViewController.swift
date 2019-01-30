@@ -166,28 +166,43 @@ class PayCyclesViewController: UITableViewController {
 //            tableView.endUpdates()
 //        }
 //    }
-    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
-            self.presentDeleteConfirmation(for: indexPath)
+
+//    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+//        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+//            self.presentDeleteConfirmation(for: indexPath)
+//        }
+//        return [delete]
+//    }
+
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (_, _, completion) in
+            self.presentDeleteConfirmation(for: indexPath, completion: completion)
         }
-        return [delete]
+        
+        let config = UISwipeActionsConfiguration(actions: [deleteAction])
+        config.performsFirstActionWithFullSwipe = false
+        
+        return config
     }
     
-    func presentDeleteConfirmation(for indexPath: IndexPath) {
+    func presentDeleteConfirmation(for indexPath: IndexPath, completion: @escaping (Bool) -> Void) {
         let alert = UIAlertController(title: "Confirmation", message: "Are you sure you want to delete this pay cycle?", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (alert: UIAlertAction!) in
+            completion(false)
+        }))
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (alert: UIAlertAction!) in
-            self.handleDelete(at: indexPath)
+            self.handleDelete(at: indexPath, completion: completion)
         }))
         
         present(alert, animated: true, completion: nil)
     }
     
-    func handleDelete(at indexPath: IndexPath) {
+    func handleDelete(at indexPath: IndexPath, completion: (Bool) -> Void) {
         tableView.beginUpdates()
 
         if removed(from: &managedPayCycles, at: indexPath, in: managedContext) {
             tableView.deleteRows(at: [indexPath], with: .automatic)
+            completion(true)
             calculateCumulativeHours()
             tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
         }
