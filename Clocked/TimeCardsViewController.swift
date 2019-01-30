@@ -238,16 +238,14 @@ class TimeCardsViewController: UITableViewController {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (_, _, completion) in
             self.presentDeleteConfirmation(for: indexPath, completion: completion)
         }
-        
         let config = UISwipeActionsConfiguration(actions: [deleteAction])
-        
         config.performsFirstActionWithFullSwipe = false
         
         return config
     }
     
     func presentDeleteConfirmation(for indexPath: IndexPath, completion: @escaping (Bool) -> Void) {
-        let alert = UIAlertController(title: "Confirmation", message: "Are you sure you want to delete this timecard?", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Confirmation", message: "Are you sure you want to delete this time card?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (alert: UIAlertAction!) in
             completion(false)
         }))
