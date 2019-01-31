@@ -19,11 +19,6 @@ class DatePickerTableViewCell: UITableViewCell {
         return "DatePickerTableViewCellIdentifier"
     }
     
-    // Nib name
-//    static func nibName() -> String {
-//        return "DatePickerTableViewCell"
-//    }
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -53,9 +48,7 @@ class DatePickerTableViewCell: UITableViewCell {
         self.indexPath = indexPath
     }
     
-    @objc func dateDidChanged(_ sender: UIDatePicker) {
-        // set seconds to 00
-        let date = sender.date
+    @objc func dateDidChanged(_ sender: UIDatePicker) {        let date = sender.date
         let newDate = date.setSecondsToZero()
 
         let indexPathForDisplayDate = IndexPath(row: indexPath.row - 1, section: indexPath.section)

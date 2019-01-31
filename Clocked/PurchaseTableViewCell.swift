@@ -66,7 +66,6 @@ class PurchaseTextField: UITextField, UITextFieldDelegate {
     init(frame: CGRect = CGRect.zero, option: PurchaseTextFieldOptions) {
         super.init(frame: frame)
         
-        // use auto layout instead of adjusting frame
         switch option {
         case .name:
             self.placeholder = "Item Name"

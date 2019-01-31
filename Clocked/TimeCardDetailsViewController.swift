@@ -144,7 +144,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
             
             return datePickerCell
         } else {
-            // refactor and create custom cells
             guard let cell = tableView.dequeueReusableCell(withIdentifier: LRLabelTableViewCell.resuseIdentifier()) as? LRLabelTableViewCell else {
                 return LRLabelTableViewCell()
             }

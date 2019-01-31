@@ -11,8 +11,6 @@ import UIKit
 
 class PayCycleTableViewCell: UITableViewCell {
     var dateRangeLabel = UILabel()
-//    var startDateLabel = UILabel()
-//    var endDateLabel = UILabel()
     var totalHoursLabel = UILabel()
     
     static func reuseIdentifier() -> String {
@@ -22,8 +20,6 @@ class PayCycleTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         addSubview(dateRangeLabel)
-//        addSubview(startDateLabel)
-//        addSubview(endDateLabel)
         addSubview(totalHoursLabel)
     }
     

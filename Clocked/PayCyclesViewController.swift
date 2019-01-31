@@ -153,26 +153,6 @@ class PayCyclesViewController: UITableViewController {
             return false
         }
     }
-    
-//    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-//        if (editingStyle == .delete) {
-//            tableView.beginUpdates()
-//
-//            if removed(from: &managedPayCycles, at: indexPath, in: managedContext) {
-//                tableView.deleteRows(at: [indexPath], with: .automatic)
-//                calculateCumulativeHours()
-//                tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-//            }
-//            tableView.endUpdates()
-//        }
-//    }
-
-//    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-//        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
-//            self.presentDeleteConfirmation(for: indexPath)
-//        }
-//        return [delete]
-//    }
 
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (_, _, completion) in
