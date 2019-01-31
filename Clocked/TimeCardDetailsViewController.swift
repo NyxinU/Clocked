@@ -382,7 +382,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
             
         do {
             try managedContext.save()
-//            try managedContext.parent?.save()
             navigationController?.popViewController(animated: true)
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
