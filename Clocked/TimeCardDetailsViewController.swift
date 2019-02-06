@@ -28,6 +28,17 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         self.items = self.timeCardDetails.items
         
         super.init(style: .plain)
+        
+        if newTimeCard {
+            guard let timeStampsItem = items[0] as? TimeCardDetailsTimeStampsItem else {
+                return
+            }
+            var timeStamps = timeStampsItem.timeStamps
+            let currentTime = Date().roundDownToNearestFiveMin()
+            timeStamps[0] = currentTime
+            timeStampsItem.save(new: timeStamps)
+            timeCard.startTime = currentTime
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -80,9 +91,9 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         let backItem = UIBarButtonItem(barButtonSystemItem: .camera, target: nil, action: nil)
         navigationItem.backBarButtonItem = backItem
         
-        if newTimeCard {
-            navigationItem.rightBarButtonItem?.isEnabled = false
-        }
+//        if newTimeCard {
+//            navigationItem.rightBarButtonItem?.isEnabled = false
+//        }
     }
     
     func setupToolbar() {
@@ -153,7 +164,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
                 let timeStampsItem = items[indexPath.section] as! TimeCardDetailsTimeStampsItem
                 let timeStamps = timeStampsItem.timeStamps
                 let timestamp = timeStamps[indexPath.row]
-                
                 if indexPath.row == 0 {
                     cell.leftLabel.text = "Starts"
                 } else if indexPath.row == 1 {
@@ -253,10 +263,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         } else {
             switch items[indexPath.section].type {
             case .timeStamps:
-                // allow save if start time is selected
-                if indexPath.row == 0 {
-                    navigationItem.rightBarButtonItem?.isEnabled = true
-                }
                 
                 // close prev date picker
                 if let datePickerIndexPath = datePickerIndexPath {
@@ -270,7 +276,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
                 tableView.insertRows(at: [datePickerIndexPath], with: .fade)
                 tableView.deselectRow(at: indexPath, animated: true)
                 
-                // add current time to cell if empty
                 guard let timeStampsItem = items[indexPath.section] as? TimeCardDetailsTimeStampsItem else {
                     return
                 }
@@ -280,11 +285,11 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
                     // fix for crash when delete and reload at same indexPath
                     tableView.endUpdates()
                     tableView.beginUpdates()
+
+                    timeStamps[datePickerIndexPath.row - 1] = Date(timeInterval: TimeInterval(exactly: 3600)!, since: timeStamps[0]!)
                     
-                    timeStamps[datePickerIndexPath.row - 1] = Date().roundDownToNearestFiveMin()
                     timeStampsItem.save(new: timeStamps)
                     tableView.reloadRows(at: [IndexPath(row: datePickerIndexPath.row - 1, section: datePickerIndexPath.section)], with: .automatic)
-                    
                     updateDuration()
                 }
             default:
