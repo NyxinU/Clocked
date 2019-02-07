@@ -163,10 +163,12 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
             case .timeStamps:
                 let timeStampsItem = items[indexPath.section] as! TimeCardDetailsTimeStampsItem
                 let timeStamps = timeStampsItem.timeStamps
-                let timestamp = timeStamps[indexPath.row]
-                if indexPath.row == 0 {
+                let row = indexPath.row <= 1 ? indexPath.row : 1
+                let timestamp = timeStamps[row]
+                
+                if row == 0 {
                     cell.leftLabel.text = "Starts"
-                } else if indexPath.row == 1 {
+                } else if row == 1 {
                     cell.leftLabel.text = "Ends"
                 }
                 
@@ -263,35 +265,40 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         } else {
             switch items[indexPath.section].type {
             case .timeStamps:
-                
-                // close prev date picker
-                if let datePickerIndexPath = datePickerIndexPath {
-                    tableView.deleteRows(at: [datePickerIndexPath], with: .fade)
+                // if section 0 has 3 rows reload if 2 insert
+                guard let timeStampsItem = items[indexPath.section] as? TimeCardDetailsTimeStampsItem else {
+                    return
                 }
+                var timeStamps = timeStampsItem.timeStamps
+                let datePickerIsOpen: Bool = (datePickerIndexPath != nil)
+                
                 datePickerIndexPath = indexPathToInsertDatePicker(indexPath: indexPath)
                 guard let datePickerIndexPath = datePickerIndexPath else {
                     return
                 }
                 
-                tableView.insertRows(at: [datePickerIndexPath], with: .fade)
-                tableView.deselectRow(at: indexPath, animated: true)
-                
-                guard let timeStampsItem = items[indexPath.section] as? TimeCardDetailsTimeStampsItem else {
-                    return
-                }
-                var timeStamps = timeStampsItem.timeStamps
-
                 if timeStamps[datePickerIndexPath.row - 1] == nil {
-                    // fix for crash when delete and reload at same indexPath
-                    tableView.endUpdates()
-                    tableView.beginUpdates()
-
                     timeStamps[datePickerIndexPath.row - 1] = Date(timeInterval: TimeInterval(exactly: 3600)!, since: timeStamps[0]!)
-                    
                     timeStampsItem.save(new: timeStamps)
-                    tableView.reloadRows(at: [IndexPath(row: datePickerIndexPath.row - 1, section: datePickerIndexPath.section)], with: .automatic)
                     updateDuration()
                 }
+
+                if datePickerIsOpen {
+                    tableView.reloadSections(IndexSet(integer: 0), with: .fade)
+                } else {
+                    tableView.insertRows(at: [datePickerIndexPath], with: .fade)
+                    tableView.deselectRow(at: indexPath, animated: true)
+                }
+                
+
+//
+//
+//
+//
+
+
+                
+                
             default:
                 closeDatePicker()
                 tableView.deselectRow(at: indexPath, animated: false)
@@ -320,7 +327,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         timeStamps[row] = date
         timeStampsItem.save(new: timeStamps)
         
-        tableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .automatic)
+        tableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .none)
         updateDuration()
     }
     
@@ -352,7 +359,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         let durationItem = items[1] as! TimeCardDetailsDurationItem
         
         durationItem.duration = hoursAndMins(from: start, to: end)
-        tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
+        tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .none)
     }
     
     enum TimeCardError: Error {

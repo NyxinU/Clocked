@@ -160,7 +160,7 @@ class TimeCardsViewController: UITableViewController {
             tableView.insertRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
             _ = items.popLast()
             updatePayCycleAttrs(with: timeCards, for: payCycle, in: managedContext)
-            tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+            tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
             items.append(clockInButton)
             setToolbarItems(items, animated: true)
         } catch let error as NSError {
@@ -262,7 +262,7 @@ class TimeCardsViewController: UITableViewController {
         if removed(from: &timeCards, at: indexPath, in: managedContext) {
             tableView.deleteRows(at: [indexPath], with: .automatic)
             completion(true)
-            tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+            tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
             updatePayCycleAttrs(with: timeCards, for: payCycle, in: managedContext)
         }
         tableView.endUpdates()

@@ -184,7 +184,7 @@ class PayCyclesViewController: UITableViewController {
             tableView.deleteRows(at: [indexPath], with: .automatic)
             completion(true)
             calculateCumulativeHours()
-            tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+            tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
         }
         tableView.endUpdates()
     }
