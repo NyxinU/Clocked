@@ -265,12 +265,16 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         } else {
             switch items[indexPath.section].type {
             case .timeStamps:
-                // if section 0 has 3 rows reload if 2 insert
                 guard let timeStampsItem = items[indexPath.section] as? TimeCardDetailsTimeStampsItem else {
                     return
                 }
                 var timeStamps = timeStampsItem.timeStamps
                 let datePickerIsOpen: Bool = (datePickerIndexPath != nil)
+                var prevDatePickerIndex: IndexPath?
+                
+                if datePickerIsOpen {
+                    prevDatePickerIndex = datePickerIndexPath
+                }
                 
                 datePickerIndexPath = indexPathToInsertDatePicker(indexPath: indexPath)
                 guard let datePickerIndexPath = datePickerIndexPath else {
@@ -284,21 +288,20 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
                 }
 
                 if datePickerIsOpen {
-                    tableView.reloadSections(IndexSet(integer: 0), with: .fade)
+                    if let prevDatePickerIndex = prevDatePickerIndex{
+                        tableView.deleteRows(at: [prevDatePickerIndex], with: .fade)
+                        tableView.insertRows(at: [datePickerIndexPath], with: .fade)
+                        
+                        tableView.endUpdates()
+                        tableView.beginUpdates()
+                        tableView.reloadRows(at: [IndexPath(row: datePickerIndexPath.row - 1, section: datePickerIndexPath.section)], with: .none)
+                    }
                 } else {
                     tableView.insertRows(at: [datePickerIndexPath], with: .fade)
                     tableView.deselectRow(at: indexPath, animated: true)
+                    tableView.reloadRows(at: [IndexPath(row: datePickerIndexPath.row - 1, section: datePickerIndexPath.section)], with: .none)
                 }
-                
 
-//
-//
-//
-//
-
-
-                
-                
             default:
                 closeDatePicker()
                 tableView.deselectRow(at: indexPath, animated: false)
