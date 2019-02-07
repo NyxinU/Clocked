@@ -90,10 +90,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         
         let backItem = UIBarButtonItem(barButtonSystemItem: .camera, target: nil, action: nil)
         navigationItem.backBarButtonItem = backItem
-        
-//        if newTimeCard {
-//            navigationItem.rightBarButtonItem?.isEnabled = false
-//        }
     }
     
     func setupToolbar() {
@@ -201,7 +197,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         
         let timeStampsItem = items[indexPath.section] as! TimeCardDetailsTimeStampsItem
         let timeStamps = timeStampsItem.timeStamps
-        
         datePickerCell.updateCell(date: timeStamps[indexPath.row - 1], indexPath: indexPath)
         datePickerCell.delegate = self
         
@@ -263,35 +258,37 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         } else {
             switch items[indexPath.section].type {
             case .timeStamps:
+                var openDatePickerIndexPath: IndexPath? = nil
                 
                 // close prev date picker
-                if let datePickerIndexPath = datePickerIndexPath {
-                    tableView.deleteRows(at: [datePickerIndexPath], with: .fade)
+                if let dPIndexPath = datePickerIndexPath {
+                    tableView.deleteRows(at: [dPIndexPath], with: .fade)
+                    openDatePickerIndexPath = datePickerIndexPath
+                    datePickerIndexPath = nil
+                    tableView.endUpdates()
+                    tableView.beginUpdates()
                 }
-                datePickerIndexPath = indexPathToInsertDatePicker(indexPath: indexPath)
+                
+                datePickerIndexPath = indexPathToInsertDatePicker(indexPath: indexPath, openDatePickerIndexPath: openDatePickerIndexPath)
                 guard let datePickerIndexPath = datePickerIndexPath else {
                     return
                 }
-                
-                tableView.insertRows(at: [datePickerIndexPath], with: .fade)
-                tableView.deselectRow(at: indexPath, animated: true)
-                
                 guard let timeStampsItem = items[indexPath.section] as? TimeCardDetailsTimeStampsItem else {
                     return
                 }
                 var timeStamps = timeStampsItem.timeStamps
 
                 if timeStamps[datePickerIndexPath.row - 1] == nil {
-                    // fix for crash when delete and reload at same indexPath
-                    tableView.endUpdates()
-                    tableView.beginUpdates()
-
                     timeStamps[datePickerIndexPath.row - 1] = Date(timeInterval: TimeInterval(exactly: 3600)!, since: timeStamps[0]!)
-                    
                     timeStampsItem.save(new: timeStamps)
+
                     tableView.reloadRows(at: [IndexPath(row: datePickerIndexPath.row - 1, section: datePickerIndexPath.section)], with: .automatic)
                     updateDuration()
                 }
+                
+                tableView.insertRows(at: [datePickerIndexPath], with: .fade)
+                tableView.deselectRow(at: indexPath, animated: true)
+
             default:
                 closeDatePicker()
                 tableView.deselectRow(at: indexPath, animated: false)
@@ -300,8 +297,8 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         tableView.endUpdates()
     }
     
-    func indexPathToInsertDatePicker(indexPath: IndexPath) -> IndexPath {
-        if let datePickerIndexPath = datePickerIndexPath, datePickerIndexPath.row < indexPath.row {
+    func indexPathToInsertDatePicker(indexPath: IndexPath, openDatePickerIndexPath: IndexPath?) -> IndexPath {
+        if let openDatePickerIndexPath = openDatePickerIndexPath, openDatePickerIndexPath.row < indexPath.row {
             return indexPath
         } else {
             return IndexPath(row: indexPath.row + 1, section: indexPath.section)
