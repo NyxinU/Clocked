@@ -2,6 +2,7 @@
 Lightweight iOS app that tracks and organizes time cards by pay cycle
 
 <img src="ReadMeImages/TimeCardsVC.png" width="250"> <img src="ReadMeImages/DatePicker.png" width="250">
+
 <img src="ReadMeImages/AddPurchase.png" width="250"> <img src="ReadMeImages/EmailShare.png" width="250">
 
 ## Features
