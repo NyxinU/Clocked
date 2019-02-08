@@ -90,10 +90,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         
         let backItem = UIBarButtonItem(barButtonSystemItem: .camera, target: nil, action: nil)
         navigationItem.backBarButtonItem = backItem
-        
-//        if newTimeCard {
-//            navigationItem.rightBarButtonItem?.isEnabled = false
-//        }
     }
     
     func setupToolbar() {
@@ -203,7 +199,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         
         let timeStampsItem = items[indexPath.section] as! TimeCardDetailsTimeStampsItem
         let timeStamps = timeStampsItem.timeStamps
-        
         datePickerCell.updateCell(date: timeStamps[indexPath.row - 1], indexPath: indexPath)
         datePickerCell.delegate = self
         
@@ -309,8 +304,8 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         tableView.endUpdates()
     }
     
-    func indexPathToInsertDatePicker(indexPath: IndexPath) -> IndexPath {
-        if let datePickerIndexPath = datePickerIndexPath, datePickerIndexPath.row < indexPath.row {
+    func indexPathToInsertDatePicker(indexPath: IndexPath, openDatePickerIndexPath: IndexPath?) -> IndexPath {
+        if let openDatePickerIndexPath = openDatePickerIndexPath, openDatePickerIndexPath.row < indexPath.row {
             return indexPath
         } else {
             return IndexPath(row: indexPath.row + 1, section: indexPath.section)
