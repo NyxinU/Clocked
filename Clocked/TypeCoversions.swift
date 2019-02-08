@@ -66,11 +66,8 @@ func timeCardsToString(managedTimeCards: [ManagedTimeCard], totalHours: Int32, m
     let totalAmount = stringToCurrency(from: priceToString(from: totalAmountOfExpenses))
     
     if purchases.count > 0 {
-        string.append(contentsOf: purchases)
-        string.append(contentsOf: "\nTotal Expenses \(totalAmount)\n")
+        string.append(contentsOf: "\n\(purchases)")
+        string.append(contentsOf: "Total Expenses \(totalAmount)")
     }
-    
-
-    
     return string
 }

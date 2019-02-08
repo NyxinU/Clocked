@@ -214,7 +214,6 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         guard let purchaseCell = tableView.dequeueReusableCell(withIdentifier: PurchaseTableViewCell.reuseIdentifier()) as? PurchaseTableViewCell else {
             return PurchaseTableViewCell()
         }
-        
         purchaseCell.itemNameTextField.text = managedPurchase.name
         purchaseCell.itemNameTextField.closeDatePickerDelegate = self
         purchaseCell.priceTextField.updatePriceTextField(price: managedPurchase.price)
@@ -234,7 +233,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         let item = items[indexPath.section]
         
-        if item.type == .purchases && item.rowCount != indexPath.row {
+        if item.type == .purchases {
             return true
         } else {
             return false
@@ -457,7 +456,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
             } else if cell.priceTextField.amountTypedString.count > 0 {
                 throw TimeCardError.purchaseWithNoName
             } else {
-                managedContext.delete(managedPurchase)
+                managedContext.delete(managedPurchases[idx])
             }
         }
     }

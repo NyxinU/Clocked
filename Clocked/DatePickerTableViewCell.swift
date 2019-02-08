@@ -54,4 +54,14 @@ class DatePickerTableViewCell: UITableViewCell {
         let indexPathForDisplayDate = IndexPath(row: indexPath.row - 1, section: indexPath.section)
         delegate?.didChangeDate(date: newDate, indexPath: indexPathForDisplayDate)
     }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        datePicker.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            datePicker.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
+            datePicker.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor)
+        ])
+    }
 }

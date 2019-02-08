@@ -17,6 +17,7 @@ enum PurchaseTextFieldOptions {
 class PurchaseTableViewCell: UITableViewCell {
     let itemNameTextField: PurchaseTextField
     let priceTextField: PriceTextField
+    
     static func reuseIdentifier() -> String {
         return "PurchaseTableViewCellIdentifier"
     }
@@ -58,6 +59,13 @@ class PurchaseTableViewCell: UITableViewCell {
             priceTextField.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor),
         ])
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        itemNameTextField.text = ""
+        priceTextField.text = ""
+        priceTextField.amountTypedString = ""
+    }
 }
 
 class PurchaseTextField: UITextField, UITextFieldDelegate {
@@ -95,7 +103,6 @@ class PurchaseTextField: UITextField, UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-    
 }
 
 protocol CloseDatePickerDelegate {
