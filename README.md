@@ -11,12 +11,10 @@ Lightweight iOS app that tracks and organizes time cards by pay cycle
 ### Setup Instructions
 **Clone the repository**
 ``` git
-$ git https://github.com/NyxinU/HoursWorked.git
+$ git clone https://github.com/NyxinU/HoursWorked.git
 ``` 
-Open project in XCode
-
-Click on Clocked.xcodeproj in project navigator
-
-Change the bundle identifier 
-
-Select your simulator device 
+* Open project in XCode
+* Click on Clocked.xcodeproj in project navigator
+* Change the bundle identifier 
+* Select your simulator device 
+* Cmd + R to build and run project 
