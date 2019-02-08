@@ -304,8 +304,8 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
         tableView.endUpdates()
     }
     
-    func indexPathToInsertDatePicker(indexPath: IndexPath, openDatePickerIndexPath: IndexPath?) -> IndexPath {
-        if let openDatePickerIndexPath = openDatePickerIndexPath, openDatePickerIndexPath.row < indexPath.row {
+    func indexPathToInsertDatePicker(indexPath: IndexPath) -> IndexPath {
+        if let datePickerIndexPath = datePickerIndexPath, datePickerIndexPath.row < indexPath.row {
             return indexPath
         } else {
             return IndexPath(row: indexPath.row + 1, section: indexPath.section)
