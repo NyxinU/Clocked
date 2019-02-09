@@ -1,9 +1,10 @@
 # HoursWorked
 Lightweight iOS app that tracks and organizes time cards by pay cycle
 
-<img src="ReadMeImages/TimeCardsVC.png" width="250" border="1px solid black"> <img src="ReadMeImages/DatePicker.png" width="250" border="1px solid black">
+## Preview
 
-<img src="ReadMeImages/AddPurchase.png" width="250" border="1px solid black"> <img src="ReadMeImages/EmailShare.png" width="250" border="1px solid black">
+<img src="ReadMeImages/TimeCardsVC.png" width="250"> <img src="ReadMeImages/DatePicker.png" width="250">
+<img src="ReadMeImages/AddPurchase.png" width="250"> <img src="ReadMeImages/EmailShare.png" width="250">
 
 ## Features
 * Create Pay Cycle and Time Cards
@@ -22,4 +23,4 @@ $ git clone https://github.com/NyxinU/HoursWorked.git
 2. Click on Clocked.xcodeproj in project navigator
 3. Change the bundle identifier 
 4. Select your simulator device 
-5. Cmd + R to build and run project 
+5. Cmd + R to build and run project
