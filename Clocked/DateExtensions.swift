@@ -22,7 +22,7 @@ extension Date {
     func dateAsString() -> String {
         let dateFormatter: DateFormatter = DateFormatter()
         
-        dateFormatter.dateFormat = "MMM dd, yyyy"
+        dateFormatter.dateFormat = "M/dd/yy"
         
         let stringifiedDate: String = dateFormatter.string(from: self)
         
@@ -32,7 +32,7 @@ extension Date {
     func timeAsString() -> String {
         let dateFormatter: DateFormatter = DateFormatter()
         
-        dateFormatter.dateFormat = "hh:mm a"
+        dateFormatter.dateFormat = "h:mm a"
         
         let stringifiedTime: String = dateFormatter.string(from: self)
         

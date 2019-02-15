@@ -212,7 +212,8 @@ class TimeCardsViewController: UITableViewController {
         cell.startTimeLabel.text = startTime?.timeAsString()
         cell.endTimeLabel.text = endTime?.timeAsString()
         cell.durationLabel.text = hoursAndMins(from: startTime, to: endTime)
-        
+        print(startTime?.timeAsString())
+        print(endTime?.timeAsString())
         return cell
     }
     

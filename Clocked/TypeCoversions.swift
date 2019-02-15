@@ -36,13 +36,13 @@ func timeCardsToString(managedTimeCards: [ManagedTimeCard], totalHours: Int32, m
     var purchases = ""
     var totalAmountOfExpenses: Float = 0.0
     
-    let totalHours = "Total: \(hoursAndMins(from: Int(totalHours)))\n"
+    let totalHours = "Total: \(hoursAndMinsInDecimal(from: Int(totalHours)))\n"
     let timeCards = managedTimeCards.reversed()
     
     for managedTimeCard in timeCards {
         let startTime: Date? = managedTimeCard.startTime
         let endTime: Date? = managedTimeCard.endTime
-        let row: String = "\(startTime?.dateAsString() ?? "") \(startTime?.timeAsString() ?? "") - \(endTime?.timeAsString() ?? "") \(hoursAndMins(from: startTime, to: endTime))\n"
+        let row: String = "\(startTime?.dateAsString() ?? "") \(startTime?.timeAsString() ?? "") - \(endTime?.timeAsString() ?? "") \(hoursAndMinsInParenthesis(from: startTime, to: endTime))\n"
         string.append(contentsOf: row)
     }
     
