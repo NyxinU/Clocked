@@ -48,7 +48,8 @@ class DatePickerTableViewCell: UITableViewCell {
         self.indexPath = indexPath
     }
     
-    @objc func dateDidChanged(_ sender: UIDatePicker) {        let date = sender.date
+    @objc func dateDidChanged(_ sender: UIDatePicker) {
+        let date = sender.date
         let newDate = date.setSecondsToZero()
 
         let indexPathForDisplayDate = IndexPath(row: indexPath.row - 1, section: indexPath.section)

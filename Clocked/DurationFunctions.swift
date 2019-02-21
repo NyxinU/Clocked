@@ -30,17 +30,18 @@ func hoursAndMins(from seconds: Int?) -> String {
     return formatTime(hours: hours, minutes: minutes)
 }
 
-func hoursAndMinsInParenthesis(from start: Date?, to end: Date?) -> String {
+func hoursAndMinsInDecimal(from start: Date?, to end: Date?) -> String {
     guard let start = start, let end = end else {
         return ""
     }
     let seconds = duration(from: start, to: end)
     
-    let hours = Int(seconds / 3600)
-    let minutes = Int((seconds / 60) % 60)
-    let minutesInString: String = minutes < 10 ? "0\(minutes)" : "\(minutes)"
+    let hours = Float(seconds / 3600)
+    let minutes = Float((seconds / 60) % 60)
+    let decimalMins =  minutes / 60
+    let hoursAndMins: String = String(format: "%.2f", hours + decimalMins)
     
-    return "(\(hours):\(minutesInString))"
+    return hoursAndMins
 }
 
 func hoursAndMinsInDecimal(from seconds: Int?) -> String {
@@ -50,9 +51,9 @@ func hoursAndMinsInDecimal(from seconds: Int?) -> String {
     let hours = Float(seconds / 3600)
     let minutes = Float((seconds / 60) % 60)
     let decimalMins =  minutes / 60
-    let hoursAnMins: String = String(format: "%.2f", hours + decimalMins)
+    let hoursAndMins: String = String(format: "%.2f", hours + decimalMins)
     
-    return hoursAnMins
+    return hoursAndMins
 }
 
 func hoursAndMins(from start: Date?, to end: Date?) -> String {

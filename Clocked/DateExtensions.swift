@@ -39,11 +39,13 @@ extension Date {
         return stringifiedTime
     }
     
-    func roundDownToNearestFiveMin() -> Date {
-        let newTime = floor(self.timeIntervalSinceReferenceDate/300.0) * 300.0
-        let newDate = Date(timeIntervalSinceReferenceDate: newTime)
-        
-        return newDate
+    func roundToNearestFiveMin() -> Date {
+      
+        let roundedTime = round(self.timeIntervalSinceReferenceDate/300.0) * 300.0
+      
+        let roundedDate = Date(timeIntervalSinceReferenceDate: roundedTime)
+      
+        return roundedDate
     }
     
     func setSecondsToZero() -> Date {

@@ -128,7 +128,7 @@ class TimeCardsViewController: UITableViewController {
     }
     
     @objc func clockInButtonAction(_ sender: UIBarButtonItem) {
-        let currentTime = Date().roundDownToNearestFiveMin()
+        let currentTime = Date().roundToNearestFiveMin()
         let newTimeCard = ManagedTimeCard(context: managedContext)
         newTimeCard.startTime = currentTime
         payCycle.activeTimeCard = newTimeCard
@@ -145,7 +145,7 @@ class TimeCardsViewController: UITableViewController {
     }
     
     @objc func clockOutButtonAction(_ sender: UIBarButtonItem) {
-        let currentTime = Date().roundDownToNearestFiveMin()
+        let currentTime = Date().roundToNearestFiveMin()
         guard let timeCard = payCycle.activeTimeCard else {
             return
         }

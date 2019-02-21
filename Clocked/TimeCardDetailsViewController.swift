@@ -34,7 +34,7 @@ class TimeCardDetailsViewController: UITableViewController, DatePickerDelegate, 
                 return
             }
             var timeStamps = timeStampsItem.timeStamps
-            let currentTime = Date().roundDownToNearestFiveMin()
+            let currentTime = Date().roundToNearestFiveMin()
             timeStamps[0] = currentTime
             timeStampsItem.save(new: timeStamps)
             timeCard.startTime = currentTime
